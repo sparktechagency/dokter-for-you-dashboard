@@ -12,6 +12,17 @@ function App() {
                         Layout: {
                             colorBgContainer: '#fff',
                         },
+                        Table: {
+                            headerBg: '#1854F9',
+                            headerColor: '#fff',
+                            headerBorderRadius: 0,
+                            borderRadius: 0,
+                            colorBgContainer: '#E7FBF2',
+                            colorText: '#636363',
+                            fontSize: 16,
+                            rowSelectedBg: '#F0F4FF',
+                            rowSelectedHoverBg: '#fff',
+                        },
                     },
                 }}
             >
