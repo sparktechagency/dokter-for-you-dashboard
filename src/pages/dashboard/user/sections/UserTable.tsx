@@ -3,7 +3,7 @@ import { Table, Button, Space, Tooltip, Popconfirm } from 'antd';
 import { BsEye } from 'react-icons/bs';
 import { CiLock, CiUnlock } from 'react-icons/ci';
 import type { ColumnsType } from 'antd/es/table';
-import { UserDataType } from '../types';
+import { UserDataType } from '../types/types';
 
 interface Props {
     data: UserDataType[];

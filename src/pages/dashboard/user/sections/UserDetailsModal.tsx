@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import { CiLock } from 'react-icons/ci';
 import { FaDownload } from 'react-icons/fa';
 import Modal from '../../../../components/shared/Modal';
-import { UserDetailsProps } from '../types';
+import { UserDetailsProps } from '../types/types';
 
 interface Props {
     open: boolean;
@@ -37,7 +37,7 @@ const UserDetailsModal: React.FC<Props> = ({ open, setOpen, userDetails }) => {
                     </div>
                 ))}
             </div>
-            
+
             <div>
                 <div className="flex justify-end">
                     <Button type="primary" icon={<FaDownload />} size="large">
@@ -48,15 +48,7 @@ const UserDetailsModal: React.FC<Props> = ({ open, setOpen, userDetails }) => {
         </div>
     );
 
-    return (
-        <Modal
-            title="Users profile Details"
-            open={open}
-            setOpen={setOpen}
-            body={userDetailsContent}
-            width={700}
-        />
-    );
+    return <Modal title="Users profile Details" open={open} setOpen={setOpen} body={userDetailsContent} width={700} />;
 };
 
 export default UserDetailsModal;

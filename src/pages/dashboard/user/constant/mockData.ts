@@ -1,4 +1,4 @@
-import { UserDataType } from './types';
+import { UserDataType } from '../types/types';
 
 export const mockUserData: UserDataType[] = [
     {

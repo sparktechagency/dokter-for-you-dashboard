@@ -6,8 +6,8 @@ import { CiLock, CiSearch, CiUnlock } from 'react-icons/ci';
 import UserTable from './sections/UserTable';
 import UserDetailsModal from './sections/UserDetailsModal';
 import MessageModal from './sections/MessageModal';
-import { mockUserData } from './mockData';
-import { UserDetailsProps } from './types';
+import { mockUserData } from './constant/mockData';
+import { UserDetailsProps } from './types/types';
 
 const UserDetails: React.FC = () => {
     const [openModal, setOpenModal] = useState(false);

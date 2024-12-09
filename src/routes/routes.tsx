@@ -13,7 +13,7 @@ import TermsCondition from '../pages/dashboard/TermsCondition';
 import Notification from '../pages/dashboard/Notification';
 
 import UserDetails from '../pages/dashboard/user/UserDetails';
-import PatientServices from '../pages/dashboard/PatientServices';
+import PatientServices from '../pages/dashboard/patient/PatientServices';
 import MedicationTrade from '../pages/dashboard/MedicationTrade';
 import Refund from '../pages/dashboard/Refund';
 import AddMedicine from '../pages/dashboard/AddMedicine';
@@ -31,6 +31,7 @@ import FAQ from '../pages/dashboard/FAQ';
 import DoctorsDetails from '../pages/dashboard/DoctorsDetails';
 import PharmacyDetails from '../pages/dashboard/PharmacyDetails';
 import AdminDetails from '../pages/dashboard/AdminDetails';
+import PatientDetailsPage from '../pages/dashboard/patient/section/PatientDetailsPage';
 
 const router = createBrowserRouter([
     {
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
 
             { path: 'user-details', element: <UserDetails /> },
             { path: 'patient-services', element: <PatientServices /> },
+            { path: 'patient-services/details', element: <PatientDetailsPage /> },
             { path: 'medication-trade', element: <MedicationTrade /> },
             { path: 'refund', element: <Refund /> },
             { path: 'add-medicine', element: <AddMedicine /> },
