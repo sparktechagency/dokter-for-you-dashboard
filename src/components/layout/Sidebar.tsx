@@ -1,7 +1,7 @@
 import { ConfigProvider, Layout, Menu } from 'antd';
 import { sidebarItemsGenerator } from '../../utils/generateSidebarItems';
-import sidebarItems from '../../utils/sidebarItems';
 import { Link } from 'react-router-dom';
+import adminSidebarItems from '../../utils/sidebarItems';
 
 const { Sider } = Layout;
 const Sidebar = () => {
@@ -9,7 +9,7 @@ const Sidebar = () => {
         <ConfigProvider
             theme={{
                 token: {
-                    colorPrimary: '#F0F4FF',
+                    colorPrimary: '#f0f4ff',
                     // colorBgContainer: '#DAA520',
                     colorText: '#414446',
                 },
@@ -58,7 +58,7 @@ const Sidebar = () => {
                     theme="light"
                     mode="inline"
                     defaultSelectedKeys={['dashboard']}
-                    items={sidebarItemsGenerator(sidebarItems)}
+                    items={sidebarItemsGenerator(adminSidebarItems)}
                 />
             </Sider>
         </ConfigProvider>

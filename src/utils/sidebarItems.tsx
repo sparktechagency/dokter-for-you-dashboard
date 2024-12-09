@@ -1,75 +1,148 @@
 import { TSidebarItem } from './generateSidebarItems';
-import { RiAdminFill } from 'react-icons/ri';
 import {
-    AiOutlineBarChart,
-    AiOutlineFileText,
+    AiOutlineDashboard,
+    AiOutlineUser,
+    AiOutlineMedicineBox,
+    AiOutlineRollback,
+    AiOutlinePlusCircle,
+    AiOutlineSetting,
+    AiOutlineLayout,
+    AiOutlineTeam,
     AiOutlineLogout,
-    AiOutlineQuestionCircle,
-    AiOutlineStar,
-    AiOutlineUnorderedList,
-    AiOutlineUsergroupAdd,
 } from 'react-icons/ai';
-const sidebarItems: TSidebarItem[] = [
+
+const adminSidebarItems: TSidebarItem[] = [
     {
         key: 'dashboard',
         label: 'Dashboard',
         path: '',
-        icon: <AiOutlineBarChart size={24} />,
+        icon: <AiOutlineDashboard size={24} />,
     },
     {
-        key: 'brands',
-        label: 'Brands',
-        path: 'brands',
-        icon: <AiOutlineStar size={24} />, // Assuming you want a star icon for Brands
+        key: 'user-details',
+        label: 'User Details',
+        path: 'user-details',
+        icon: <AiOutlineUser size={24} />,
     },
     {
-        key: 'influencer',
-        label: 'Influencer',
-        path: 'influencer',
-        icon: <AiOutlineUsergroupAdd size={24} />, // Assuming you want a group icon for Influencer
+        key: 'patient-services',
+        label: 'Patient Services',
+        path: 'patient-services',
+        icon: <AiOutlineMedicineBox size={24} />,
     },
     {
-        key: 'categories',
-        label: 'Categories',
-        path: 'categories',
-        icon: <AiOutlineUnorderedList size={24} />, // Assuming you want a list icon for Categories
+        key: 'medication-trade',
+        label: 'Medication trade',
+        path: 'medication-trade',
+        icon: <AiOutlineMedicineBox size={24} />,
     },
     {
-        key: 'reviews',
-        label: 'Reviews',
-        path: 'reviews',
-        icon: <AiOutlineStar size={24} />, // Assuming a star for Reviews as well
+        key: 'refund',
+        label: 'Refund',
+        path: 'refund',
+        icon: <AiOutlineRollback size={24} />,
     },
     {
-        key: 'campaign',
-        label: 'Campaign',
-        path: 'campaign',
-        icon: <AiOutlineStar size={24} />, // Assuming you want a bullhorn icon for Campaign
+        key: 'add-medicine',
+        label: 'Add Medicine',
+        path: 'add-medicine',
+        icon: <AiOutlinePlusCircle size={24} />,
     },
     {
-        key: 'add-admin',
-        label: 'Add Admin',
-        path: 'make-admin',
-        icon: <RiAdminFill size={24} />,
+        key: 'service-setting',
+        label: 'Service Setting',
+        path: 'service-setting',
+        icon: <AiOutlineSetting size={24} />,
+        children: [
+            {
+                key: 'consultation-category',
+                label: 'Consultation Category',
+                path: 'consultation-category',
+            },
+            {
+                key: 'consultation-subcategory',
+                label: 'Consultation Subcategory',
+                path: 'consultation-subcategory',
+            },
+            {
+                key: 'shipping-setting',
+                label: 'Shipping Setting',
+                path: 'shipping-setting',
+            },
+            {
+                key: 'discount-price',
+                label: 'Discount Price',
+                path: 'discount-price',
+            },
+        ],
     },
     {
-        key: 'terms',
-        label: 'Terms & Conditions',
-        path: 'terms',
-        icon: <AiOutlineFileText size={24} />, // Assuming you want a file icon for Terms & Conditions
+        key: 'interface-setting',
+        label: 'Interface Setting',
+        path: 'interface-setting',
+        icon: <AiOutlineLayout size={24} />,
+        children: [
+            {
+                key: 'user-review',
+                label: 'User Review',
+                path: 'user-review',
+            },
+            {
+                key: 'about',
+                label: 'About',
+                path: 'about',
+            },
+            {
+                key: 'set-article',
+                label: 'Set Article',
+                path: 'set-article',
+            },
+            {
+                key: 'terms-conditions',
+                label: 'Terms & Conditions',
+                path: 'terms-conditions',
+            },
+            {
+                key: 'user-agreement',
+                label: 'User Agreement',
+                path: 'user-agreement',
+            },
+            {
+                key: 'faq',
+                label: 'FAQ',
+                path: 'faq',
+            },
+        ],
     },
     {
-        key: 'faqs',
-        label: 'FAQs',
-        path: 'faqs',
-        icon: <AiOutlineQuestionCircle size={24} />, // Assuming you want a question icon for FAQs
+        key: 'service-provider',
+        label: 'Service Provider',
+        path: 'service-provider',
+        icon: <AiOutlineTeam size={24} />,
+        children: [
+            {
+                key: 'doctors-details',
+                label: 'Doctors Details',
+                path: 'doctors-details',
+            },
+            {
+                key: 'pharmacy-details',
+                label: 'Pharmacy Details',
+                path: 'pharmacy-details',
+            },
+            {
+                key: 'admin-details',
+                label: 'Admin Details',
+                path: 'admin-details',
+            },
+        ],
     },
     {
         key: 'logout',
         label: 'Log Out',
         path: 'logout',
-        icon: <AiOutlineLogout size={24} />, // Assuming you want a logout icon for Log Out
+        icon: <AiOutlineLogout size={24} />,
     },
 ];
 
-export default sidebarItems;
+export default adminSidebarItems;
