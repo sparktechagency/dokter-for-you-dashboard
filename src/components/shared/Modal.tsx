@@ -9,7 +9,7 @@ interface IModalProps {
     width?: number;
 }
 
-const CustomModal: React.FC<IModalProps> = ({ title, open, setOpen, width, body }) => {
+const Modal: React.FC<IModalProps> = ({ title, open, setOpen, width, body }) => {
     const handleClose = () => {
         setOpen(false);
     };
@@ -28,4 +28,4 @@ const CustomModal: React.FC<IModalProps> = ({ title, open, setOpen, width, body 
     );
 };
 
-export default CustomModal;
+export default Modal;

@@ -1,6 +1,6 @@
 import { Button, ConfigProvider, Flex, Form, Input, Table } from 'antd';
 
-import CustomModal from '../../components/shared/CustomModal';
+import CustomModal from '../../components/shared/Modal';
 import { useState } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
 

@@ -1,7 +1,7 @@
 import { BsTrash } from 'react-icons/bs';
 import { Button, ConfigProvider, Flex, Form, Input, Popconfirm, Table } from 'antd';
 import { dummyData } from '../../constant/constant';
-import CustomModal from '../../components/shared/CustomModal';
+import CustomModal from '../../components/shared/Modal';
 import { useState } from 'react';
 
 const MakeAdmin = () => {

@@ -23,6 +23,7 @@ function App() {
                             rowSelectedBg: '#F0F4FF',
                             rowSelectedHoverBg: '#fff',
                         },
+                        Popconfirm: {},
                     },
                 }}
             >

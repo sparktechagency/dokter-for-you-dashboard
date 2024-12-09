@@ -5,16 +5,14 @@ import MakeAdmin from '../pages/dashboard/MakeAdmin';
 import Login from '../pages/authentication/Login';
 import Register from '../pages/authentication/Register';
 import ErrorPage from '../pages/error/ErrorPage';
-import Brands from '../pages/dashboard/Brands';
-import Influencer from '../pages/dashboard/Influencer';
 import Categories from '../pages/dashboard/Categories';
 import Review from '../pages/dashboard/Review';
 import Campaign from '../pages/dashboard/Campaign';
 import TermsCondition from '../pages/dashboard/TermsCondition';
-import FAQs from '../pages/dashboard/FAQs';
+
 import Notification from '../pages/dashboard/Notification';
 
-import UserDetails from '../pages/dashboard/UserDetails';
+import UserDetails from '../pages/dashboard/user/UserDetails';
 import PatientServices from '../pages/dashboard/PatientServices';
 import MedicationTrade from '../pages/dashboard/MedicationTrade';
 import Refund from '../pages/dashboard/Refund';
@@ -41,14 +39,11 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             { path: '', element: <Dashboard /> },
-            { path: 'brands', element: <Brands /> },
-            { path: 'influencer', element: <Influencer /> },
             { path: 'categories', element: <Categories /> },
             { path: 'reviews', element: <Review /> },
             { path: 'campaign', element: <Campaign /> },
             { path: 'make-admin', element: <MakeAdmin /> },
             { path: 'terms', element: <TermsCondition /> },
-            { path: 'faqs', element: <FAQs /> },
             { path: 'notification', element: <Notification /> },
 
             { path: 'user-details', element: <UserDetails /> },
