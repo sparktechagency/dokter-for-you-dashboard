@@ -67,7 +67,7 @@ const PatientServices = () => {
                 <div className="flex items-center space-x-2">
                     <Tooltip title="Details">
                         <Button
-                            href="/patient-services/details"
+                            href="/regular-consultation/details/2222"
                             type="text"
                             shape="circle"
                             icon={<BsEye size={20} />}
@@ -98,24 +98,24 @@ const PatientServices = () => {
             key: 'sno',
         },
         {
-            title: 'Meeting ID',
-            dataIndex: 'meetingId',
-            key: 'meetingId',
+            title: 'Registration No.',
+            dataIndex: 'regNo',
+            key: 'regNo',
         },
         {
-            title: 'Patient Name',
-            dataIndex: 'patientName',
-            key: 'patientName',
+            title: 'Consult for',
+            dataIndex: 'consultFor',
+            key: 'consultFor',
         },
         {
-            title: 'Doctor',
-            dataIndex: 'doctor',
-            key: 'doctor',
+            title: 'Consultant',
+            dataIndex: 'consultant',
+            key: 'consultant',
         },
         {
-            title: 'Schedule',
-            dataIndex: 'schedule',
-            key: 'schedule',
+            title: 'Date & Time',
+            dataIndex: 'dateAndTime',
+            key: 'dateAndTime',
         },
         {
             title: 'Duration',
@@ -123,17 +123,22 @@ const PatientServices = () => {
             key: 'duration',
         },
         {
+            title: 'Price',
+            dataIndex: 'price',
+            key: 'price',
+            render: (price: string) => price,
+        },
+        {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => (
                 <Badge
-                    status={status === 'Scheduled' ? 'processing' : status === 'Completed' ? 'success' : 'default'}
+                    status={status === 'Reported' ? 'success' : 'default'}
                     text={
                         <span
                             style={{
-                                color:
-                                    status === 'Scheduled' ? '#FAAD14' : status === 'Completed' ? '#52C41A' : '#1890FF',
+                                color: status === 'Reported' ? '#52C41A' : '#1890FF',
                                 fontWeight: 'bold',
                             }}
                         >
@@ -148,11 +153,27 @@ const PatientServices = () => {
             key: 'action',
             render: () => (
                 <div className="flex items-center space-x-2">
-                    <Tooltip title="Join Meeting">
-                        <Button type="primary" size="small" onClick={() => console.log('Join Meeting')}>
-                            Join
-                        </Button>
+                    <Tooltip title="Details">
+                        <Button
+                            href="/video-consultation/details/2222"
+                            type="text"
+                            shape="circle"
+                            icon={<BsEye size={20} />}
+                        />
                     </Tooltip>
+
+                    <Popconfirm
+                        title="Are you sure to poke your therapist?"
+                        onConfirm={() => console.log('Poked')}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button
+                            type="text"
+                            shape="circle"
+                            icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />}
+                        />
+                    </Popconfirm>
                 </div>
             ),
         },
@@ -166,19 +187,20 @@ const PatientServices = () => {
             key: 'sno',
         },
         {
-            title: 'Prescription ID',
-            dataIndex: 'prescriptionId',
-            key: 'prescriptionId',
+            title: 'Registration No.',
+            dataIndex: 'regNo',
+            key: 'regNo',
         },
         {
-            title: 'Patient Name',
-            dataIndex: 'patientName',
-            key: 'patientName',
+            title: 'Consult for',
+            dataIndex: 'consultFor',
+            key: 'consultFor',
         },
         {
-            title: 'Doctor',
-            dataIndex: 'doctor',
-            key: 'doctor',
+            title: 'Price',
+            dataIndex: 'price',
+            key: 'price',
+            render: (price: string) => price,
         },
         {
             title: 'Date',
@@ -186,15 +208,52 @@ const PatientServices = () => {
             key: 'date',
         },
         {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: string) => (
+                <Badge
+                    status={status === 'Reported' ? 'success' : 'default'}
+                    text={
+                        <span
+                            style={{
+                                color: status === 'Reported' ? '#52C41A' : '#1890FF',
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            {status}
+                        </span>
+                    }
+                />
+            ),
+        },
+
+        {
             title: 'Action',
             key: 'action',
             render: () => (
                 <div className="flex items-center space-x-2">
-                    <Tooltip title="Download">
-                        <Button type="primary" size="small" onClick={() => console.log('Download Prescription')}>
-                            Download
-                        </Button>
+                    <Tooltip title="Details">
+                        <Button
+                            href="/digital-prescription/details/2222"
+                            type="text"
+                            shape="circle"
+                            icon={<BsEye size={20} />}
+                        />
                     </Tooltip>
+
+                    <Popconfirm
+                        title="Are you sure to poke your therapist?"
+                        onConfirm={() => console.log('Poked')}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button
+                            type="text"
+                            shape="circle"
+                            icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />}
+                        />
+                    </Popconfirm>
                 </div>
             ),
         },
@@ -208,29 +267,29 @@ const PatientServices = () => {
             key: 'sno',
         },
         {
-            title: 'Medicine Name',
-            dataIndex: 'medicineName',
-            key: 'medicineName',
+            title: 'Registration No.',
+            dataIndex: 'regNo',
+            key: 'regNo',
         },
         {
-            title: 'Dosage',
-            dataIndex: 'dosage',
-            key: 'dosage',
+            title: 'Consult for',
+            dataIndex: 'consultFor',
+            key: 'consultFor',
         },
         {
-            title: 'Frequency',
-            dataIndex: 'frequency',
-            key: 'frequency',
+            title: 'Medication',
+            dataIndex: 'medication',
+            key: 'medication',
         },
         {
-            title: 'Start Date',
-            dataIndex: 'startDate',
-            key: 'startDate',
+            title: 'Price',
+            dataIndex: 'price',
+            key: 'price',
         },
         {
-            title: 'End Date',
-            dataIndex: 'endDate',
-            key: 'endDate',
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
         },
         {
             title: 'Status',
@@ -238,11 +297,12 @@ const PatientServices = () => {
             key: 'status',
             render: (status: string) => (
                 <Badge
-                    status={status === 'Active' ? 'success' : 'default'}
+                    status={status === 'Loading...' ? 'processing' : status === 'Reported' ? 'success' : 'default'}
                     text={
                         <span
                             style={{
-                                color: status === 'Active' ? '#52C41A' : '#1890FF',
+                                color:
+                                    status === 'Loading...' ? '#FAAD14' : status === 'Reported' ? '#52C41A' : '#1890FF',
                                 fontWeight: 'bold',
                             }}
                         >
@@ -252,18 +312,53 @@ const PatientServices = () => {
                 />
             ),
         },
+        {
+            title: 'Action',
+            key: 'action',
+            render: () => (
+                <div className="flex items-center space-x-2">
+                    <Tooltip title="Details">
+                        <Button href="/medication/details/2222" type="text" shape="circle" icon={<BsEye size={20} />} />
+                    </Tooltip>
+
+                    <Popconfirm
+                        title="Are you sure to poke your therapist?"
+                        onConfirm={() => console.log('Poked')}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button
+                            type="text"
+                            shape="circle"
+                            icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />}
+                        />
+                    </Popconfirm>
+                </div>
+            ),
+        },
     ];
 
     // Sample data for each table
     const videoData = [
         {
             sno: 1,
-            meetingId: 'MEET-001',
-            patientName: 'John Doe',
-            doctor: 'Dr. Smith',
-            schedule: '2024-12-10 14:00',
+            regNo: '190653',
+            consultFor: 'Man problem/Erectile dysfunction',
+            consultant: 'Dr. Arco Verhoog',
+            dateAndTime: '2024-12-10 14:00',
             duration: '30 mins',
-            status: 'Scheduled',
+            price: '€ 25.00',
+            status: 'Loading...',
+        },
+        {
+            sno: 2,
+            regNo: '190652',
+            consultFor: 'Man problem/Erectile dysfunction',
+            consultant: 'Dr. Arco Verhoog',
+            dateAndTime: '2024-12-10 14:00',
+            duration: '30 mins',
+            price: '€ 25.00',
+            status: 'Reported',
         },
         // Add more video consultation data as needed
     ];
@@ -271,10 +366,21 @@ const PatientServices = () => {
     const prescriptionData = [
         {
             sno: 1,
-            prescriptionId: 'PRE-001',
-            patientName: 'John Doe',
-            doctor: 'Dr. Smith',
-            date: '2024-12-10',
+            regNo: '190653',
+            consultFor: 'Man problem/Erectile dysfunction',
+            medication: 'Amoxicillin',
+            price: '€ 25.00',
+            status: 'Loading...',
+            date: '2024-12-10 14:00',
+        },
+        {
+            sno: 4,
+            regNo: '190652',
+            consultFor: 'Man problem/Erectile dysfunction',
+            medication: 'Amoxicillin',
+            price: '€ 25.00',
+            status: 'Reported',
+            date: '2024-12-10 14:00',
         },
         // Add more prescription data as needed
     ];
@@ -282,14 +388,22 @@ const PatientServices = () => {
     const medicationData = [
         {
             sno: 1,
-            medicineName: 'Amoxicillin',
-            dosage: '500mg',
-            frequency: '3 times/day',
-            startDate: '2024-12-10',
-            endDate: '2024-12-17',
-            status: 'Active',
+            regNo: '190653',
+            consultFor: 'Man problem/Erectile dysfunction',
+            medication: 'Amoxicillin',
+            price: '€ 25.00',
+            status: 'Loading...',
+            date: '2024-12-10 14:00',
         },
-        // Add more medication data as needed
+        {
+            sno: 4,
+            regNo: '190652',
+            consultFor: 'Man problem/Erectile dysfunction',
+            medication: 'Amoxicillin',
+            price: '€ 25.00',
+            status: 'Reported',
+            date: '2024-12-10 14:00',
+        },
     ];
 
     const getTableContent = () => {

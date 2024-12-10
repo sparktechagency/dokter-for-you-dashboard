@@ -32,6 +32,9 @@ import DoctorsDetails from '../pages/dashboard/DoctorsDetails';
 import PharmacyDetails from '../pages/dashboard/PharmacyDetails';
 import AdminDetails from '../pages/dashboard/AdminDetails';
 import PatientDetailsPage from '../pages/dashboard/patient/section/PatientDetailsPage';
+import VideConsultationDetails from '../pages/dashboard/patient/section/VideoColsultationDetails';
+import DigitalPrescriptionDetails from '../pages/dashboard/patient/section/DigitalPrescriptionDetails';
+import MedicationDetails from '../pages/dashboard/patient/section/MedicationDetails';
 
 const router = createBrowserRouter([
     {
@@ -49,7 +52,12 @@ const router = createBrowserRouter([
 
             { path: 'user-details', element: <UserDetails /> },
             { path: 'patient-services', element: <PatientServices /> },
-            { path: 'patient-services/details', element: <PatientDetailsPage /> },
+
+            // pages for patient details
+            { path: 'regular-consultation/details/:id', element: <PatientDetailsPage /> },
+            { path: 'video-consultation/details/:id', element: <VideConsultationDetails /> },
+            { path: 'digital-prescription/details/:id', element: <DigitalPrescriptionDetails /> },
+            { path: 'medication/details/:id', element: <MedicationDetails /> },
             { path: 'medication-trade', element: <MedicationTrade /> },
             { path: 'refund', element: <Refund /> },
             { path: 'add-medicine', element: <AddMedicine /> },

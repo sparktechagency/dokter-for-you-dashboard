@@ -1,9 +1,9 @@
 import { Button } from 'antd';
 import { BsArrowLeft } from 'react-icons/bs';
-import { FaDownload } from 'react-icons/fa';
+import { FaDownload, FaVideo } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const PatientDetailsPage = () => {
+const VideConsultationDetails = () => {
     const navigate = useNavigate();
     const handleBack = () => {
         navigate(-1);
@@ -32,18 +32,18 @@ const PatientDetailsPage = () => {
 
     const detailsSection = (
         <div className="bg-[#E7FBF2] p-6  flex justify-between items-center mb-4">
-            <div>
-                <p className="text-lg font-semibold text-gray-800">S No. #2164564615</p>
-                <p className="text-md text-gray-600">Man problem/Erectile dysfunction</p>
-                <p className="text-md text-gray-600">1/1/2025, 5:30 pm</p>
+            <div className="text-gray0-80">
+                <p className="text-lg font-semibold">S No. #2164564615</p>
+                <p className="text-md">Man problem/Erectile dysfunction</p>
+                <p className="text-md">1/1/2025, 5:30 pm</p>
             </div>
-            <div className="text-right">
-                <p className="text-lg font-semibold text-gray-800">Consultation Report</p>
-                <p className="text-sm text-gray-500">Prescription is Complete</p>
+            <div className="text-center ">
+                <p className="text-lg font-semibold">Consultation Report</p>
+                <p className="text-sm text-secondary">Appointment date: 22 nov, 2024 . 08:30am</p>
             </div>
             <div>
-                <Button type="primary" icon={<FaDownload />} size="large">
-                    Download
+                <Button type="primary" icon={<FaVideo />} size="large">
+                    Meeting Link
                 </Button>
             </div>
         </div>
@@ -168,4 +168,4 @@ const PatientDetailsPage = () => {
     );
 };
 
-export default PatientDetailsPage;
+export default VideConsultationDetails;
