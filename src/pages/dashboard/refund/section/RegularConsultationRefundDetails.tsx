@@ -1,9 +1,10 @@
 import { Button } from 'antd';
 import { BsArrowLeft } from 'react-icons/bs';
-import { FaDownload, FaVideo } from 'react-icons/fa';
+import { FaDownload } from 'react-icons/fa';
+import { RiRefundLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 
-const VideConsultationDetails = () => {
+const PatientDetailsPage = () => {
     const navigate = useNavigate();
     const handleBack = () => {
         navigate(-1);
@@ -14,7 +15,7 @@ const VideConsultationDetails = () => {
             {/* Back Button and Title */}
             <div className="flex items-center space-x-2">
                 <BsArrowLeft className="text-lg text-gray-700 cursor-pointer" onClick={handleBack} />
-                <h1 className="text-lg font-medium text-gray-800">User Services Details</h1>
+                <h1 className="text-lg font-medium text-gray-800">User Services Details For Refund</h1>
             </div>
 
             {/* Reported Button */}
@@ -32,18 +33,18 @@ const VideConsultationDetails = () => {
 
     const detailsSection = (
         <div className="bg-[#E7FBF2] p-6  flex justify-between items-center mb-4">
-            <div className="text-gray0-80">
-                <p className="text-lg font-semibold">S No. #2164564615</p>
-                <p className="text-md">Man problem/Erectile dysfunction</p>
-                <p className="text-md">1/1/2025, 5:30 pm</p>
+            <div>
+                <p className="text-lg font-semibold text-gray-800">S No. #2164564615</p>
+                <p className="text-md text-gray-600">Man problem/Erectile dysfunction</p>
+                <p className="text-md text-gray-600">1/1/2025, 5:30 pm</p>
             </div>
-            <div className="text-center ">
-                <p className="text-lg font-semibold">Consultation Report</p>
-                <p className="text-sm text-secondary">Appointment date: 22 nov, 2024 . 08:30am</p>
+            <div className="text-right">
+                <p className="text-lg font-semibold text-gray-800">Consultation Report</p>
+                <p className="text-sm text-gray-500">Prescription is Complete</p>
             </div>
             <div>
-                <Button type="primary" icon={<FaVideo />} size="large">
-                    Meeting Link
+                <Button type="primary" icon={<FaDownload />} size="large">
+                    Download
                 </Button>
             </div>
         </div>
@@ -150,7 +151,14 @@ const VideConsultationDetails = () => {
             </div>
 
             {/* Download Button */}
-            <div className="mt-6 text-right">
+            <div className="mt-6 text-right flex justify-end space-x-2">
+                <Button
+                    style={{ height: 42, backgroundColor: '#FF3B28' }}
+                    type="primary"
+                    icon={<RiRefundLine size={20} />}
+                >
+                    Refund Now
+                </Button>
                 <Button style={{ height: 42 }} type="primary" icon={<FaDownload size={20} />}>
                     Download
                 </Button>
@@ -168,4 +176,4 @@ const VideConsultationDetails = () => {
     );
 };
 
-export default VideConsultationDetails;
+export default PatientDetailsPage;

@@ -1,9 +1,10 @@
 import { Button } from 'antd';
 import { BsArrowLeft } from 'react-icons/bs';
 import { FaDownload } from 'react-icons/fa';
+import { RiRefundLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 
-const MedicationDetails = () => {
+const MedicationRefundDetails = () => {
     const navigate = useNavigate();
     const handleBack = () => {
         navigate(-1);
@@ -14,7 +15,7 @@ const MedicationDetails = () => {
             {/* Back Button and Title */}
             <div className="flex items-center space-x-2">
                 <BsArrowLeft className="text-lg text-gray-700 cursor-pointer" onClick={handleBack} />
-                <h1 className="text-lg font-medium text-gray-800">User Services Details</h1>
+                <h1 className="text-lg font-medium text-gray-800">User Services Details For Refund</h1>
             </div>
 
             {/* Reported Button */}
@@ -146,7 +147,21 @@ const MedicationDetails = () => {
             </div>
 
             {/* Download Button */}
-            <div className="mt-6 text-right">
+            <div className="mt-6 text-right space-x-4">
+                <Button
+                    style={{
+                        height: 42,
+                        backgroundColor: '#FF4D4F',
+                        marginRight: '10px',
+                    }}
+                    icon={<RiRefundLine size={20} />}
+                    type="primary"
+                    onClick={() => {
+                        // Handle refund logic here
+                    }}
+                >
+                    Refund
+                </Button>
                 <Button style={{ height: 42 }} type="primary" icon={<FaDownload size={20} />}>
                     Download
                 </Button>
@@ -166,4 +181,4 @@ const MedicationDetails = () => {
     );
 };
 
-export default MedicationDetails;
+export default MedicationRefundDetails;

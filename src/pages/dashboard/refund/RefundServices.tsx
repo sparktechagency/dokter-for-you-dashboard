@@ -3,8 +3,10 @@ import { BsEye, BsSearch } from 'react-icons/bs';
 import { LiaHandPointRightSolid } from 'react-icons/lia';
 import { data } from './constant/constant';
 import { useState } from 'react';
+import { RiRefundLine } from 'react-icons/ri';
+import { MdDiscount } from 'react-icons/md';
 
-const PatientServices = () => {
+const RefundServices = () => {
     const [activeTab, setActiveTab] = useState('1');
 
     // Regular Consultation columns
@@ -67,23 +69,27 @@ const PatientServices = () => {
                 <div className="flex items-center space-x-2">
                     <Tooltip title="Details">
                         <Button
-                            href="/regular-consultation/details/2222"
+                            href="/regular-consultation-refund/details/2222"
                             type="text"
                             shape="circle"
                             icon={<BsEye size={20} />}
                         />
                     </Tooltip>
                     <Popconfirm
-                        title="Are you sure to poke your therapist?"
-                        onConfirm={() => console.log('Poked')}
+                        title="Are you want to refund?"
+                        onConfirm={() => console.log('refund')}
                         okText="Yes"
                         cancelText="No"
                     >
                         <Button
-                            type="text"
-                            shape="circle"
-                            icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />}
-                        />
+                            type="primary"
+                            style={{
+                                backgroundColor: '#FF3B28',
+                            }}
+                            icon={<RiRefundLine size={20} />}
+                        >
+                            Refund Now
+                        </Button>
                     </Popconfirm>
                 </div>
             ),
@@ -155,7 +161,7 @@ const PatientServices = () => {
                 <div className="flex items-center space-x-2">
                     <Tooltip title="Details">
                         <Button
-                            href="/video-consultation/details/2222"
+                            href="/video-consultation-refund/details/2222"
                             type="text"
                             shape="circle"
                             icon={<BsEye size={20} />}
@@ -163,16 +169,20 @@ const PatientServices = () => {
                     </Tooltip>
 
                     <Popconfirm
-                        title="Are you sure to poke your therapist?"
-                        onConfirm={() => console.log('Poked')}
+                        title="Are you want to refund?"
+                        onConfirm={() => console.log('refund')}
                         okText="Yes"
                         cancelText="No"
                     >
                         <Button
-                            type="text"
-                            shape="circle"
-                            icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />}
-                        />
+                            type="primary"
+                            style={{
+                                backgroundColor: '#FF3B28',
+                            }}
+                            icon={<RiRefundLine size={20} />}
+                        >
+                            Refund Now
+                        </Button>
                     </Popconfirm>
                 </div>
             ),
@@ -235,7 +245,7 @@ const PatientServices = () => {
                 <div className="flex items-center space-x-2">
                     <Tooltip title="Details">
                         <Button
-                            href="/digital-prescription/details/2222"
+                            href="/digital-prescription-refund/details/2222"
                             type="text"
                             shape="circle"
                             icon={<BsEye size={20} />}
@@ -243,16 +253,20 @@ const PatientServices = () => {
                     </Tooltip>
 
                     <Popconfirm
-                        title="Are you sure to poke your therapist?"
-                        onConfirm={() => console.log('Poked')}
+                        title="Are you want to refund?"
+                        onConfirm={() => console.log('refund')}
                         okText="Yes"
                         cancelText="No"
                     >
                         <Button
-                            type="text"
-                            shape="circle"
-                            icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />}
-                        />
+                            type="primary"
+                            style={{
+                                backgroundColor: '#FF3B28',
+                            }}
+                            icon={<RiRefundLine size={20} />}
+                        >
+                            Refund Now
+                        </Button>
                     </Popconfirm>
                 </div>
             ),
@@ -318,20 +332,29 @@ const PatientServices = () => {
             render: () => (
                 <div className="flex items-center space-x-2">
                     <Tooltip title="Details">
-                        <Button href="/medication/details/2222" type="text" shape="circle" icon={<BsEye size={20} />} />
+                        <Button
+                            href="/medication-refund/details/2222"
+                            type="text"
+                            shape="circle"
+                            icon={<BsEye size={20} />}
+                        />
                     </Tooltip>
 
                     <Popconfirm
-                        title="Are you sure to poke your therapist?"
-                        onConfirm={() => console.log('Poked')}
+                        title="Are you want to refund?"
+                        onConfirm={() => console.log('refund')}
                         okText="Yes"
                         cancelText="No"
                     >
                         <Button
-                            type="text"
-                            shape="circle"
-                            icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />}
-                        />
+                            type="primary"
+                            style={{
+                                backgroundColor: '#FF3B28',
+                            }}
+                            icon={<RiRefundLine size={20} />}
+                        >
+                            Refund Now
+                        </Button>
                     </Popconfirm>
                 </div>
             ),
@@ -427,7 +450,7 @@ const PatientServices = () => {
         <div>
             <div className="flex justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-title">Patient Services</h1>
+                    <h1 className="text-2xl font-semibold text-title">Refund Services</h1>
                 </div>
                 <div className="mb-4 flex items-center justify-end gap-4">
                     <Input
@@ -527,4 +550,4 @@ const PatientServices = () => {
     );
 };
 
-export default PatientServices;
+export default RefundServices;

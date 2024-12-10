@@ -15,7 +15,6 @@ import Notification from '../pages/dashboard/Notification';
 import UserDetails from '../pages/dashboard/user/UserDetails';
 import PatientServices from '../pages/dashboard/patient/PatientServices';
 
-import Refund from '../pages/dashboard/Refund';
 import AddMedicine from '../pages/dashboard/AddMedicine';
 import ConsultationCategory from '../pages/dashboard/ConsultationCategory';
 import ConsultationSubcategory from '../pages/dashboard/ConsultationSubcategory';
@@ -37,6 +36,11 @@ import DigitalPrescriptionDetails from '../pages/dashboard/patient/section/Digit
 import MedicationDetails from '../pages/dashboard/patient/section/MedicationDetails';
 import MedicationTrade from '../pages/dashboard/medication-trade/MedicationTrade';
 import MedicationTradeDetails from '../pages/dashboard/medication-trade/section/MedicationTradeDetails';
+import RefundServices from '../pages/dashboard/refund/RefundServices';
+import RegularConsultationRefundDetails from '../pages/dashboard/refund/section/RegularConsultationRefundDetails';
+import VideoConsultationRefundDetails from '../pages/dashboard/refund/section/VideoConsultationRefundDetails';
+import DigitalPrescriptionRefundDetails from '../pages/dashboard/refund/section/DigitalPrescriptionRefundDetails';
+import MedicationRefundDetails from '../pages/dashboard/refund/section/MedicationRefundDetails';
 
 const router = createBrowserRouter([
     {
@@ -64,7 +68,13 @@ const router = createBrowserRouter([
             //Note: pages for medication trade
             { path: 'medication-trade/details/:id', element: <MedicationTradeDetails /> },
 
-            { path: 'refund', element: <Refund /> },
+            { path: 'refund', element: <RefundServices /> },
+            //Note: pages for refund
+            { path: 'regular-consultation-refund/details/:id', element: <RegularConsultationRefundDetails /> },
+            { path: 'video-consultation-refund/details/:id', element: <VideoConsultationRefundDetails /> },
+            { path: 'digital-prescription-refund/details/:id', element: <DigitalPrescriptionRefundDetails /> },
+            { path: 'medication-refund/details/:id', element: <MedicationRefundDetails /> },
+
             { path: 'add-medicine', element: <AddMedicine /> },
 
             { path: 'consultation-category', element: <ConsultationCategory /> },
