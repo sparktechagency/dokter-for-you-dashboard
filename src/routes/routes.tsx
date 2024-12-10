@@ -14,7 +14,7 @@ import Notification from '../pages/dashboard/Notification';
 
 import UserDetails from '../pages/dashboard/user/UserDetails';
 import PatientServices from '../pages/dashboard/patient/PatientServices';
-import MedicationTrade from '../pages/dashboard/MedicationTrade';
+
 import Refund from '../pages/dashboard/Refund';
 import AddMedicine from '../pages/dashboard/AddMedicine';
 import ConsultationCategory from '../pages/dashboard/ConsultationCategory';
@@ -35,6 +35,8 @@ import PatientDetailsPage from '../pages/dashboard/patient/section/PatientDetail
 import VideConsultationDetails from '../pages/dashboard/patient/section/VideoColsultationDetails';
 import DigitalPrescriptionDetails from '../pages/dashboard/patient/section/DigitalPrescriptionDetails';
 import MedicationDetails from '../pages/dashboard/patient/section/MedicationDetails';
+import MedicationTrade from '../pages/dashboard/medication-trade/MedicationTrade';
+import MedicationTradeDetails from '../pages/dashboard/medication-trade/section/MedicationTradeDetails';
 
 const router = createBrowserRouter([
     {
@@ -53,12 +55,15 @@ const router = createBrowserRouter([
             { path: 'user-details', element: <UserDetails /> },
             { path: 'patient-services', element: <PatientServices /> },
 
-            // pages for patient details
+            //Note: pages for patient details
             { path: 'regular-consultation/details/:id', element: <PatientDetailsPage /> },
             { path: 'video-consultation/details/:id', element: <VideConsultationDetails /> },
             { path: 'digital-prescription/details/:id', element: <DigitalPrescriptionDetails /> },
             { path: 'medication/details/:id', element: <MedicationDetails /> },
             { path: 'medication-trade', element: <MedicationTrade /> },
+            //Note: pages for medication trade
+            { path: 'medication-trade/details/:id', element: <MedicationTradeDetails /> },
+
             { path: 'refund', element: <Refund /> },
             { path: 'add-medicine', element: <AddMedicine /> },
 

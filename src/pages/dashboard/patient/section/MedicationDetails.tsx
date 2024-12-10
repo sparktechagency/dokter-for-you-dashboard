@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import { BsArrowLeft } from 'react-icons/bs';
-import { FaDownload, FaVideo } from 'react-icons/fa';
+import { FaDownload } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const MedicationDetails = () => {
