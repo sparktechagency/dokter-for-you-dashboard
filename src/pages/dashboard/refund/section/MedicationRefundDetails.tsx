@@ -147,7 +147,7 @@ const MedicationRefundDetails = () => {
             </div>
 
             {/* Download Button */}
-            <div className="mt-6 text-right space-x-4">
+            <div className="mt-6 text-right flex justify-end space-x-4">
                 <Button
                     style={{
                         height: 42,
