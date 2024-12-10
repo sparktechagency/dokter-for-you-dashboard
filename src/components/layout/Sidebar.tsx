@@ -38,14 +38,7 @@ const Sidebar = () => {
             >
                 {/* logo of the website */}
                 <Link to="/">
-                    <div
-                        style={{
-                            margin: '0 20px',
-                            padding: '20px 0',
-                        }}
-                    >
-                        <h1 className="text-2xl text-center">LOGO</h1>
-                    </div>
+                    <img src="/logo.svg" className="w-[180px] object-cover m-5" alt="" />
                 </Link>
 
                 <Menu

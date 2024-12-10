@@ -409,41 +409,15 @@ const PatientServices = () => {
     const getTableContent = () => {
         switch (activeTab) {
             case '1':
-                return (
-                    <Table
-                        columns={regularColumns}
-                        dataSource={data}
-                        pagination={{ pageSize: 10 }}
-                        rowClassName="text-gray-700"
-                    />
-                );
+                return <Table columns={regularColumns} dataSource={data} pagination={{ pageSize: 10 }} />;
             case '2':
-                return (
-                    <Table
-                        columns={videoColumns}
-                        dataSource={videoData}
-                        pagination={{ pageSize: 10 }}
-                        rowClassName="text-gray-700"
-                    />
-                );
+                return <Table columns={videoColumns} dataSource={videoData} pagination={{ pageSize: 10 }} />;
             case '3':
                 return (
-                    <Table
-                        columns={prescriptionColumns}
-                        dataSource={prescriptionData}
-                        pagination={{ pageSize: 10 }}
-                        rowClassName="text-gray-700"
-                    />
+                    <Table columns={prescriptionColumns} dataSource={prescriptionData} pagination={{ pageSize: 10 }} />
                 );
             case '4':
-                return (
-                    <Table
-                        columns={medicationColumns}
-                        dataSource={medicationData}
-                        pagination={{ pageSize: 10 }}
-                        rowClassName="text-gray-700"
-                    />
-                );
+                return <Table columns={medicationColumns} dataSource={medicationData} pagination={{ pageSize: 10 }} />;
             default:
                 return null;
         }
@@ -488,16 +462,13 @@ const PatientServices = () => {
             <div className="flex justify-start">
                 <Tabs
                     removeIcon
-                    hideAdd
                     activeKey={activeTab}
                     centered
                     indicator={{
-                        size: 20,
-                        align: 'end',
+                        size: 0,
                     }}
                     onChange={(key: string) => setActiveTab(key)}
                     animated
-                    tabPosition="top"
                     items={[
                         {
                             label: (
