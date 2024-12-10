@@ -5,6 +5,8 @@ export default {
         extend: {
             colors: {
                 primary: '#2884FF',
+                gray: '#4E4E4E',
+                title: '#222222',
             },
         },
     },

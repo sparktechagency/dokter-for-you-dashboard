@@ -23,7 +23,15 @@ function App() {
                             rowSelectedBg: '#F0F4FF',
                             rowSelectedHoverBg: '#fff',
                         },
-                        Popconfirm: {},
+                        Input: {
+                            controlHeight: 42,
+                        },
+                        Select: {
+                            controlHeight: 42,
+                        },
+                        DatePicker: {
+                            controlHeight: 42,
+                        },
                     },
                 }}
             >

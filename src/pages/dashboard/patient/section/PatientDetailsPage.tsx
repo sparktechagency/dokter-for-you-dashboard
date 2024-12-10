@@ -1,36 +1,33 @@
 import { Button } from 'antd';
+import { BsArrowLeft } from 'react-icons/bs';
 import { FaDownload } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const PatientDetailsPage = () => {
-    const userDetails = {
-        patient: {
-            name: 'Asaduijaman Mahfuz',
-            email: 'Asaduijaman101@bd.com',
-            contactNumber: '+0999999999999999',
-            gender: 'Male',
-            deathOfBirth: '12 Nov, 2024',
-            country: 'Netherlands',
-            profileImg: '/user.svg', // Update with real image URL
-        },
-        consultant: {
-            name: 'Dr. Arco Verhoog',
-            specialty: 'Urologist',
-            contactNumber: '+0999999999999999',
-            gender: 'Male',
-            profileImg: '/user.svg', // Update with real image URL
-        },
-        consultationDetails: {
-            consultationType: 'Man problem/Erectile dysfunction',
-            date: '1/1/2025, 5:30 pm',
-            prescriptionStatus: 'Complete',
-            price: 25.0,
-            discount: 0.0,
-            total: 25.0,
-        },
+    const navigate = useNavigate();
+    const handleBack = () => {
+        navigate(-1);
     };
-
     return (
         <div className="bg-white p-3">
+            <div className="flex items-center justify-between px-4 py-2 bg-white my-2">
+                {/* Back Button and Title */}
+                <div className="flex items-center space-x-2">
+                    <BsArrowLeft className="text-lg text-gray-700 cursor-pointer" onClick={handleBack} />
+                    <h1 className="text-lg font-medium text-gray-800">User Services Details</h1>
+                </div>
+
+                {/* Reported Button */}
+                <Button
+                    type="primary"
+                    style={{
+                        height: 42,
+                        backgroundColor: '#1854F9',
+                    }}
+                >
+                    Reported
+                </Button>
+            </div>
             <div className="bg-[#E7FBF2] p-6  flex justify-between items-center mb-4">
                 <div>
                     <p className="text-lg font-semibold text-gray-800">S No. #2164564615</p>
@@ -49,86 +46,106 @@ const PatientDetailsPage = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div className="bg-[#E8EEFE] p-6 lg:order-2">
-                    <h3 className="text-xl font-semibold">Patient:</h3>
-                    <div className="flex items-center gap-3">
+                <div className="bg-[#E8EEFE] p-6 text-gray ">
+                    <h1 className="text-xl font-semibold text-[#222222] my-3">Patient:</h1>
+                    <div className="flex items-center space-x-4">
+                        {/* Profile Picture */}
+
                         <img
-                            src={userDetails.patient.profileImg}
+                            src="/user.svg" // Replace with the real image URL
                             alt="Patient"
-                            className="size-32 rounded-full mt-4 mb-4"
+                            className="object-cover size-32 rounded-full"
                         />
-                        <div className="ml-4">
-                            <p>{userDetails.patient.name}</p>
+
+                        {/* Patient Info */}
+                        <div>
+                            <h2 className="text-xl font-semibold text-[#0A2369]">Asadujjaman</h2>
+                            <p className="text-lg text-[#11D279]">Netherlands</p>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-2 ml-4 md:ml-0 md:text-right">
-                        <p className="flex items-center">
-                            <strong>Name:</strong> {userDetails.patient.name}
+
+                    {/* Details Section */}
+                    <div className="mt-4 text-sm text-gray-800 space-y-2">
+                        <p>
+                            <span className="font-semibold">Name:</span> Asadujjaman Mahfuz
                         </p>
-                        <p className="flex items-center">
-                            <strong>Email:</strong> {userDetails.patient.email}
+                        <p>
+                            <span className="font-semibold">Email:</span> Asadujjaman101@bd.com
                         </p>
-                        <p className="flex items-center">
-                            <strong>Contact Number:</strong> {userDetails.patient.contactNumber}
+                        <p>
+                            <span className="font-semibold">Contact Number:</span> +0999999999999999
                         </p>
-                        <p className="flex items-center">
-                            <strong>Gender:</strong> {userDetails.patient.gender}
+                        <p>
+                            <span className="font-semibold">Gender:</span> Male
                         </p>
-                        <p className="flex items-center">
-                            <strong>Death of Birth:</strong> {userDetails.patient.deathOfBirth}
-                        </p>
-                        <p className="flex items-center">
-                            <strong>Country:</strong> {userDetails.patient.country}
+                        <p>
+                            <span className="font-semibold">Death of birth:</span> 12 Nov, 2024
                         </p>
                     </div>
                 </div>
+                <div className="bg-[#E8EEFE] p-6 text-gray ">
+                    <h1 className="text-xl font-semibold text-[#222222] my-3">Consultant:</h1>
+                    <div className="flex items-center space-x-4">
+                        {/* Profile Picture */}
 
-                <div className="bg-[#E8EEFE] p-6 lg:order-1">
-                    <h3 className="text-xl font-semibold">Consultant:</h3>
-                    <img
-                        src={userDetails.consultant.profileImg}
-                        alt="Consultant"
-                        className="size-32 rounded-full mt-4 mb-4"
-                    />
-                    <div>
+                        <img
+                            src="/user.svg" // Replace with the real image URL
+                            alt="Patient"
+                            className="object-cover size-32 rounded-full"
+                        />
+
+                        {/* Patient Info */}
+                        <div>
+                            <h2 className="text-xl font-semibold text-[#0A2369]">Dr. Arco Verhoog</h2>
+                            <p className="text-lg text-[#11D279]">Urologist</p>
+                        </div>
+                    </div>
+
+                    {/* Details Section */}
+                    <div className="mt-4 text-sm text-gray-800 space-y-2">
                         <p>
-                            <strong>Name:</strong> {userDetails.consultant.name}
+                            <span className="font-semibold">Name:</span> Dr. Arco Verhoog
                         </p>
                         <p>
-                            <strong>Specialty:</strong> {userDetails.consultant.specialty}
+                            <span className="font-semibold">Email:</span> Asadujjaman101@bd.com
                         </p>
                         <p>
-                            <strong>Contact Number:</strong> {userDetails.consultant.contactNumber}
+                            <span className="font-semibold">Contact Number:</span> +0999999999999999
                         </p>
                         <p>
-                            <strong>Gender:</strong> {userDetails.consultant.gender}
+                            <span className="font-semibold">Gender:</span> Male
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-                <p>
-                    <strong>Consultation for:</strong> {userDetails.consultationDetails.consultationType}
-                </p>
-                <p>Medical questionnaire, doctor's advice, and prescription.</p>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+            <div className=" p-4 text-gray">
+                {/* Consultation Details */}
+                <div className="flex justify-between items-center pb-4">
                     <div>
-                        <p>
-                            <strong>Price:</strong> ${userDetails.consultationDetails.price}
+                        <h3 className="text-lg font-semibold text-gray-800">Consultation for man's weight problem</h3>
+                        <p className="text-sm text-gray-500">
+                            Medical questionnaire, doctor's advice and prescription.
                         </p>
                     </div>
-                    <div>
-                        <p>
-                            <strong>Discount:</strong> ${userDetails.consultationDetails.discount}
-                        </p>
+                    <div className="text-[#0A2369] font-semibold text-lg">$25.00</div>
+                </div>
+
+                {/* Discount and Total */}
+                <div className="mt-4">
+                    <div className="flex justify-end gap-20">
+                        <span>Discount -</span>
+                        <span>$0.00</span>
+                    </div>
+                    <div className="flex justify-end gap-20 text-lg font-semibold text-gray-900 mt-2">
+                        <span>Total -</span>
+                        <span className="text-[#0A2369]">$25.00</span>
                     </div>
                 </div>
-                <div className="flex justify-between items-center mt-4">
-                    <p>
-                        <strong>Total:</strong> ${userDetails.consultationDetails.total}
-                    </p>
-                    <Button type="primary" icon={<FaDownload />} size="large">
+
+                {/* Download Button */}
+                <div className="mt-6 text-right">
+                    <Button type="primary" icon={<i className="fas fa-download"></i>}>
                         Download
                     </Button>
                 </div>
