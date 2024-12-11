@@ -154,7 +154,17 @@ const MedicineService = () => {
             </div>
 
             <div>
-                <Table columns={medicationColumns} dataSource={medicationData} pagination={{ pageSize: 5 }} />
+                <Table
+                    rowSelection={{
+                        type: 'checkbox',
+                        onChange: (selectedRowKeys: any, selectedRows: any) => {
+                            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+                        },
+                    }}
+                    columns={medicationColumns}
+                    dataSource={medicationData}
+                    pagination={{ pageSize: 5 }}
+                />
             </div>
         </div>
     );
