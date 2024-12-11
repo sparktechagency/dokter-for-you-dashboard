@@ -41,6 +41,9 @@ function App() {
                             labelColor: '#636363',
                             labelFontSize: 17,
                         },
+                        Modal: {
+                            borderRadius: 0,
+                        },
                     },
                 }}
             >

@@ -14,7 +14,7 @@ import UserDetails from '../pages/dashboard/user/UserDetails';
 import PatientServices from '../pages/dashboard/patient/PatientServices';
 import ConsultationCategory from '../pages/dashboard/consultation-category/ConsultationCategory';
 import ConsultationSubcategory from '../pages/dashboard/consultation-subcategory/ConsultationSubcategory';
-import ShippingSetting from '../pages/dashboard/ShippingSetting';
+import ShippingSetting from '../pages/dashboard/shipping-management/ShippingSetting';
 import DiscountPrice from '../pages/dashboard/DiscountPrice';
 
 import UserReview from '../pages/dashboard/UserReview';
