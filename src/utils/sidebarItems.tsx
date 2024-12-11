@@ -11,7 +11,7 @@ import {
 } from 'react-icons/ai';
 import { MdOutlineCategory, MdOutlineLocalShipping, MdOutlineArticle, MdOutlineDescription } from 'react-icons/md';
 import { FiUsers, FiArrowRightCircle, FiArrowLeftCircle } from 'react-icons/fi';
-import { LuLayoutDashboard } from 'react-icons/lu';
+import { LuLayoutDashboard, LuLogOut } from 'react-icons/lu';
 
 const adminSidebarItems: TSidebarItem[] = [
     {
@@ -156,7 +156,7 @@ const adminSidebarItems: TSidebarItem[] = [
         key: 'logout',
         label: 'Log Out',
         path: 'logout',
-        icon: <AiOutlineLogout size={24} />,
+        icon: <LuLogOut size={24} />,
     },
 ];
 

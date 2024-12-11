@@ -17,7 +17,7 @@ import ShippingSetting from '../pages/dashboard/shipping-management/ShippingSett
 import DiscountPrice from '../pages/dashboard/discount/DiscountPrice';
 
 import UserReview from '../pages/dashboard/user-reviews/UserReview';
-import About from '../pages/dashboard/About';
+import About from '../pages/dashboard/about/About';
 import SetArticle from '../pages/dashboard/SetArticle';
 import TermsConditions from '../pages/dashboard/TermsConditions';
 import UserAgreement from '../pages/dashboard/UserAgreement';

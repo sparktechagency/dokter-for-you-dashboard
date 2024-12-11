@@ -94,6 +94,7 @@ const UserReviews = () => {
                             icon={<LuChevronRight size={18} />}
                             style={{
                                 height: 42,
+                                backgroundColor: record.isPublished ? 'green' : undefined,
                             }}
                             type="primary"
                         >
