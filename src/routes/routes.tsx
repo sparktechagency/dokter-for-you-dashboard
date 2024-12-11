@@ -6,7 +6,6 @@ import Login from '../pages/authentication/Login';
 import Register from '../pages/authentication/Register';
 import ErrorPage from '../pages/error/ErrorPage';
 import Categories from '../pages/dashboard/Categories';
-import Review from '../pages/dashboard/Review';
 import Campaign from '../pages/dashboard/Campaign';
 import TermsCondition from '../pages/dashboard/TermsCondition';
 import Notification from '../pages/dashboard/Notification';
@@ -17,7 +16,7 @@ import ConsultationSubcategory from '../pages/dashboard/consultation-subcategory
 import ShippingSetting from '../pages/dashboard/shipping-management/ShippingSetting';
 import DiscountPrice from '../pages/dashboard/discount/DiscountPrice';
 
-import UserReview from '../pages/dashboard/UserReview';
+import UserReview from '../pages/dashboard/user-reviews/UserReview';
 import About from '../pages/dashboard/About';
 import SetArticle from '../pages/dashboard/SetArticle';
 import TermsConditions from '../pages/dashboard/TermsConditions';
@@ -49,9 +48,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             { path: '', element: <Dashboard /> },
-            { path: 'categories', element: <Categories /> },
-            { path: 'reviews', element: <Review /> },
-            { path: 'campaign', element: <Campaign /> },
+
             { path: 'make-admin', element: <MakeAdmin /> },
             { path: 'terms', element: <TermsCondition /> },
             { path: 'notification', element: <Notification /> },
