@@ -18,7 +18,7 @@ import DiscountPrice from '../pages/dashboard/discount/DiscountPrice';
 
 import UserReview from '../pages/dashboard/user-reviews/UserReview';
 import About from '../pages/dashboard/about/About';
-import SetArticle from '../pages/dashboard/SetArticle';
+import SetArticle from '../pages/dashboard/article/ArticleManagement';
 import TermsConditions from '../pages/dashboard/TermsConditions';
 import UserAgreement from '../pages/dashboard/UserAgreement';
 import FAQ from '../pages/dashboard/FAQ';

@@ -6,50 +6,50 @@ import { IoImage } from 'react-icons/io5';
 import { CiEdit } from 'react-icons/ci';
 import { BsTrash } from 'react-icons/bs';
 
-const About: React.FC = () => {
+const ArticleManagement: React.FC = () => {
     const [form] = Form.useForm();
     const [selectedRows, setSelectedRows] = useState<any[]>([]);
     const [openModal, setOpenModal] = useState(false);
-    const [editAboutData, setEditAboutData] = useState<any>(null);
-    const [aboutData, setAboutData] = useState<any[]>([
+    const [editArticleData, setEditArticleData] = useState<any>(null);
+    const [articleData, setArticleData] = useState<any[]>([
         {
             key: '1',
-            title: 'About Us',
-            description: 'This is a description of the about us section.',
+            title: 'Article 1',
+            description: 'This is the description for article 1.',
             image: '/vite.svg',
         },
-        { key: '2', title: 'Our Mission', description: 'This is a description of our mission.', image: '/vite.svg' },
+        { key: '2', title: 'Article 2', description: 'This is the description for article 2.', image: '/vite.svg' },
     ]);
-    const [categoryImagePreview, setCategoryImagePreview] = useState<string | undefined>(undefined);
+    const [articleImagePreview, setArticleImagePreview] = useState<string | undefined>(undefined);
 
     useEffect(() => {
-        if (editAboutData) {
+        if (editArticleData) {
             form.setFieldsValue({
-                title: editAboutData.title,
-                description: editAboutData.description,
-                image: editAboutData.image,
+                title: editArticleData.title,
+                description: editArticleData.description,
+                image: editArticleData.image,
             });
-            setCategoryImagePreview(editAboutData.image);
+            setArticleImagePreview(editArticleData.image);
         } else {
             form.resetFields();
-            setCategoryImagePreview(undefined);
+            setArticleImagePreview(undefined);
         }
-    }, [editAboutData, form]);
+    }, [editArticleData, form]);
 
     const onFinish = async (values: any) => {
-        if (editAboutData) {
-            // Update existing about data
-            setAboutData((prev) =>
-                prev.map((item) => (item.key === editAboutData.key ? { ...item, ...values } : item)),
+        if (editArticleData) {
+            // Update existing article data
+            setArticleData((prev) =>
+                prev.map((item) => (item.key === editArticleData.key ? { ...item, ...values } : item)),
             );
         } else {
-            // Add new about data
-            setAboutData((prev) => [...prev, { key: `${prev.length + 1}`, ...values }]);
+            // Add new article data
+            setArticleData((prev) => [...prev, { key: `${prev.length + 1}`, ...values }]);
         }
         setOpenModal(false);
     };
 
-    const aboutForm = (
+    const articleForm = (
         <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}>
             <Form.Item label="Title" name="title">
                 <Input placeholder="Enter Title" />
@@ -63,7 +63,7 @@ const About: React.FC = () => {
                 getValueFromEvent={(e) => {
                     const file = e?.fileList?.[0]?.originFileObj;
                     if (file) {
-                        setCategoryImagePreview(URL.createObjectURL(file));
+                        setArticleImagePreview(URL.createObjectURL(file));
                     }
                     return e?.fileList?.[0]?.originFileObj;
                 }}
@@ -76,10 +76,10 @@ const About: React.FC = () => {
                         return false;
                     }}
                 >
-                    {categoryImagePreview ? (
+                    {articleImagePreview ? (
                         <img
-                            src={categoryImagePreview}
-                            alt="category preview"
+                            src={articleImagePreview}
+                            alt="article preview"
                             className="w-48 h-48 mx-auto object-cover"
                         />
                     ) : (
@@ -95,7 +95,7 @@ const About: React.FC = () => {
             <div className="flex justify-end">
                 <Form.Item>
                     <Button htmlType="submit" type="primary" size="large">
-                        {editAboutData ? 'Update About' : 'Add About'}
+                        {editArticleData ? 'Update Article' : 'Add Article'}
                     </Button>
                 </Form.Item>
             </div>
@@ -107,7 +107,7 @@ const About: React.FC = () => {
             title: 'Image',
             dataIndex: 'image',
             key: 'image',
-            render: (image: string) => <img src={image} alt="about" className="size-16 object-cover" />,
+            render: (image: string) => <img src={image} alt="article" className="size-16 object-cover" />,
         },
         {
             title: 'Title',
@@ -124,7 +124,6 @@ const About: React.FC = () => {
                 </Tooltip>
             ),
         },
-
         {
             title: 'Action',
             key: 'action',
@@ -132,7 +131,7 @@ const About: React.FC = () => {
                 <div className="flex items-center gap-3">
                     <Button
                         onClick={() => {
-                            setEditAboutData(record);
+                            setEditArticleData(record);
                             setOpenModal(true);
                         }}
                         type="text"
@@ -141,8 +140,8 @@ const About: React.FC = () => {
                     />
 
                     <Popconfirm
-                        title="Delete About"
-                        description="Are you sure to delete this about section?"
+                        title="Delete Article"
+                        description="Are you sure to delete this article?"
                         okText="Yes"
                         cancelText="No"
                     >
@@ -156,7 +155,7 @@ const About: React.FC = () => {
     return (
         <div className="">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">About Management</h1>
+                <h1 className="text-2xl font-bold">Article Management</h1>
                 <div className="flex items-center gap-3">
                     <Button type="text" icon={<BsTrash size={24} className="text-red-500" />} />
                     <Button
@@ -167,13 +166,13 @@ const About: React.FC = () => {
                         icon={<PlusOutlined />}
                         type="primary"
                     >
-                        Add About
+                        Add Article
                     </Button>
                 </div>
             </div>
             <Table
                 columns={columns}
-                dataSource={aboutData}
+                dataSource={articleData}
                 rowClassName="hover:bg-gray-100"
                 pagination={{ pageSize: 10 }}
                 rowSelection={{
@@ -190,15 +189,15 @@ const About: React.FC = () => {
                 setOpen={(open) => {
                     setOpenModal(open);
                     if (!open) {
-                        setEditAboutData(null);
-                        setCategoryImagePreview(undefined);
+                        setEditArticleData(null);
+                        setArticleImagePreview(undefined);
                     }
                 }}
-                body={aboutForm}
-                title={editAboutData ? 'Edit About' : 'Add About'}
+                body={articleForm}
+                title={editArticleData ? 'Edit Article' : 'Add Article'}
             />
         </div>
     );
 };
 
-export default About;
+export default ArticleManagement;
