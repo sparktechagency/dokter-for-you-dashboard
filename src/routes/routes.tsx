@@ -40,6 +40,7 @@ import MedicationRefundDetails from '../pages/dashboard/refund/section/Medicatio
 import MedicineService from '../pages/dashboard/medicine/MedicineService';
 import AddMedicine from '../pages/dashboard/medicine/AddMedicine';
 import EditMedication from '../pages/dashboard/medicine/EditMedicine';
+import SingleMedicineDetails from '../pages/dashboard/medicine/SingleMedicineDetails';
 
 const router = createBrowserRouter([
     {
@@ -79,6 +80,7 @@ const router = createBrowserRouter([
 
             { path: 'medicine-service/add-medicine', element: <AddMedicine /> },
             { path: 'medicine-service/edit-medicine/:id', element: <EditMedication /> },
+            { path: 'medicine-service/details-medicine/:id', element: <SingleMedicineDetails /> },
 
             { path: 'consultation-category', element: <ConsultationCategory /> },
             { path: 'consultation-subcategory', element: <ConsultationSubcategory /> },

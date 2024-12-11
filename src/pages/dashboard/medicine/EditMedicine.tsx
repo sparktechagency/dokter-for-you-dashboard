@@ -1,5 +1,6 @@
 import { Form, Input, Select, Button, Upload, InputNumber } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import BackButton from '../../../components/ui/BackButton';
 
 const EditMedication = () => {
     const data = {
@@ -41,6 +42,9 @@ const EditMedication = () => {
 
     return (
         <div className="">
+            <div>
+                <BackButton />
+            </div>
             <h2 className="text-2xl font-semibold mb-6">Edit Medication</h2>
             <Form
                 form={form}

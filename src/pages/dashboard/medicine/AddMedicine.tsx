@@ -1,11 +1,8 @@
 import { Form, Input, Select, Button, Upload, InputNumber } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { BsArrowLeft } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import BackButton from '../../../components/ui/BackButton';
 
 const AddMedication = () => {
-    const navigation = useNavigate();
-
     const handleFinish = (values: any) => {
         console.log('Form Values:', values);
     };
@@ -13,10 +10,7 @@ const AddMedication = () => {
     return (
         <div className="">
             <div>
-                <div className="flex items-center space-x-2 mb-4">
-                    <BsArrowLeft className="text-lg text-gray-700 cursor-pointer" onClick={() => navigation(-1)} />
-                    <h1 className="text-lg font-medium text-gray-800">Back to Medication List</h1>
-                </div>
+                <BackButton />
             </div>
             <h2 className="text-2xl font-semibold mb-6">Add Medication</h2>
             <Form requiredMark={false} layout="vertical" onFinish={handleFinish} className="grid grid-cols-2 gap-6">

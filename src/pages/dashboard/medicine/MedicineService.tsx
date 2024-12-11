@@ -1,5 +1,6 @@
 import { Table, Button, Tooltip, Popconfirm, Select, Input } from 'antd';
 import { BsEye, BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
+import { CiEdit } from 'react-icons/ci';
 
 const MedicineService = () => {
     // Medication columns
@@ -46,7 +47,7 @@ const MedicineService = () => {
                 <div className="flex items-center space-x-2">
                     <Tooltip title="View">
                         <Button
-                            href={`/medicine-service/details/${record.sno}`}
+                            href={`/medicine-service/details-medicine/${record.sno}`}
                             type="text"
                             shape="circle"
                             icon={<BsEye size={20} />}
@@ -55,10 +56,10 @@ const MedicineService = () => {
 
                     <Tooltip title="Edit">
                         <Button
-                            href={`/medication-trade/edit/${record.sno}`}
+                            href={`/medicine-service/edit-medicine/${record.sno}`}
                             type="text"
                             shape="circle"
-                            icon={<BsPlusLg color="#00B3CC" size={20} />}
+                            icon={<CiEdit color="#004B56" size={20} />}
                         />
                     </Tooltip>
                 </div>
@@ -91,7 +92,7 @@ const MedicineService = () => {
         <div>
             <div className="flex justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-title">Medication trade</h1>
+                    <h1 className="text-2xl font-semibold text-title">Medicine Lists</h1>
                 </div>
                 <div className="mb-4 flex items-center justify-end gap-4">
                     <Popconfirm
