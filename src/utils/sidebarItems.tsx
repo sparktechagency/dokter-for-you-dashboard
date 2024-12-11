@@ -43,9 +43,9 @@ const adminSidebarItems: TSidebarItem[] = [
         icon: <AiOutlineRollback size={24} />,
     },
     {
-        key: 'add-medicine',
+        key: 'medicine-service',
         label: 'Add Medicine',
-        path: 'add-medicine',
+        path: 'medicine-service',
         icon: <AiOutlinePlusCircle size={24} />,
     },
     {

@@ -9,13 +9,9 @@ import Categories from '../pages/dashboard/Categories';
 import Review from '../pages/dashboard/Review';
 import Campaign from '../pages/dashboard/Campaign';
 import TermsCondition from '../pages/dashboard/TermsCondition';
-
 import Notification from '../pages/dashboard/Notification';
-
 import UserDetails from '../pages/dashboard/user/UserDetails';
 import PatientServices from '../pages/dashboard/patient/PatientServices';
-
-import AddMedicine from '../pages/dashboard/AddMedicine';
 import ConsultationCategory from '../pages/dashboard/ConsultationCategory';
 import ConsultationSubcategory from '../pages/dashboard/ConsultationSubcategory';
 import ShippingSetting from '../pages/dashboard/ShippingSetting';
@@ -41,6 +37,9 @@ import RegularConsultationRefundDetails from '../pages/dashboard/refund/section/
 import VideoConsultationRefundDetails from '../pages/dashboard/refund/section/VideoConsultationRefundDetails';
 import DigitalPrescriptionRefundDetails from '../pages/dashboard/refund/section/DigitalPrescriptionRefundDetails';
 import MedicationRefundDetails from '../pages/dashboard/refund/section/MedicationRefundDetails';
+import MedicineService from '../pages/dashboard/medicine/MedicineService';
+import AddMedicine from '../pages/dashboard/medicine/AddMedicine';
+import EditMedication from '../pages/dashboard/medicine/EditMedicine';
 
 const router = createBrowserRouter([
     {
@@ -75,7 +74,11 @@ const router = createBrowserRouter([
             { path: 'digital-prescription-refund/details/:id', element: <DigitalPrescriptionRefundDetails /> },
             { path: 'medication-refund/details/:id', element: <MedicationRefundDetails /> },
 
-            { path: 'add-medicine', element: <AddMedicine /> },
+            { path: 'medicine-service', element: <MedicineService /> },
+            //Note: pages for medicine service
+
+            { path: 'medicine-service/add-medicine', element: <AddMedicine /> },
+            { path: 'medicine-service/edit-medicine/:id', element: <EditMedication /> },
 
             { path: 'consultation-category', element: <ConsultationCategory /> },
             { path: 'consultation-subcategory', element: <ConsultationSubcategory /> },

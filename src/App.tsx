@@ -7,6 +7,7 @@ function App() {
                 theme={{
                     token: {
                         colorPrimary: '#0A2369',
+                        fontFamily: 'Poppins, sans-serif',
                     },
                     components: {
                         Layout: {
@@ -26,11 +27,19 @@ function App() {
                         Input: {
                             controlHeight: 42,
                         },
+                        InputNumber: {
+                            controlHeight: 42,
+                        },
                         Select: {
                             controlHeight: 42,
                         },
                         DatePicker: {
                             controlHeight: 42,
+                        },
+                        Form: {
+                            marginLG: 10,
+                            labelColor: '#636363',
+                            labelFontSize: 17,
                         },
                     },
                 }}
