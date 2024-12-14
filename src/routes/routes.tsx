@@ -5,9 +5,7 @@ import MakeAdmin from '../pages/dashboard/MakeAdmin';
 import Login from '../pages/authentication/Login';
 import Register from '../pages/authentication/Register';
 import ErrorPage from '../pages/error/ErrorPage';
-import Categories from '../pages/dashboard/Categories';
-import Campaign from '../pages/dashboard/Campaign';
-import TermsCondition from '../pages/dashboard/TermsCondition';
+import TermsCondition from '../pages/dashboard/TermsAndCondition';
 import Notification from '../pages/dashboard/Notification';
 import UserDetails from '../pages/dashboard/user/UserDetails';
 import PatientServices from '../pages/dashboard/patient/PatientServices';
@@ -19,7 +17,6 @@ import DiscountPrice from '../pages/dashboard/discount/DiscountPrice';
 import UserReview from '../pages/dashboard/user-reviews/UserReview';
 import About from '../pages/dashboard/about/About';
 import SetArticle from '../pages/dashboard/article/ArticleManagement';
-import TermsConditions from '../pages/dashboard/TermsConditions';
 import UserAgreement from '../pages/dashboard/UserAgreement';
 import FAQ from '../pages/dashboard/FAQ';
 import DoctorsDetails from '../pages/dashboard/DoctorsDetails';
@@ -40,6 +37,7 @@ import MedicineService from '../pages/dashboard/medicine/MedicineService';
 import AddMedicine from '../pages/dashboard/medicine/AddMedicine';
 import EditMedication from '../pages/dashboard/medicine/EditMedicine';
 import SingleMedicineDetails from '../pages/dashboard/medicine/SingleMedicineDetails';
+import TermsAndCondition from '../pages/dashboard/TermsAndCondition';
 
 const router = createBrowserRouter([
     {
@@ -87,7 +85,7 @@ const router = createBrowserRouter([
             { path: 'user-review', element: <UserReview /> },
             { path: 'about', element: <About /> },
             { path: 'set-article', element: <SetArticle /> },
-            { path: 'terms-conditions', element: <TermsConditions /> },
+            { path: 'terms-conditions', element: <TermsAndCondition /> },
             { path: 'user-agreement', element: <UserAgreement /> },
             { path: 'faq', element: <FAQ /> },
 

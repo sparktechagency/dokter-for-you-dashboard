@@ -2,7 +2,7 @@ import { useState } from 'react';
 import JoditEditor from 'jodit-react';
 import { Button } from 'antd';
 
-const UserAgreement = () => {
+const TermsAndCondition = () => {
     const [content, setContent] = useState('');
 
     const config = {
@@ -17,7 +17,7 @@ const UserAgreement = () => {
         <div className="bg-white px-4 py-2 rounded-lg pb-10">
             <div className="flex items-center justify-between mb-4">
                 <div>
-                    <h3 className="text-2xl text-primary font-semibold">User Agreement</h3>
+                    <h3 className="text-2xl text-primary font-semibold">Terms and Conditions</h3>
                 </div>
             </div>
             <div>
@@ -37,4 +37,4 @@ const UserAgreement = () => {
     );
 };
 
-export default UserAgreement;
+export default TermsAndCondition;

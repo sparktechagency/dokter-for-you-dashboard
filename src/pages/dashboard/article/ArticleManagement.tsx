@@ -17,8 +17,17 @@ const ArticleManagement: React.FC = () => {
             title: 'Article 1',
             description: 'This is the description for article 1.',
             image: '/vite.svg',
+            createdAt: '2023-08-01',
         },
-        { key: '2', title: 'Article 2', description: 'This is the description for article 2.', image: '/vite.svg' },
+        {
+            key: '2',
+            title: 'Article 2',
+            description: 'This is the description for article 2.',
+            image: '/vite.svg',
+
+            createdAt: '2023-08-01',
+        },
+        {},
     ]);
     const [articleImagePreview, setArticleImagePreview] = useState<string | undefined>(undefined);
 
@@ -113,6 +122,11 @@ const ArticleManagement: React.FC = () => {
             title: 'Title',
             dataIndex: 'title',
             key: 'title',
+        },
+        {
+            title: 'Date    ',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
         },
         {
             title: 'Description',
