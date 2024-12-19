@@ -153,9 +153,9 @@ const adminSidebarItems: TSidebarItem[] = [
         ],
     },
     {
-        key: 'logout',
+        key: 'login',
         label: 'Log Out',
-        path: 'logout',
+        path: 'login',
         icon: <LuLogOut size={24} />,
     },
 ];

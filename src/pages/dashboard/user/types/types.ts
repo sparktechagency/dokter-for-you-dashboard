@@ -15,5 +15,23 @@ export interface UserDetailsProps {
     address: string;
     postcode: string;
     city: string;
-    country: string;
+    country: string; 
+  
+} 
+export interface doctorDetails {
+    name: string;
+    email: string;
+    contactNumber: string;
+    gender: string;
+    address: string;
+    type: string;
+}  
+
+export interface  pharmacy{
+    name: string;
+    email: string;
+    contactNumber: string;
+    address: string;
 }
+
+

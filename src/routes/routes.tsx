@@ -38,6 +38,7 @@ import AddMedicine from '../pages/dashboard/medicine/AddMedicine';
 import EditMedication from '../pages/dashboard/medicine/EditMedicine';
 import SingleMedicineDetails from '../pages/dashboard/medicine/SingleMedicineDetails';
 import TermsAndCondition from '../pages/dashboard/TermsAndCondition';
+import AdminProfile from '../pages/dashboard/profile/AdminProfile';
 
 const router = createBrowserRouter([
     {
@@ -92,6 +93,7 @@ const router = createBrowserRouter([
             { path: 'doctors-details', element: <DoctorsDetails /> },
             { path: 'pharmacy-details', element: <PharmacyDetails /> },
             { path: 'admin-details', element: <AdminDetails /> },
+            { path: 'profile', element: <AdminProfile /> },
         ],
     },
     { path: '/login', element: <Login /> },
