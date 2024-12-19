@@ -1,5 +1,4 @@
-import { Form, Input, Button, Checkbox } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { Form, Input, Checkbox } from 'antd';
 
 const Login = () => {
     const onFinish = (values: any) => {
@@ -7,55 +6,94 @@ const Login = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="w-full max-w-md bg-white rounded-lg p-8 shadow-lg">
-                <h2 className="text-center text-2xl font-semibold mb-2">Login to Account</h2>
-                <p className="text-center text-gray-500 mb-6">Please enter your email and password to continue</p>
+        <div className="flex justify-center items-center min-h-screen bg-gray-100"   style={{
+            backgroundImage: `url('/bgImg.svg')`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            zIndex: 1,
+        }}>
+              <div  className='bg-white/80 drop-shadow-md  rounded-lg p-10 w-[600px]'
+    >
+        <div className=" mb-6">
+          <h1 className="text-[25px] font-semibold mb-2">Log in to your account</h1>
+          <p className="text-[#11D279]"> Please enter your email and password to continue</p>
+        </div>
+        <Form
+          onFinish={onFinish}
+          layout="vertical"
+        > 
+        <Form.Item name="email"  label={<p> Email</p>}  > 
 
-                <Form name="login" initialValues={{ remember: true }} onFinish={onFinish} layout="vertical">
-                    {/* Email Address */}
-                    <Form.Item
-                        label="Email address:"
-                        name="email"
-                        rules={[{ required: true, message: 'Please input your email!' }]}
-                    >
-                        <Input
-                            placeholder="pasqual@gmail.com"
-                            className="rounded-lg bg-gray-100 text-gray-700"
-                            size="large"
-                        />
-                    </Form.Item>
+          <Input  placeholder='Enter your email' 
+          style={{ 
+            width:"100%" ,
+                  height: 45,
+                  border: "1px solid #d9d9d9",
+                  outline: "none",
+                  boxShadow: "none"
+                }} />
+        </Form.Item>
 
-                    {/* Password */}
-                    <Form.Item
-                        label="Password"
-                        name="password"
-                        rules={[{ required: true, message: 'Please input your password!' }]}
-                    >
-                        <Input.Password
-                            placeholder="******"
-                            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                            className="rounded-lg bg-gray-100"
-                            size="large"
-                        />
-                    </Form.Item>
 
-                    {/* Remember Me and Forgot Password */}
-                    <div className="flex justify-between items-center mb-4">
-                        <Form.Item name="remember" valuePropName="checked" noStyle>
-                            <Checkbox>Remember Password</Checkbox>
-                        </Form.Item>
-                        <a className="text-blue-500">Forget Password?</a>
-                    </div>
+            <Form.Item
+              name="password"
+              label={<p>Password</p>}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Password!",
+                },
+              ]}
+            >
+              <Input.Password
+                type="password"
+                placeholder="Enter your password"
+                style={{
+                  height: 45,
+                  border: "1px solid #d9d9d9",
+                  outline: "none",
+                  boxShadow: "none"
+                }}
+              />
+            </Form.Item>
 
-                    {/* Sign In Button */}
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" className="w-full rounded-lg" size="large">
-                            Sign In
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </div>
+            <div className="flex items-center justify-between">
+              <Form.Item style={{marginBottom: 0}} name="remember" valuePropName="checked">
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+
+              <a
+                className="login-form-forgot text-primary font-semibold"
+                href="/forgot-password"
+              >
+                Forgot password
+              </a>
+          </div>
+
+          <Form.Item style={{marginBottom: 0}}>
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                height: 45,
+                color: "white",
+                fontWeight: "400px",
+                fontSize: "18px",
+           
+                marginTop: 20
+              }}
+              className="flex items-center justify-center bg-primary rounded-lg"
+            >
+              {/* {isLoading? < Spinner/> : "Sign in"} */} Sign in
+            </button>
+          </Form.Item>
+
+          
+        </Form> 
+
+   
+    </div>
         </div>
     );
 };

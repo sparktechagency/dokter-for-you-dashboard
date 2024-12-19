@@ -39,6 +39,9 @@ import EditMedication from '../pages/dashboard/medicine/EditMedicine';
 import SingleMedicineDetails from '../pages/dashboard/medicine/SingleMedicineDetails';
 import TermsAndCondition from '../pages/dashboard/TermsAndCondition';
 import AdminProfile from '../pages/dashboard/profile/AdminProfile';
+import ForgetPassword from '../pages/authentication/ForgetPassword';
+import VerifyOtp from '../pages/authentication/VerifyOtp';
+import ResetPassword from '../pages/authentication/ResetPassword';
 
 const router = createBrowserRouter([
     {
@@ -98,6 +101,9 @@ const router = createBrowserRouter([
     },
     { path: '/login', element: <Login /> },
     { path: '/register', element: <Register /> },
+    { path: '/forgot-password', element: <ForgetPassword /> },
+    { path: '/verify-otp', element: <VerifyOtp /> },
+    { path: '/reset-password', element: <ResetPassword /> },
 ]);
 
 export default router;
