@@ -42,6 +42,11 @@ import AdminProfile from '../pages/dashboard/profile/AdminProfile';
 import ForgetPassword from '../pages/authentication/ForgetPassword';
 import VerifyOtp from '../pages/authentication/VerifyOtp';
 import ResetPassword from '../pages/authentication/ResetPassword';
+import PharmacyHome from '../pages/PharmacyDashboard/PharmacyHome';
+import PharmacyMedicationTrade from '../pages/PharmacyDashboard/PharmacyMedicationTrade';
+import PharmacyAddMedicine from '../pages/PharmacyDashboard/PharmacyAddMedicine';
+import PharmacyPatientServices from '../pages/PharmacyDashboard/PharmacyPatientServices';
+import PharmacyPatientServicesDetails from '../components/ui/PharmacyDashboard/PharmacyPatientServices/PharmacyPatientServicesDetails';
 
 const router = createBrowserRouter([
     {
@@ -96,7 +101,15 @@ const router = createBrowserRouter([
             { path: 'doctors-details', element: <DoctorsDetails /> },
             { path: 'pharmacy-details', element: <PharmacyDetails /> },
             { path: 'admin-details', element: <AdminDetails /> },
-            { path: 'profile', element: <AdminProfile /> },
+            { path: 'profile', element: <AdminProfile /> }, 
+
+            // **** Pharmacy Dashboard ****  
+            { path:"pharmacy-dashboard" , element:<PharmacyHome />} , 
+            {path:"pharmacy-patient-services" , element:<PharmacyPatientServices />}, 
+            {path:"pharmacy-patient-services/details/:id" , element:<PharmacyPatientServicesDetails/>},
+            {path:"pharmacy-medication-trade" , element:<PharmacyMedicationTrade/>} ,
+            {path:"pharmacy-add-medicine" , element:<PharmacyAddMedicine/>},
+            // {path:"" , element:""} 
         ],
     },
     { path: '/login', element: <Login /> },

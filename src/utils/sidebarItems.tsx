@@ -5,7 +5,6 @@ import {
     AiOutlinePlusCircle,
     AiOutlineSetting,
     AiOutlineUnorderedList,
-    AiOutlineLogout,
     AiOutlineSearch,
     AiOutlineStar,
 } from 'react-icons/ai';
@@ -18,43 +17,50 @@ const adminSidebarItems: TSidebarItem[] = [
         key: 'dashboard',
         label: 'Dashboard',
         path: '',
-        icon: <LuLayoutDashboard size={24} />,
+        icon: <LuLayoutDashboard size={24} />, 
+        roles: ['admin'], 
     },
     {
         key: 'user-details',
         label: 'User Details',
         path: 'user-details',
-        icon: <AiOutlineUser size={24} />,
+        icon: <AiOutlineUser size={24} />, 
+        roles: ['admin'], 
     },
     {
         key: 'patient-services',
         label: 'Patient Services',
         path: 'patient-services',
-        icon: <AiOutlineMedicineBox size={24} />,
+        icon: <AiOutlineMedicineBox size={24} />, 
+        roles: ['admin'], 
     },
     {
         key: 'medication-trade',
         label: 'Medication Trade',
         path: 'medication-trade',
         icon: <AiOutlineMedicineBox size={24} />,
+        roles: ['admin'], 
     },
     {
         key: 'refund',
         label: 'Refund',
         path: 'refund',
         icon: <AiOutlineUnorderedList size={24} />,
+        roles: ['admin'], 
     },
     {
         key: 'medicine-service',
         label: 'Add Medicine',
         path: 'medicine-service',
         icon: <AiOutlinePlusCircle size={24} />,
+        roles: ['admin'], 
     },
     {
         key: 'service-setting',
         label: 'Service Setting',
         path: 'service-setting',
         icon: <AiOutlineSetting size={24} />,
+        roles: ['admin'], 
         children: [
             {
                 key: 'consultation-category',
@@ -87,6 +93,7 @@ const adminSidebarItems: TSidebarItem[] = [
         label: 'Interface Setting',
         path: 'interface-setting',
         icon: <AiOutlineSetting size={24} />,
+        roles: ['admin'], 
         children: [
             {
                 key: 'user-review',
@@ -131,6 +138,7 @@ const adminSidebarItems: TSidebarItem[] = [
         label: 'Service Provider',
         path: 'service-provider',
         icon: <FiUsers size={24} />,
+        roles: ['admin'], 
         children: [
             {
                 key: 'doctors-details',
@@ -151,12 +159,38 @@ const adminSidebarItems: TSidebarItem[] = [
                 icon: <AiOutlineUser size={24} />,
             },
         ],
+    }, 
+    //pharmacy
+    {
+        key:"pharmacy-dashboard" ,
+        label:"Pharmacy Dashboard" ,
+        path:"pharmacy-dashboard",
+        roles: ['pharmacy'], 
+    },
+    {
+        key:"patient-services" ,
+        label:"Patient Services" ,
+        path:"pharmacy-patient-services",
+        roles: ['pharmacy'], 
+    },
+    {
+        key:"medication-trade" ,
+        label:"Medication trade" ,
+        path:"pharmacy-medication-trade",
+        roles: ['pharmacy'], 
+    },
+    {
+        key:"add-medicine" ,
+        label:"Add Medicine" ,
+        path:"pharmacy-add-medicine",
+        roles: ['pharmacy'], 
     },
     {
         key: 'login',
         label: 'Log Out',
         path: 'login',
-        icon: <LuLogOut size={24} />,
+        icon: <LuLogOut size={24} />, 
+        roles: ['admin', 'doctor', 'pharmacy'], 
     },
 ];
 

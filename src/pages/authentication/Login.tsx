@@ -1,8 +1,12 @@
-import { Form, Input, Checkbox } from 'antd';
+import { Form, Input, Checkbox, Select } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = () => { 
+  const navigate = useNavigate()
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        console.log('Success:', values); 
+      localStorage.setItem("role", values?.role) 
+      navigate("/profile")
     };
 
     return (
@@ -33,6 +37,22 @@ const Login = () => {
                   outline: "none",
                   boxShadow: "none"
                 }} />
+        </Form.Item> 
+
+        <Form.Item name="role" label={<p>User Role</p>}> 
+        <Select
+                        placeholder="user role"
+                        style={{   width:"100%" ,
+                          height: 45,
+                          // border: "1px solid #d9d9d9", 
+                          outline: "none",
+                          boxShadow: "none"  }}
+                        options={[
+                            { value: 'admin', label: 'Admin' },
+                            { value: 'pharmacy', label: 'Pharmacy' },
+                            { value: 'doctor', label: 'Doctor' },
+                        ]}
+                    />
         </Form.Item>
 
 

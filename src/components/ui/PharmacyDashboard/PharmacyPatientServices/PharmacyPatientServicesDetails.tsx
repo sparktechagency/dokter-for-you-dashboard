@@ -1,9 +1,8 @@
 import { Button } from 'antd';
 import { BsArrowLeft } from 'react-icons/bs';
-import { FaDownload } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const DigitalPrescriptionDetails = () => {
+const PharmacyPatientServicesDetails = () => { 
     const navigate = useNavigate();
     const handleBack = () => {
         navigate(-1);
@@ -32,14 +31,19 @@ const DigitalPrescriptionDetails = () => {
 
     const detailsSection = (
         <div className="bg-[#E7FBF2] p-6  flex justify-between items-center mb-4">
-            <div className="text-gray0-80">
-                <p className="text-lg font-semibold">S No. #2164564615</p>
-                <p className="text-md">Man problem/Erectile dysfunction</p>
-                <p className="text-md">1/1/2025, 5:30 pm</p>
+            <div className="text-gray-600  flex flex-col gap-1  ">
+                <p className="text-[16px] ">S No. #2164564615</p>
+                <p className="text-[16px]">Man problem/Erectile dysfunction</p>
+                <p className="text-[16px]">1/1/2025, 5:30 pm</p> 
+              
             </div>
             <div className="text-center ">
-                <p className="text-lg font-semibold">Consultation Report</p>
+                <p className="text-lg  font-normal text-[#0A2369] pb-1">Consultation Report</p>
                 <p className="text-sm text-secondary">Appointment date: 22 nov, 2024 . 08:30am</p>
+            </div>
+            <div className="text-center ">
+                <p className="text-lg font-normal text-[#0A2369] pb-1">Price</p>
+                <p className="text-sm text-secondary">220$</p>
             </div>
             <div>
       
@@ -51,7 +55,7 @@ const DigitalPrescriptionDetails = () => {
         <div className="">
             <div className="bg-[#E8EEFE] p-6 text-gray ">
                 <h1 className="text-xl font-semibold text-[#222222] my-3">Patient:</h1>
-                <div className="flex h-full pb-5 justify-evenly items-center">
+                <div className="flex h-full pb-5 justify-start gap-14 items-center">
                     <div className="flex items-center space-x-4">
                         {/* Profile Picture */}
 
@@ -90,48 +94,13 @@ const DigitalPrescriptionDetails = () => {
             </div>
         </div>
     );
-
-    const consultationDetailsSection = (
-        <div className=" p-4 text-gray">
-            {/* Consultation Details */}
-            <div className="flex justify-between items-center pb-4">
-                <div>
-                    <h3 className="text-lg font-semibold text-gray-800">Consultation for man's weight problem</h3>
-                    <p className="text-sm text-gray-500">Medical questionnaire, doctor's advice and prescription.</p>
-                </div>
-                <div className="text-[#0A2369] font-semibold text-lg">$25.00</div>
-            </div>
-
-            {/* Discount and Total */}
-            <div className="mt-4">
-                <div className="flex justify-end gap-20">
-                    <span>Discount -</span>
-                    <span>$0.00</span>
-                </div>
-                <hr className="h-0.5 bg-gray" />
-                <div className="flex justify-end gap-20 text-lg font-semibold text-gray-900 mt-2">
-                    <span>Total -</span>
-                    <span className="text-[#0A2369]">$25.00</span>
-                </div>
-            </div>
-
-            {/* Download Button */}
-            <div className="mt-6 text-right">
-                <Button style={{ height: 42 }} type="primary" icon={<FaDownload size={20} />}>
-                    Download
-                </Button>
-            </div>
-        </div>
-    );
-
     return (
-        <div className="bg-white p-3">
-            {topSection}
+        <div className=' bg-white p-3'>
+              {topSection}
             {detailsSection}
             {patientAndConsultantSection}
-            {consultationDetailsSection}
         </div>
     );
 };
 
-export default DigitalPrescriptionDetails;
+export default PharmacyPatientServicesDetails;

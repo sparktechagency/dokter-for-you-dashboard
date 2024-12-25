@@ -2,9 +2,21 @@ import { ConfigProvider, Layout, Menu } from 'antd';
 import { sidebarItemsGenerator } from '../../utils/generateSidebarItems';
 import { Link } from 'react-router-dom';
 import adminSidebarItems from '../../utils/sidebarItems';
+const { Sider } = Layout; 
 
-const { Sider } = Layout;
-const Sidebar = () => {
+const Sidebar = () => { 
+    const userRole = localStorage.getItem("role"); 
+
+    const filteredSidebarItems = adminSidebarItems
+        .filter((item) => 
+            !item.roles || (userRole && item.roles.includes(userRole))
+        )
+        .map((item) => ({
+            ...item,
+            children: item.children?.filter((child) => 
+                !child.roles || (userRole && child.roles.includes(userRole))
+            ),
+        }));
     return (
         <ConfigProvider
             theme={{
@@ -28,13 +40,6 @@ const Sidebar = () => {
                 theme="light"
                 breakpoint="lg"
                 collapsedWidth="0"
-
-                // onBreakpoint={(broken) => {
-                //   // console.log(broken);
-                // }}
-                // onCollapse={(collapsed, type) => {
-                //   console.log(collapsed, type);
-                // }}
             >
                 {/* logo of the website */}
                 <Link to="/">
@@ -51,7 +56,7 @@ const Sidebar = () => {
                     theme="light"
                     mode="inline"
                     defaultSelectedKeys={['dashboard']}
-                    items={sidebarItemsGenerator(adminSidebarItems)}
+                    items={sidebarItemsGenerator(filteredSidebarItems)}
                 />
             </Sider>
         </ConfigProvider>
