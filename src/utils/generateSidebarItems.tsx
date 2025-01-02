@@ -7,7 +7,7 @@ export type TSidebarItem = {
     label: ReactNode;
     path?: string;
     icon?: ReactNode;
-    children?: TSidebarItem[]; 
+    children?: TSidebarItem[];
     roles?: string[];
 };
 

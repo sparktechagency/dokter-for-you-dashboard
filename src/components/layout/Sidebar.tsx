@@ -2,20 +2,16 @@ import { ConfigProvider, Layout, Menu } from 'antd';
 import { sidebarItemsGenerator } from '../../utils/generateSidebarItems';
 import { Link } from 'react-router-dom';
 import adminSidebarItems from '../../utils/sidebarItems';
-const { Sider } = Layout; 
+const { Sider } = Layout;
 
-const Sidebar = () => { 
-    const userRole = localStorage.getItem("role"); 
+const Sidebar = () => {
+    const userRole = localStorage.getItem('role');
 
     const filteredSidebarItems = adminSidebarItems
-        .filter((item) => 
-            !item.roles || (userRole && item.roles.includes(userRole))
-        )
+        .filter((item) => !item.roles || (userRole && item.roles.includes(userRole)))
         .map((item) => ({
             ...item,
-            children: item.children?.filter((child) => 
-                !child.roles || (userRole && child.roles.includes(userRole))
-            ),
+            children: item.children?.filter((child) => !child.roles || (userRole && child.roles.includes(userRole))),
         }));
     return (
         <ConfigProvider
@@ -35,12 +31,7 @@ const Sidebar = () => {
                 },
             }}
         >
-            <Sider
-                width={250}
-                theme="light"
-                breakpoint="lg"
-                collapsedWidth="0"
-            >
+            <Sider width={250} theme="light" breakpoint="lg" collapsedWidth="0">
                 {/* logo of the website */}
                 <Link to="/">
                     <img src="/logo.svg" className="w-[180px] object-cover m-5" alt="" />

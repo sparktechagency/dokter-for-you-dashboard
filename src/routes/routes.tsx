@@ -101,15 +101,15 @@ const router = createBrowserRouter([
             { path: 'doctors-details', element: <DoctorsDetails /> },
             { path: 'pharmacy-details', element: <PharmacyDetails /> },
             { path: 'admin-details', element: <AdminDetails /> },
-            { path: 'profile', element: <AdminProfile /> }, 
+            { path: 'profile', element: <AdminProfile /> },
 
-            // **** Pharmacy Dashboard ****  
-            { path:"pharmacy-dashboard" , element:<PharmacyHome />} , 
-            {path:"pharmacy-patient-services" , element:<PharmacyPatientServices />}, 
-            {path:"pharmacy-patient-services/details/:id" , element:<PharmacyPatientServicesDetails/>},
-            {path:"pharmacy-medication-trade" , element:<PharmacyMedicationTrade/>} ,
-            {path:"pharmacy-add-medicine" , element:<PharmacyAddMedicine/>},
-            // {path:"" , element:""} 
+            // **** Pharmacy Dashboard ****
+            { path: 'pharmacy-dashboard', element: <PharmacyHome /> },
+            { path: 'pharmacy-patient-services', element: <PharmacyPatientServices /> },
+            { path: 'pharmacy-patient-services/details/:id', element: <PharmacyPatientServicesDetails /> },
+            { path: 'pharmacy-medication-trade', element: <PharmacyMedicationTrade /> },
+            { path: 'pharmacy-add-medicine', element: <PharmacyAddMedicine /> },
+            // {path:"" , element:""}
         ],
     },
     { path: '/login', element: <Login /> },
