@@ -47,6 +47,11 @@ import PharmacyMedicationTrade from '../pages/PharmacyDashboard/PharmacyMedicati
 import PharmacyAddMedicine from '../pages/PharmacyDashboard/PharmacyAddMedicine';
 import PharmacyPatientServices from '../pages/PharmacyDashboard/PharmacyPatientServices';
 import PharmacyPatientServicesDetails from '../components/ui/PharmacyDashboard/PharmacyPatientServices/PharmacyPatientServicesDetails';
+import RejectPrescriptionPage from '../components/ui/PharmacyDashboard/PharmacyPatientServices/RejectPrescriptionPage';
+import PharmacyMedicationDetails from '../pages/PharmacyDashboard/MedicationDetails/PharmacyMedicationDetails';
+import AddPharmacyMedicine from '../pages/PharmacyDashboard/MedicineManagement/AddPharmacyMedicine';
+import ViewSinglePharmacyMedicine from '../pages/PharmacyDashboard/MedicineManagement/ViewSinglePharmacyMedicine';
+import EditSinglePharmacyMedicine from '../pages/PharmacyDashboard/MedicineManagement/EditSinglePharmacyMedicine';
 
 const router = createBrowserRouter([
     {
@@ -108,8 +113,15 @@ const router = createBrowserRouter([
             { path: 'pharmacy-patient-services', element: <PharmacyPatientServices /> },
             { path: 'pharmacy-patient-services/details/:id', element: <PharmacyPatientServicesDetails /> },
             { path: 'pharmacy-medication-trade', element: <PharmacyMedicationTrade /> },
+            { path: 'pharmacy-medication-trade/medication-details/:id', element: <PharmacyMedicationDetails /> },
             { path: 'pharmacy-add-medicine', element: <PharmacyAddMedicine /> },
-            // {path:"" , element:""}
+            {
+                path: 'pharmacy-patient-services/details/:id/reject-prescription',
+                element: <RejectPrescriptionPage />,
+            },
+            { path: 'add-new-pharmacy-medicine', element: <AddPharmacyMedicine /> },
+            { path: 'Update-pharmacy-medicine/:id', element: <EditSinglePharmacyMedicine /> },
+            { path: 'view-single-pharmacy-medicine/:id', element: <ViewSinglePharmacyMedicine /> },
         ],
     },
     { path: '/login', element: <Login /> },
