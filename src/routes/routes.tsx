@@ -53,6 +53,12 @@ import ViewSinglePharmacyMedicine from '../pages/PharmacyDashboard/MedicineManag
 import EditSinglePharmacyMedicine from '../pages/PharmacyDashboard/MedicineManagement/EditSinglePharmacyMedicine';
 import DoctorDashboard from '../components/ui/DoctorDashboard/DoctorDashboardHome/DoctorDashboard';
 import DoctorPatientServices from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorPatientServices';
+import DoctorPatientServicesDetails from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorPatientServicesDetails';
+import DoctorPatientServicesRejectPrescription from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorPatientServicesRejectPrescription';
+import DoctorPatientServicesConfirmPrescription from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorPatientServicesConfirmPrescription';
+import DoctorVideoConsultationDetails from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorVideoConsultationDetails';
+import DoctorConfirmVideoConsultation from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorConfirmVideoConsultation';
+import DoctorDigitalPrescriptionDetails from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorDigitalPrescriptionDetails';
 
 const router = createBrowserRouter([
     {
@@ -61,11 +67,9 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             { path: '', element: <Dashboard /> },
-
             { path: 'make-admin', element: <MakeAdmin /> },
             { path: 'terms', element: <TermsCondition /> },
             { path: 'notification', element: <Notification /> },
-
             { path: 'user-details', element: <UserDetails /> },
             { path: 'patient-services', element: <PatientServices /> },
 
@@ -127,6 +131,21 @@ const router = createBrowserRouter([
             // **** Doctor Dashboard ****
             { path: 'doctor-dashboard', element: <DoctorDashboard /> },
             { path: 'doctor-patient-services-list', element: <DoctorPatientServices /> },
+            { path: 'doctor-patient-services/details/:id', element: <DoctorPatientServicesDetails /> },
+            { path: 'doctor-digital-prescription/details/:id', element: <DoctorDigitalPrescriptionDetails /> },
+            { path: 'doctor-video-consultation/details/:id', element: <DoctorVideoConsultationDetails /> },
+            {
+                path: 'doctor-patient-services/details/:id/reject-prescription',
+                element: <DoctorPatientServicesRejectPrescription />,
+            },
+            {
+                path: 'doctor-patient-services/details/:id/confirm-prescription',
+                element: <DoctorPatientServicesConfirmPrescription />,
+            },
+            {
+                path: '/doctor-video-consultation/details/:id/confirm-prescription',
+                element: <DoctorConfirmVideoConsultation />,
+            },
         ],
     },
     { path: '/login', element: <Login /> },

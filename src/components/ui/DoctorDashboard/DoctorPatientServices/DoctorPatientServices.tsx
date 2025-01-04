@@ -1,6 +1,5 @@
-import { Table, Badge, Button, Tooltip, Popconfirm, Select, DatePicker, Input, Tabs } from 'antd';
+import { Table, Badge, Button, Tooltip, Select, DatePicker, Input, Tabs } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
-import { LiaHandPointRightSolid } from 'react-icons/lia';
 import { useState } from 'react';
 
 export const data = [
@@ -90,7 +89,7 @@ const DoctorPatientServices = () => {
                 <div className="flex items-center space-x-2">
                     <Tooltip title="Details">
                         <Button
-                            href="/regular-consultation/details/2222"
+                            href="/doctor-patient-services/details/2222"
                             type="text"
                             shape="circle"
                             icon={<BsEye size={20} />}
@@ -166,7 +165,7 @@ const DoctorPatientServices = () => {
                 <div className="flex items-center space-x-2">
                     <Tooltip title="Details">
                         <Button
-                            href="/video-consultation/details/2222"
+                            href="/doctor-video-consultation/details/2222/"
                             type="text"
                             shape="circle"
                             icon={<BsEye size={20} />}
@@ -233,7 +232,7 @@ const DoctorPatientServices = () => {
                 <div className="flex items-center space-x-2">
                     <Tooltip title="Details">
                         <Button
-                            href="/digital-prescription/details/2222"
+                            href="/doctor-digital-prescription/details/2222"
                             type="text"
                             shape="circle"
                             icon={<BsEye size={20} />}
