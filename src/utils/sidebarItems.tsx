@@ -199,7 +199,7 @@ const adminSidebarItems: TSidebarItem[] = [
         roles: ['doctor'],
     },
     {
-        key: 'my-transaction',
+        key: 'my-transaction-doctor',
         label: 'My Transaction',
         path: 'doctor-my-transaction',
         roles: ['doctor'],

@@ -59,6 +59,7 @@ import DoctorPatientServicesConfirmPrescription from '../components/ui/DoctorDas
 import DoctorVideoConsultationDetails from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorVideoConsultationDetails';
 import DoctorConfirmVideoConsultation from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorConfirmVideoConsultation';
 import DoctorDigitalPrescriptionDetails from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorDigitalPrescriptionDetails';
+import DoctorMyTransaction from '../components/ui/DoctorDashboard/MyTransactions/DoctorMyTransaction';
 
 const router = createBrowserRouter([
     {
@@ -146,6 +147,7 @@ const router = createBrowserRouter([
                 path: '/doctor-video-consultation/details/:id/confirm-prescription',
                 element: <DoctorConfirmVideoConsultation />,
             },
+            { path: 'doctor-my-transaction', element: <DoctorMyTransaction /> },
         ],
     },
     { path: '/login', element: <Login /> },
