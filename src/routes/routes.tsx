@@ -13,7 +13,6 @@ import ConsultationCategory from '../pages/dashboard/consultation-category/Consu
 import ConsultationSubcategory from '../pages/dashboard/consultation-subcategory/ConsultationSubcategory';
 import ShippingSetting from '../pages/dashboard/shipping-management/ShippingSetting';
 import DiscountPrice from '../pages/dashboard/discount/DiscountPrice';
-
 import UserReview from '../pages/dashboard/user-reviews/UserReview';
 import About from '../pages/dashboard/about/About';
 import SetArticle from '../pages/dashboard/article/ArticleManagement';
@@ -52,6 +51,8 @@ import PharmacyMedicationDetails from '../pages/PharmacyDashboard/MedicationDeta
 import AddPharmacyMedicine from '../pages/PharmacyDashboard/MedicineManagement/AddPharmacyMedicine';
 import ViewSinglePharmacyMedicine from '../pages/PharmacyDashboard/MedicineManagement/ViewSinglePharmacyMedicine';
 import EditSinglePharmacyMedicine from '../pages/PharmacyDashboard/MedicineManagement/EditSinglePharmacyMedicine';
+import DoctorDashboard from '../components/ui/DoctorDashboard/DoctorDashboardHome/DoctorDashboard';
+import DoctorPatientServices from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorPatientServices';
 
 const router = createBrowserRouter([
     {
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
             { path: 'add-new-pharmacy-medicine', element: <AddPharmacyMedicine /> },
             { path: 'Update-pharmacy-medicine/:id', element: <EditSinglePharmacyMedicine /> },
             { path: 'view-single-pharmacy-medicine/:id', element: <ViewSinglePharmacyMedicine /> },
+
+            // **** Doctor Dashboard ****
+            { path: 'doctor-dashboard', element: <DoctorDashboard /> },
+            { path: 'doctor-patient-services-list', element: <DoctorPatientServices /> },
         ],
     },
     { path: '/login', element: <Login /> },

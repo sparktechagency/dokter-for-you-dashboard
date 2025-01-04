@@ -185,6 +185,25 @@ const adminSidebarItems: TSidebarItem[] = [
         path: 'pharmacy-add-medicine',
         roles: ['pharmacy'],
     },
+    //doctor
+    {
+        key: 'doctor-dashboard',
+        label: 'Dashboard',
+        path: 'doctor-dashboard',
+        roles: ['doctor'],
+    },
+    {
+        key: 'doctor-patient-services-list',
+        label: 'Patient Services',
+        path: 'doctor-patient-services-list',
+        roles: ['doctor'],
+    },
+    {
+        key: 'my-transaction',
+        label: 'My Transaction',
+        path: 'doctor-my-transaction',
+        roles: ['doctor'],
+    },
     {
         key: 'login',
         label: 'Log Out',
