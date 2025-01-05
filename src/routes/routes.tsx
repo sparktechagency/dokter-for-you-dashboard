@@ -67,7 +67,7 @@ const router = createBrowserRouter([
         element: <App />,
         errorElement: <ErrorPage />,
         children: [
-            { path: '', element: <Dashboard /> },
+            { path: 'admin-dashboard', element: <Dashboard /> },
             { path: 'make-admin', element: <MakeAdmin /> },
             { path: 'terms', element: <TermsCondition /> },
             { path: 'notification', element: <Notification /> },

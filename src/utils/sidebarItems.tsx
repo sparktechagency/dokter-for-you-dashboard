@@ -16,7 +16,7 @@ const adminSidebarItems: TSidebarItem[] = [
     {
         key: 'dashboard',
         label: 'Dashboard',
-        path: '',
+        path: 'admin-dashboard',
         icon: <LuLayoutDashboard size={24} />,
         roles: ['admin'],
     },

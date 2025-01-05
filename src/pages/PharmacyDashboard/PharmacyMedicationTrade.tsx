@@ -107,7 +107,7 @@ const PharmacyMedicationTrade = () => {
         <div>
             <div className="flex justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-title">Patient Services</h1>
+                    <h1 className="text-2xl font-semibold text-title">Medication Trade</h1>
                 </div>
                 <div className="mb-4 flex items-center justify-end gap-4">
                     <Input
