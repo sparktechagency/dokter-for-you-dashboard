@@ -17,6 +17,17 @@ const UserDetails: React.FC = () => {
     if (isFetching) return <div>Loading...</div>;
     const userData = users?.data;
 
+    const [searchQuery, setSearchQuery] = useState<string>('');
+
+    // Filtered user data based on search query
+    const filteredUserData = userData.filter(
+        (user: UserDataType) =>
+            user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.contact.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+
     const columns = [
         { title: 'Serial No', dataIndex: 'sno', key: 'sno', render: (_: any, __: any, index: number) => index + 1 },
         {
@@ -74,11 +85,17 @@ const UserDetails: React.FC = () => {
                     >
                         Send Message
                     </Button>
-                    <Input placeholder="Search" prefix={<CiSearch size={20} />} style={{ width: 200, height: 40 }} />
+                    <Input
+                        placeholder="Search"
+                        prefix={<CiSearch size={20} />}
+                        style={{ width: 200, height: 40 }}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </Space>
             </div>
 
-            <Table dataSource={userData} columns={columns} pagination={false} />
+            <Table dataSource={filteredUserData} columns={columns} pagination={false} />
             {/* //user details modal */}
             <Modal title="User Details" visible={openModal} onCancel={() => setOpenModal(false)} footer={null}>
                 {modalData && (
@@ -134,12 +151,23 @@ const UserDetails: React.FC = () => {
                 )}
             </Modal>
             <Modal
-                title="Message Modal"
-                visible={openMessageModal}
+                title="Type your Message"
+                open={openMessageModal}
                 onCancel={() => setOpenMessageModal(false)}
                 footer={null}
             >
-                {/* Add message modal content here */}
+                <div className="w-full">
+                    <textarea
+                        rows={4}
+                        className="border border-slate-400 rounded-2xl p-5 w-full"
+                        placeholder="Message"
+                    />
+                </div>
+                <div className="flex justify-end mt-4">
+                    <Button type="primary" size="large">
+                        Send Now
+                    </Button>
+                </div>
             </Modal>
         </div>
     );
