@@ -53,7 +53,7 @@ const MedicationDetails = () => {
         <div className="">
             <div className="bg-[#E8EEFE] p-6 text-gray ">
                 <h1 className="text-xl font-semibold text-[#222222] my-3">Patient:</h1>
-                <div className="flex h-full pb-5 justify-evenly items-center">
+                <div className="flex h-full pb-5 gap-20 items-center">
                     <div className="flex items-center space-x-4">
                         {/* Profile Picture */}
 

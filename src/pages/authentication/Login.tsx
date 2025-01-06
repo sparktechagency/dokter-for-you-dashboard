@@ -1,18 +1,54 @@
 import { Form, Input, Checkbox, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useLoginMutation } from '../../redux/apiSlices/authSlice';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+
+interface CustomJwtPayload extends JwtPayload {
+    role: string;
+}
+
+interface LoginResponse {
+    data: string;
+}
 
 const Login = () => {
     const navigate = useNavigate();
-    const onFinish = (values: any) => {
-        console.log('Success:', values);
-        localStorage.setItem('role', values?.role);
-        if (values?.role === 'admin') {
-            navigate('/admin-dashboard');
-        } else if (values?.role === 'pharmacy') {
-            navigate('/pharmacy-dashboard');
-        } else if (values?.role === 'doctor') {
-            navigate('/doctor-dashboard');
+    const [rememberMe, setRememberMe] = useState(false);
+
+    const [login] = useLoginMutation();
+
+    const onFinish = async (values: any) => {
+        try {
+            const response: LoginResponse = await login(values).unwrap();
+            const decodedToken = jwtDecode<CustomJwtPayload>(response.data);
+            console.log('decodedToken', decodedToken?.role);
+            const { role } = decodedToken;
+            if (rememberMe) {
+                localStorage.setItem('authToken', response.data);
+                localStorage.setItem('role', role);
+            } else {
+                sessionStorage.setItem('authToken', response.data);
+                sessionStorage.setItem('role', role);
+            }
+
+            if (role === 'ADMIN') {
+                navigate('/admin-dashboard');
+            } else if (role === 'PHARMACY') {
+                navigate('/pharmacy-dashboard');
+            } else if (role === 'DOCTOR') {
+                navigate('/doctor-dashboard');
+            }
+
+            toast.success('Login successful!');
+        } catch (error) {
+            toast.error(error?.data?.message);
         }
+    };
+
+    const onCheckboxChange = (e: any) => {
+        setRememberMe(e.target.checked);
     };
 
     return (
@@ -87,7 +123,9 @@ const Login = () => {
 
                     <div className="flex items-center justify-between">
                         <Form.Item style={{ marginBottom: 0 }} name="remember" valuePropName="checked">
-                            <Checkbox>Remember me</Checkbox>
+                            <Checkbox onChange={onCheckboxChange} className="text-sm">
+                                Remember me
+                            </Checkbox>
                         </Form.Item>
 
                         <a className="login-form-forgot text-primary font-semibold" href="/forgot-password">
