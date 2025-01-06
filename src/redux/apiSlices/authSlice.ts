@@ -1,7 +1,7 @@
-import baseApi from '../api/baseApi';
 import { getFromLocalStorage } from '../../utils/local-storage';
+import api from '../api/baseApi';
 
-const authApi = baseApi.injectEndpoints({
+const authApi = api.injectEndpoints({
     endpoints: (builder) => ({
         otpVerify: builder.mutation({
             query: (data) => ({
@@ -25,6 +25,7 @@ const authApi = baseApi.injectEndpoints({
                 body: data,
             }),
         }),
+
         resetPassword: builder.mutation({
             query: ({ data }) => {
                 console.log('authSlice', data);
@@ -68,7 +69,7 @@ const authApi = baseApi.injectEndpoints({
         }),
         profile: builder.query({
             query: () => ({
-                url: '/auth/get-profile',
+                url: '/user/profile',
                 method: 'GET',
             }),
             providesTags: ['user'],
@@ -117,5 +118,6 @@ export const {
     useFetchAdminProfileQuery,
     useFetchAllAdminsQuery,
     useDeleteAdminProfileMutation,
+
     useAddAdminProfileMutation,
 } = authApi;
