@@ -109,7 +109,10 @@ const MedicationDetails = () => {
     <div>
       {consultationData?.medicins?.map((medicine: any, index: number) => {
         return (
-          <div key={index} className="flex items-center justify-between my-2 rounded-lg p-4 text-gray">
+          <div
+            key={index}
+            className="flex items-center border-b border-slate-200 justify-between my-2 rounded-lg p-4 text-gray"
+          >
             <div className="flex items-center space-x-4">
               <img src="/ceevit.png" alt="Ceevit" className="w-20 h-auto rounded" />
 
@@ -129,7 +132,7 @@ const MedicationDetails = () => {
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-600">Price</p>
-              <p className="font-semibold text-gray-800">{medicine?._id?.price || '$25.00'}</p>
+              <p className="font-semibold text-gray-800">€ {medicine?._id?.sellingPrice || '25.00'}</p>
             </div>
           </div>
         );
@@ -154,12 +157,17 @@ const MedicationDetails = () => {
       <div className="mt-4">
         <div className="flex justify-end gap-20">
           <span>Discount -</span>
-          <span>$0.00</span>
+          <span>{consultationData?.medicins?._id?.discount || '€0.00'}</span>
         </div>
         <hr className="h-0.5 bg-gray" />
         <div className="flex justify-end gap-20 text-lg font-semibold text-gray-900 mt-2">
           <span>Total -</span>
-          <span className="text-[#0A2369]">$25.00</span>
+          <span className="text-[#0A2369]">
+            €{' '}
+            {consultationData?.medicins
+              ?.map((medicine: any) => medicine._id.sellingPrice)
+              .reduce((total: number, price: number) => total + price, 0) + 25}
+          </span>
         </div>
       </div>
 
