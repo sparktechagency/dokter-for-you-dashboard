@@ -1,11 +1,34 @@
 import { Form, Input, Select, Button, Upload, InputNumber } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 const AddMedication = () => {
   const [form] = Form.useForm();
+  const [units, setUnits] = useState<string[]>([]);
+  const [unitInput, setUnitInput] = useState('');
+  const [dosages, setDosages] = useState<string[]>([]);
+  const [dosageInput, setDosageInput] = useState('');
+
+  const handleAddUnit = () => {
+    setUnits([...units, unitInput]);
+    setUnitInput('');
+  };
+
+  const handleRemoveUnit = (index: number) => {
+    setUnits(units.filter((_unit, i) => i !== index));
+  };
+
+  const handleAddDosage = () => {
+    setDosages([...dosages, dosageInput]);
+    setDosageInput('');
+  };
+
+  const handleRemoveDosage = (index: number) => {
+    setDosages(dosages.filter((_dosage, i) => i !== index));
+  };
 
   const onFinish = (values: any) => {
-    console.log('Form Values:', values);
+    console.log('Form Values:', { ...values, units, dosages });
   };
 
   return (
@@ -53,14 +76,31 @@ const AddMedication = () => {
           <div className="space-y-4">
             <Form.Item
               label="Units per Box"
-              name="unitsPerBox"
+              name="unitPerBox"
               rules={[{ required: true, message: 'Please enter units per box' }]}
             >
-              <div className="flex items-center gap-2">
-                <Input placeholder="50pcs/Box" className="flex-grow" />
-                <Button type="primary" className="bg-blue-800 h-[39px]">
-                  Add
-                </Button>
+              <div className="flex flex-col w-full items-center gap-2">
+                <div className="flex-grow w-full flex items-center gap-2">
+                  <Input
+                    placeholder="50pcs/Box"
+                    className="flex-grow"
+                    value={unitInput}
+                    onChange={(e) => setUnitInput(e.target.value)}
+                  />
+                  <Button type="primary" className="bg-blue-800 h-[39px]" onClick={() => handleAddUnit()}>
+                    Add
+                  </Button>
+                </div>
+                <div className="flex justify-start flex-wrap gap-2">
+                  {units.map((unit, index) => (
+                    <Button key={index} className="bg-gray-200 border border-gray-400 rounded-md px-2 py-1">
+                      {unit}{' '}
+                      <span onClick={() => handleRemoveUnit(index)} className="ml-2 cursor-pointer">
+                        &times;
+                      </span>
+                    </Button>
+                  ))}
+                </div>
               </div>
             </Form.Item>
 
@@ -69,11 +109,28 @@ const AddMedication = () => {
               name="dosageAmount"
               rules={[{ required: true, message: 'Please enter dosage amount' }]}
             >
-              <div className="flex items-center gap-2">
-                <Input placeholder="250 gm" className="flex-grow" />
-                <Button type="primary" className="bg-blue-800  h-[39px]">
-                  Add
-                </Button>
+              <div className="flex flex-col w-full items-center gap-2">
+                <div className="flex-grow w-full flex items-center gap-2">
+                  <Input
+                    placeholder="250 gm"
+                    className="flex-grow"
+                    value={dosageInput}
+                    onChange={(e) => setDosageInput(e.target.value)}
+                  />
+                  <Button type="primary" className="bg-blue-800  h-[39px]" onClick={() => handleAddDosage()}>
+                    Add
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {dosages.map((dosage, index) => (
+                    <Button key={index} className="bg-gray-200 border border-gray-400 rounded-md px-2 py-1">
+                      {dosage}{' '}
+                      <span onClick={() => handleRemoveDosage(index)} className="ml-2 cursor-pointer">
+                        &times;
+                      </span>
+                    </Button>
+                  ))}
+                </div>
               </div>
             </Form.Item>
 
