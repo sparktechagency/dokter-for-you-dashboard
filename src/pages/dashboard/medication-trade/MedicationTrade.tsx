@@ -98,7 +98,7 @@ const MedicationTrade = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (_, record: any) => (
+      render: (_: any, record: any) => (
         <div className="flex items-center space-x-2">
           <Tooltip title="Details">
             <Button

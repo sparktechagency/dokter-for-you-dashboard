@@ -4,6 +4,17 @@ import { LiaHandPointRightSolid } from 'react-icons/lia';
 import { useState } from 'react';
 import { useGetConsultationsQuery } from '../../../redux/apiSlices/patientServiceSlice';
 
+// Define the interface for consultation items
+interface ConsultationItem {
+  _id: string;
+  consultationType: string;
+  subCategory: {
+    name: string;
+  };
+  forwardToPartner: boolean;
+  medicins: any[];
+}
+
 const PatientServices = () => {
   const [activeTab, setActiveTab] = useState('1');
   // const [selectedData, setSelectedData] = useState<any>(null);
@@ -15,10 +26,16 @@ const PatientServices = () => {
   if (isFetching) return <div>Loading...</div>;
   const consultationData = getConsultations?.data;
 
-  const regularConsultationData = consultationData?.filter((item) => item?.consultationType === 'regular');
-  const videoConsultationData = consultationData?.filter((item) => item?.consultationType === 'video');
-  const digitalPrescriptionData = consultationData?.filter((item) => item?.forwardToPartner === true);
-  const digitalPrescriptionWithOrderData = consultationData?.filter((item) => item?.medicins?.length > 0);
+  const regularConsultationData = consultationData?.filter(
+    (item: ConsultationItem) => item?.consultationType === 'regular',
+  );
+  const videoConsultationData = consultationData?.filter(
+    (item: ConsultationItem) => item?.consultationType === 'video',
+  );
+  const digitalPrescriptionData = consultationData?.filter((item: ConsultationItem) => item?.forwardToPartner === true);
+  const digitalPrescriptionWithOrderData = consultationData?.filter(
+    (item: ConsultationItem) => item?.medicins?.length > 0,
+  );
 
   // Regular Consultation columns
   const regularColumns = [
@@ -38,7 +55,7 @@ const PatientServices = () => {
       title: 'Consult for',
       dataIndex: 'subCategory',
       key: 'consultFor',
-      render: (subCategory: string) => (
+      render: (subCategory: { name: string }) => (
         <div className="flex items-center space-x-2">
           <span>{subCategory?.name}</span>
         </div>
@@ -131,7 +148,7 @@ const PatientServices = () => {
       title: 'Consult for',
       dataIndex: 'subCategory',
       key: 'consultFor',
-      render: (subCategory: string) => (
+      render: (subCategory: { name: string }) => (
         <div className="flex items-center space-x-2">
           <span>{subCategory?.name}</span>
         </div>
@@ -223,7 +240,7 @@ const PatientServices = () => {
       title: 'Consult for',
       dataIndex: 'subCategory',
       key: 'consultFor',
-      render: (subCategory: string) => (
+      render: (subCategory: { name: string }) => (
         <div className="flex items-center space-x-2">
           <span>{subCategory?.name}</span>
         </div>
@@ -306,7 +323,7 @@ const PatientServices = () => {
       title: 'Consult for',
       dataIndex: 'subCategory',
       key: 'consultFor',
-      render: (subCategory: string) => (
+      render: (subCategory: { name: string }) => (
         <div className="flex items-center space-x-2">
           <span>{subCategory?.name}</span>
         </div>
