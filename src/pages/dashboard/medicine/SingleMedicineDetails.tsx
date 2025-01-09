@@ -14,7 +14,6 @@ const SingleMedicineDetails = () => {
   }
 
   const medicineData = getMedicineById?.data;
-  console.log(medicineData);
 
   return (
     <div className="bg-white p-6 ">

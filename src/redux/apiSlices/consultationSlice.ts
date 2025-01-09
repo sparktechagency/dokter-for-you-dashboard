@@ -28,6 +28,12 @@ const consultationApi = api.injectEndpoints({
         body: data,
       }),
     }),
+    deleteConsultationCategory: builder.mutation({
+      query: (id) => ({
+        url: `/category/${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -36,4 +42,5 @@ export const {
   useGetConsultationCategoryByIdQuery,
   useCreateConsultationCategoryMutation,
   useEditConsultationCategoryMutation,
+  useDeleteConsultationCategoryMutation,
 } = consultationApi;

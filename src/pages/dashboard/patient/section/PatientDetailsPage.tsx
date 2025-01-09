@@ -11,14 +11,11 @@ const PatientDetailsPage = () => {
     navigate(-1);
   };
 
-  console.log(id);
-
   const { data: getConsultationById, isFetching } = useGetConsultationByIdQuery(id);
 
   if (isFetching) return <div>Loading...</div>;
 
   const consultationData = getConsultationById?.data;
-  console.log(consultationData);
 
   const topSection = (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">

@@ -20,8 +20,6 @@ const PatientServices = () => {
   const digitalPrescriptionData = consultationData?.filter((item) => item?.forwardToPartner === true);
   const digitalPrescriptionWithOrderData = consultationData?.filter((item) => item?.medicins?.length > 0);
 
-  console.log(regularConsultationData, videoConsultationData);
-
   // Regular Consultation columns
   const regularColumns = [
     {

@@ -11,7 +11,7 @@ const UserDetails: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openMessageModal, setOpenMessageModal] = useState(false);
   const [modalData, setModalData] = useState<UserDataType | null>(null);
-  console.log(modalData);
+
   const { data: users, isFetching } = useGetUserQuery(undefined);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -90,9 +90,9 @@ const UserDetails: React.FC = () => {
         </Space>
       </div>
 
-      <Table dataSource={filteredUserData} columns={columns} pagination={false} />
+      <Table dataSource={filteredUserData} rowKey="_id" columns={columns} pagination={false} />
       {/* //user details modal */}
-      <Modal title="User Details" visible={openModal} onCancel={() => setOpenModal(false)} footer={null}>
+      <Modal title="User Details" open={openModal} onCancel={() => setOpenModal(false)} footer={null}>
         {modalData && (
           <>
             <div className="flex gap-4 items-center my-10">

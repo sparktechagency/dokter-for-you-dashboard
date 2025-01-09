@@ -8,7 +8,6 @@ const MedicationTrade = () => {
 
   if (isFetching) return <div>Loading...</div>;
   const consultationData = getConsultations?.data;
-  console.log(consultationData);
 
   // Medication columns
   const medicationColumns = [

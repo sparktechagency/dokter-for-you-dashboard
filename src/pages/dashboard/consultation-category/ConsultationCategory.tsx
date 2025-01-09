@@ -6,12 +6,14 @@ import Modal from '../../../components/shared/Modal';
 import { IoImage } from 'react-icons/io5';
 import {
   useCreateConsultationCategoryMutation,
+  useDeleteConsultationCategoryMutation,
   useEditConsultationCategoryMutation,
   useGetConsultationCategoryQuery,
 } from '../../../redux/apiSlices/consultationSlice';
 import toast from 'react-hot-toast';
 
 interface ConsultationCategory {
+  _id: string;
   name: string;
   image: string;
   summary: string;
@@ -25,10 +27,9 @@ const ConsultationCategory: React.FC = () => {
   const { data: getCategories, isFetching, refetch } = useGetConsultationCategoryQuery(undefined);
   const [createConsultationCategory] = useCreateConsultationCategoryMutation();
   const [editConsultationCategory] = useEditConsultationCategoryMutation();
+  const [deleteConsultationCategory] = useDeleteConsultationCategoryMutation();
 
   const consultationCategories: ConsultationCategory[] = getCategories?.data || [];
-
-  console.log(consultationCategories);
 
   const [categoryImagePreview, setCategoryImagePreview] = useState<string | undefined>(undefined);
 
@@ -39,30 +40,54 @@ const ConsultationCategory: React.FC = () => {
         image: editCategoryData?.image,
         summary: editCategoryData?.summary,
       });
+      setCategoryImagePreview(editCategoryData?.image);
     } else {
       form.resetFields();
+      setCategoryImagePreview(undefined);
     }
   }, [editCategoryData, form]);
 
   if (isFetching) return <div>Loading...</div>;
 
   const onFinish = async (values: any) => {
-    console.log('Form Values:', values);
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('image', values.image);
     formData.append('summary', values.summary);
 
     try {
-      const response = await createConsultationCategory(formData).unwrap();
+      let response;
+      if (editCategoryData) {
+        // Update category
+
+        response = await editConsultationCategory({ data: formData, id: editCategoryData?._id }).unwrap();
+        if (response?.success) {
+          toast.success('Category updated successfully!');
+        }
+      } else {
+        // Create new category
+        response = await createConsultationCategory(formData).unwrap();
+        if (response?.success) {
+          toast.success('Category added successfully!');
+        }
+      }
+      refetch();
+    } catch (error) {
+      toast.error(editCategoryData ? 'Failed to update category!' : 'Failed to add category!');
+    }
+    setOpenModal(false);
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    try {
+      const response = await deleteConsultationCategory(id).unwrap();
       if (response?.success) {
-        toast.success('Category added successfully!');
+        toast.success('Category deleted successfully!');
         refetch();
       }
     } catch (error) {
-      toast.error('Failed to add category!');
+      toast.error('Failed to delete category!');
     }
-    setOpenModal(false);
   };
 
   const categoryForm = (
@@ -78,7 +103,7 @@ const ConsultationCategory: React.FC = () => {
           if (file) {
             setCategoryImagePreview(URL.createObjectURL(file));
           }
-          return e?.fileList?.[0]?.originFileObj;
+          return file || editCategoryData?.image;
         }}
       >
         <Upload.Dragger
@@ -91,7 +116,7 @@ const ConsultationCategory: React.FC = () => {
         >
           {categoryImagePreview || editCategoryData?.image ? (
             <img
-              src={categoryImagePreview || editCategoryData?.image}
+              src={`${import.meta.env.VITE_BASE_URL}${categoryImagePreview || editCategoryData?.image}`}
               alt="category preview"
               className="w-48 h-48 mx-auto object-cover"
             />
@@ -156,6 +181,7 @@ const ConsultationCategory: React.FC = () => {
             <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 bg-[#002B90] rounded-full flex items-center justify-center">
                 <img
+                  className="w-12 h-12 rounded-full object-cover"
                   src={
                     category?.image.startsWith('http')
                       ? category?.image
@@ -171,6 +197,7 @@ const ConsultationCategory: React.FC = () => {
                 title="Delete Category"
                 description="Are you sure to delete this category?"
                 okText="Yes"
+                onConfirm={() => handleDeleteCategory(category._id)}
                 cancelText="No"
               >
                 <Button icon={<DeleteOutlined />} className="flex items-center">

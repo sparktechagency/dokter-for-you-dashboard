@@ -10,7 +10,6 @@ const MedicineService = () => {
     return <h1>Loading...</h1>;
   }
   const getMedicineData = getMedicine?.data;
-  console.log(getMedicineData);
 
   // Medication columns
   const medicationColumns = [
