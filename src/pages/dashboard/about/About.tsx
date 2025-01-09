@@ -1,204 +1,206 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, Popconfirm, Upload, Table, Tooltip } from 'antd';
+import { Button, Form, Input, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import Modal from '../../../components/shared/Modal';
 import { IoImage } from 'react-icons/io5';
-import { CiEdit } from 'react-icons/ci';
 import { BsTrash } from 'react-icons/bs';
+import {
+  useCreateAboutMutation,
+  useDeleteAboutMutation,
+  useGetAboutQuery,
+  useUpdateAboutMutation,
+} from '../../../redux/apiSlices/aboutAndArticleSlice';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 const About: React.FC = () => {
-    const [form] = Form.useForm();
-    const [selectedRows, setSelectedRows] = useState<any[]>([]);
-    const [openModal, setOpenModal] = useState(false);
-    const [editAboutData, setEditAboutData] = useState<any>(null);
-    const [aboutData, setAboutData] = useState<any[]>([
-        {
-            key: '1',
-            title: 'About Us',
-            description: 'This is a description of the about us section.',
-            image: '/vite.svg',
-        },
-        { key: '2', title: 'Our Mission', description: 'This is a description of our mission.', image: '/vite.svg' },
-    ]);
-    const [categoryImagePreview, setCategoryImagePreview] = useState<string | undefined>(undefined);
+  const [form] = Form.useForm();
+  const [openModal, setOpenModal] = useState(false);
+  const [editAboutData, setEditAboutData] = useState<any>(null);
+  const [categoryImagePreview, setCategoryImagePreview] = useState<string | undefined>(undefined);
 
-    useEffect(() => {
-        if (editAboutData) {
-            form.setFieldsValue({
-                title: editAboutData.title,
-                description: editAboutData.description,
-                image: editAboutData.image,
-            });
-            setCategoryImagePreview(editAboutData.image);
-        } else {
-            form.resetFields();
-            setCategoryImagePreview(undefined);
+  const { data: aboutData, isFetching } = useGetAboutQuery(undefined);
+  const [createAbout] = useCreateAboutMutation();
+  const [editAbout] = useUpdateAboutMutation();
+  const [deleteAbout] = useDeleteAboutMutation();
+
+  const abouts = aboutData?.data || [];
+  console.log(abouts);
+
+  useEffect(() => {
+    if (editAboutData) {
+      form.setFieldsValue({
+        title: editAboutData.title,
+        description: editAboutData.description,
+        image: editAboutData.image,
+      });
+      setCategoryImagePreview(
+        editAboutData.image?.startsWith('http')
+          ? editAboutData.image
+          : `${import.meta.env.VITE_BASE_URL}${editAboutData.image}`,
+      );
+    } else {
+      setCategoryImagePreview(undefined);
+    }
+  }, [editAboutData, form]);
+
+  if (isFetching) return <div>Loading...</div>;
+
+  const onFinish = async () => {
+    const formData = new FormData();
+    formData.append('title', form.getFieldValue('title'));
+    formData.append('description', form.getFieldValue('description'));
+    formData.append('image', form.getFieldValue('image'));
+
+    try {
+      if (editAboutData) {
+        const response = await editAbout({ data: formData, id: editAboutData._id }).unwrap();
+        if (response?.success) {
+          toast.success('About updated successfully!');
         }
-    }, [editAboutData, form]);
-
-    const onFinish = async (values: any) => {
-        if (editAboutData) {
-            // Update existing about data
-            setAboutData((prev) =>
-                prev.map((item) => (item.key === editAboutData.key ? { ...item, ...values } : item)),
-            );
-        } else {
-            // Add new about data
-            setAboutData((prev) => [...prev, { key: `${prev.length + 1}`, ...values }]);
+      } else {
+        const response = await createAbout(formData).unwrap();
+        if (response?.success) {
+          toast.success('About added successfully!');
+          form.resetFields();
+          setCategoryImagePreview(undefined);
         }
-        setOpenModal(false);
-    };
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setOpenModal(false);
+    }
+  };
 
-    const aboutForm = (
-        <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}>
-            <Form.Item label="Title" name="title">
-                <Input placeholder="Enter Title" />
-            </Form.Item>
-            <Form.Item label="Description" name="description">
-                <Input.TextArea placeholder="Enter Description" />
-            </Form.Item>
-            <Form.Item
-                label="Image"
-                name="image"
-                getValueFromEvent={(e) => {
-                    const file = e?.fileList?.[0]?.originFileObj;
-                    if (file) {
-                        setCategoryImagePreview(URL.createObjectURL(file));
-                    }
-                    return e?.fileList?.[0]?.originFileObj;
-                }}
-            >
-                <Upload.Dragger
-                    accept="image/*"
-                    maxCount={1}
-                    showUploadList={false}
-                    beforeUpload={(_file) => {
-                        return false;
-                    }}
-                >
-                    {categoryImagePreview ? (
-                        <img
-                            src={categoryImagePreview}
-                            alt="category preview"
-                            className="w-48 h-48 mx-auto object-cover"
-                        />
-                    ) : (
-                        <div className="text-center">
-                            <div className="w-8 h-8 mx-auto mb-2">
-                                <IoImage size={24} />
-                            </div>
-                            <p className="text-gray">Upload Image</p>
-                        </div>
-                    )}
-                </Upload.Dragger>
-            </Form.Item>
-            <div className="flex justify-end">
-                <Form.Item>
-                    <Button htmlType="submit" type="primary" size="large">
-                        {editAboutData ? 'Update About' : 'Add About'}
-                    </Button>
-                </Form.Item>
+  const handleDeleteAbout = async (id: string) => {
+    try {
+      const response = await deleteAbout(id).unwrap();
+      if (response?.success) {
+        toast.success('About deleted successfully!');
+      }
+    } catch (error) {
+      toast.error('Failed to delete about!');
+    }
+  };
+
+  const aboutForm = (
+    <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}>
+      <Form.Item label="Title" name="title">
+        <Input placeholder="Enter Title" />
+      </Form.Item>
+      <Form.Item label="Description" name="description">
+        <Input.TextArea rows={10} placeholder="Enter Description" />
+      </Form.Item>
+      <Form.Item
+        label="Image"
+        name="image"
+        getValueFromEvent={(e) => {
+          const file = e?.fileList?.[0]?.originFileObj;
+          if (file) {
+            setCategoryImagePreview(URL.createObjectURL(file));
+          }
+          return e?.fileList?.[0]?.originFileObj;
+        }}
+      >
+        <Upload.Dragger
+          accept="image/*"
+          maxCount={1}
+          showUploadList={false}
+          beforeUpload={(_file) => {
+            return false;
+          }}
+        >
+          {categoryImagePreview ? (
+            <img src={categoryImagePreview} alt="category preview" className="w-48 h-48 mx-auto object-cover" />
+          ) : (
+            <div className="text-center">
+              <div className="w-8 h-8 mx-auto mb-2">
+                <IoImage size={24} />
+              </div>
+              <p className="text-gray">Upload Image</p>
             </div>
-        </Form>
-    );
+          )}
+        </Upload.Dragger>
+      </Form.Item>
+      <div className="flex justify-end">
+        <Form.Item>
+          <Button htmlType="submit" type="primary" size="large">
+            {editAboutData ? 'Update About' : 'Add About'}
+          </Button>
+        </Form.Item>
+      </div>
+    </Form>
+  );
 
-    const columns = [
-        {
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
-            render: (image: string) => <img src={image} alt="about" className="size-16 object-cover" />,
-        },
-        {
-            title: 'Title',
-            dataIndex: 'title',
-            key: 'title',
-        },
-        {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
-            render: (description: string) => (
-                <Tooltip placement="topLeft" title={description}>
-                    <div className="line-clamp-2">{description}</div>
-                </Tooltip>
-            ),
-        },
-
-        {
-            title: 'Action',
-            key: 'action',
-            render: (_: any, record: any) => (
-                <div className="flex items-center gap-3">
-                    <Button
-                        onClick={() => {
-                            setEditAboutData(record);
-                            setOpenModal(true);
-                        }}
-                        type="text"
-                        icon={<CiEdit size={20} />}
-                        className="flex items-center"
-                    />
-
-                    <Popconfirm
-                        title="Delete About"
-                        description="Are you sure to delete this about section?"
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button type="text" icon={<BsTrash size={18} className="text-red-500" />} />
-                    </Popconfirm>
-                </div>
-            ),
-        },
-    ];
-
-    return (
-        <div className="">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">About Management</h1>
-                <div className="flex items-center gap-3">
-                    <Button type="text" icon={<BsTrash size={24} className="text-red-500" />} />
-                    <Button
-                        onClick={() => setOpenModal(true)}
-                        style={{
-                            height: 42,
-                        }}
-                        icon={<PlusOutlined />}
-                        type="primary"
-                    >
-                        Add About
-                    </Button>
-                </div>
-            </div>
-            <Table
-                columns={columns}
-                dataSource={aboutData}
-                rowClassName="hover:bg-gray-100"
-                pagination={{ pageSize: 10 }}
-                rowSelection={{
-                    type: 'checkbox',
-                    onChange: (selectedRowKeys, selectedRows) => {
-                        setSelectedRows(selectedRows);
-                    },
-                }}
-            />
-
-            <Modal
-                width={600}
-                open={openModal}
-                setOpen={(open) => {
-                    setOpenModal(open);
-                    if (!open) {
-                        setEditAboutData(null);
-                        setCategoryImagePreview(undefined);
-                    }
-                }}
-                body={aboutForm}
-                title={editAboutData ? 'Edit About' : 'Add About'}
-            />
+  return (
+    <div className="bg-white h-screen p-6 rounded-md">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">About Management</h1>
+        <div className="flex items-center gap-3">
+          <Button type="text" icon={<BsTrash size={24} className="text-red-500" />} />
+          <Button
+            onClick={() => setOpenModal(true)}
+            style={{
+              height: 42,
+            }}
+            icon={<PlusOutlined />}
+            type="primary"
+          >
+            Add About
+          </Button>
         </div>
-    );
+      </div>
+      <div>
+        <div>
+          {abouts.map((about: any, index: number) => (
+            <div key={index}>
+              <div className="flex w-full gap-1 justify-between mb-4 border-b-2 pb-5 border-dashed border-slate-300">
+                <h1 className="w-[5%] bg-white rounded-xl shadow-lg flex justify-center font-bold items-center">
+                  {index + 1}
+                </h1>
+                <div className="w-[90%]">
+                  <h3 className="text-lg p-3 rounded-xl mb-1 shadow-lg bg-white font-semibold">{about.title}</h3>
+                  <p className="text-gray-600 text-justify p-3 rounded-xl shadow-lg bg-white ">{about.description}</p>
+                </div>
+                <div className="flex w-[5%] flex-col justify-center items-center shadow-lg rounded-xl gap-3">
+                  <div className="">
+                    <FaEdit
+                      size={24}
+                      onClick={() => {
+                        setOpenModal(true), setEditAboutData(about);
+                      }}
+                      className="text-blue-500 cursor-pointer"
+                    />
+                  </div>
+                  <div className="border-t-2 border-dashed border-slate-300 pt-3">
+                    <FaTrash
+                      size={24}
+                      onClick={() => handleDeleteAbout(about._id)}
+                      className="text-red-500 cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <Modal
+        width={600}
+        open={openModal}
+        setOpen={(open) => {
+          setOpenModal(open);
+          if (!open) {
+            setEditAboutData(null);
+            setCategoryImagePreview(undefined);
+          }
+        }}
+        body={aboutForm}
+        title={editAboutData ? 'Edit About' : 'Add About'}
+      />
+    </div>
+  );
 };
 
 export default About;
