@@ -32,6 +32,14 @@ const shippingAndDiscountApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Discount'],
     }),
+    updateDiscount: builder.mutation({
+      query: ({ data, id }: { data: any; id: any }) => ({
+        url: `/discount/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['Discount'],
+    }),
     deleteDiscount: builder.mutation({
       query: (id) => ({
         url: `/discount/${id}`,
@@ -49,5 +57,6 @@ export const {
   //discount
   useGetDiscountQuery,
   useCreateDiscountMutation,
+  useUpdateDiscountMutation,
   useDeleteDiscountMutation,
 } = shippingAndDiscountApi;

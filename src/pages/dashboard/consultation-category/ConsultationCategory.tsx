@@ -40,7 +40,11 @@ const ConsultationCategory: React.FC = () => {
         image: editCategoryData?.image,
         summary: editCategoryData?.summary,
       });
-      setCategoryImagePreview(editCategoryData?.image);
+      setCategoryImagePreview(
+        editCategoryData?.image.startsWith('http')
+          ? editCategoryData?.image
+          : `${import.meta.env.VITE_BASE_URL}${editCategoryData?.image}`,
+      );
     } else {
       form.resetFields();
       setCategoryImagePreview(undefined);
@@ -101,9 +105,11 @@ const ConsultationCategory: React.FC = () => {
         getValueFromEvent={(e) => {
           const file = e?.fileList?.[0]?.originFileObj;
           if (file) {
-            setCategoryImagePreview(URL.createObjectURL(file));
+            const imageUrl = URL.createObjectURL(file);
+            setCategoryImagePreview(imageUrl); // Update the preview immediately
+            console.log('Image preview set:', imageUrl); // Log the image preview
           }
-          return file || editCategoryData?.image;
+          return file || editCategoryData?.image; // Return the file or existing image
         }}
       >
         <Upload.Dragger
@@ -114,9 +120,11 @@ const ConsultationCategory: React.FC = () => {
             return false;
           }}
         >
-          {categoryImagePreview || editCategoryData?.image ? (
+          {categoryImagePreview ? (
+            <img src={categoryImagePreview} alt="category preview" className="w-48 h-48 mx-auto object-cover" />
+          ) : editCategoryData?.image ? (
             <img
-              src={`${import.meta.env.VITE_BASE_URL}${categoryImagePreview || editCategoryData?.image}`}
+              src={`${import.meta.env.VITE_BASE_URL}${editCategoryData?.image}`}
               alt="category preview"
               className="w-48 h-48 mx-auto object-cover"
             />
@@ -227,6 +235,9 @@ const ConsultationCategory: React.FC = () => {
           setOpenModal(open);
           if (!open) {
             setEditCategoryData(null);
+            setCategoryImagePreview(undefined);
+          } else {
+            console.log('Opening add modal, resetting image preview.'); // Log when opening add modal
             setCategoryImagePreview(undefined);
           }
         }}

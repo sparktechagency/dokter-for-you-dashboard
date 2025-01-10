@@ -15,6 +15,10 @@ import toast from 'react-hot-toast';
 interface Subcategory {
   _id: string;
   name: string;
+  category: {
+    name: string;
+    _id: string;
+  };
   subCategoryName: string;
   image: string;
   details: string;
@@ -24,6 +28,8 @@ const ConsultationSubCategory: React.FC = () => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState<Subcategory | null>(null);
+
+  console.log('asrgvb', editCategoryData);
 
   const { data: consultationSubCategoryData, isFetching, refetch } = useGetConsultationSubcategoryQuery(undefined);
   const [createConsultationSubcategory] = useCreateConsultationSubcategoryMutation();
@@ -40,10 +46,14 @@ const ConsultationSubCategory: React.FC = () => {
       form.setFieldsValue({
         name: editCategoryData.name,
         subCategoryName: editCategoryData.subCategoryName,
-        image: editCategoryData.image,
+
         details: editCategoryData.details,
       });
-      setCategoryImagePreview(editCategoryData.image);
+      setCategoryImagePreview(
+        editCategoryData?.image.startsWith('http')
+          ? editCategoryData.image
+          : `${import.meta.env.VITE_BASE_URL}${editCategoryData?.image}`,
+      );
     } else {
       form.resetFields();
       setCategoryImagePreview(undefined);
@@ -52,12 +62,12 @@ const ConsultationSubCategory: React.FC = () => {
 
   if (isFetching) return <div>Loading...</div>;
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: { name: string; category: string; image: File; details: string }) => {
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('image', values.image);
     formData.append('details', values.details);
-    // formData.append('category', values.category);
+    formData.append('category', values.category);
     console.log(values);
 
     try {
@@ -80,7 +90,8 @@ const ConsultationSubCategory: React.FC = () => {
     setOpenModal(false);
   };
 
-  const handleDeleteSubcategory = async (id: string) => {
+  const handleDeleteSubcategory = async (value: unknown) => {
+    const id = value as string;
     try {
       const response = await deleteConsultationSubcategory(id).unwrap();
       if (response?.success) {
@@ -92,23 +103,42 @@ const ConsultationSubCategory: React.FC = () => {
     }
   };
 
-  const categoryForm = (
+  const categoryForm: React.ReactNode = (
     <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}>
-      <Form.Item label="Sub Category Name" name="subCategoryName">
+      <Form.Item
+        label="Sub Category Name"
+        name="name"
+        rules={[{ required: true, message: 'Please enter the sub category name' }]}
+      >
         <Input placeholder="Enter Sub Category Name" />
       </Form.Item>
-      <Form.Item label="Category Name" name="name">
+      <Form.Item
+        label="Category Name"
+        name="category"
+        rules={[{ required: true, message: 'Please select a category' }]}
+      >
         <Select placeholder="Select Category">
-          {consultationSubCategories?.map((category: Subcategory) => (
-            <Select.Option key={category.name} value={category.name}>
-              {category.name}
-            </Select.Option>
-          ))}
+          {Array.from(new Set(consultationSubCategories.map((category: Subcategory) => category.category._id))).map(
+            (id) => {
+              const category: Subcategory | undefined = consultationSubCategories.find(
+                (cat: Subcategory) => cat.category._id === id,
+              );
+              if (category && category.category) {
+                return (
+                  <Select.Option key={category.category._id} value={category.category._id}>
+                    {category.category.name}
+                  </Select.Option>
+                );
+              }
+              return null;
+            },
+          )}
         </Select>
       </Form.Item>
       <Form.Item
         label="Category Image"
         name="image"
+        rules={[{ required: true, message: 'Please upload the sub category image' }]}
         getValueFromEvent={(e) => {
           const file = e?.fileList?.[0]?.originFileObj;
           if (file) {
@@ -141,7 +171,7 @@ const ConsultationSubCategory: React.FC = () => {
           )}
         </Upload.Dragger>
       </Form.Item>
-      <Form.Item label="Details" name="details">
+      <Form.Item label="Details" name="details" rules={[{ required: true, message: 'Please enter the details' }]}>
         <Input.TextArea rows={12} placeholder="Enter Details" />
       </Form.Item>
 
@@ -194,54 +224,54 @@ const ConsultationSubCategory: React.FC = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {consultationSubCategories?.map((subcategory: Subcategory, _index: number) => (
-          <Card key={_index} className="">
-            <div className="flex items-center gap-4 mb-4 rounded-xl relative">
-              <div className="w-full h-40 rounded-xl">
-                <img
-                  className="w-full h-full object-cover rounded-xl"
-                  src={
-                    subcategory?.image.startsWith('http')
-                      ? subcategory?.image
-                      : `${import.meta.env.VITE_BASE_URL}${subcategory?.image}`
-                  }
-                  alt="subCategoryName"
-                />
+        {consultationSubCategories?.map((subcategory: Subcategory, _index: number) => {
+          console.log('adthbadhbarhb', `${import.meta.env.VITE_BASE_URL}${subcategory?.image}`);
+          return (
+            <Card key={_index} className="">
+              <div className="flex items-center gap-4 mb-4 rounded-xl relative">
+                <div className="w-full h-40 rounded-xl">
+                  <img
+                    className="w-full h-[160px] object-cover rounded-xl"
+                    src={
+                      subcategory?.image.startsWith('http')
+                        ? subcategory?.image
+                        : `${import.meta.env.VITE_BASE_URL}${subcategory?.image}`
+                    }
+                    alt="image"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="space-y-1 mb-3">
-              <h1 className="text-secondary text-lg font-semibold">{subcategory.subCategoryName}</h1>
-              <h3 className="text-primary">{subcategory.name}</h3>
-            </div>
-            <div className="flex gap-2">
-              <Popconfirm
-                title="Delete Subcategory"
-                description="Are you sure to delete this subcategory?"
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button
-                  icon={<DeleteOutlined />}
-                  className="flex items-center"
-                  onClick={() => handleDeleteSubcategory(subcategory._id)}
+              <div className="space-y-1 mb-3">
+                <h3 className="text-secondary text-lg font-semibold ">{subcategory.name}</h3>
+                <h1 className="text-primary">{subcategory?.category?.name}</h1>
+              </div>
+              <div className="flex gap-2">
+                <Popconfirm
+                  title="Delete Subcategory"
+                  description="Are you sure to delete this subcategory?"
+                  okText="Yes"
+                  onConfirm={() => handleDeleteSubcategory(subcategory._id)}
+                  cancelText="No"
                 >
-                  Delete
+                  <Button icon={<DeleteOutlined />} className="flex items-center">
+                    Delete
+                  </Button>
+                </Popconfirm>
+                <Button
+                  onClick={() => {
+                    setEditCategoryData(subcategory);
+                    setOpenModal(true);
+                  }}
+                  type="primary"
+                  icon={<EditOutlined />}
+                  className="flex items-center bg-[#002B90]"
+                >
+                  Edit
                 </Button>
-              </Popconfirm>
-              <Button
-                onClick={() => {
-                  setEditCategoryData(subcategory);
-                  setOpenModal(true);
-                }}
-                type="primary"
-                icon={<EditOutlined />}
-                className="flex items-center bg-[#002B90]"
-              >
-                Edit
-              </Button>
-            </div>
-          </Card>
-        ))}
+              </div>
+            </Card>
+          );
+        })}
       </div>
 
       <Modal
