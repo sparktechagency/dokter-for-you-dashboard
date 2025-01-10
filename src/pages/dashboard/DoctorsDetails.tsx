@@ -4,13 +4,21 @@ import { BsEye, BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
 import { CiEdit, CiLock, CiUnlock } from 'react-icons/ci';
 import DoctorDetailsModal from '../../components/ui/DoctorDetailsModal';
 import AddDoctorDetails from '../../components/ui/AddDoctorDetails';
+import { useGetDoctorQuery } from '../../redux/apiSlices/userSlice';
 
 const DoctorsDetails: React.FC = () => {
-
   const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [viewShippingProfile, setViewShippingProfile] = useState<any>(null);
-  const [shippingProfile, setShippingProfile] = useState<any>(null); 
+  const [shippingProfile, setShippingProfile] = useState<any>(null);
+
+  const { data: DoctorsData, isFetching } = useGetDoctorQuery(undefined);
+
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+  const DoctorData = DoctorsData?.data || [];
+  console.log(DoctorData);
 
   const columns = [
     {
@@ -20,19 +28,21 @@ const DoctorsDetails: React.FC = () => {
       render: (_: any, __: any, index: number) => index + 1,
     },
     {
-      title: 'User Name ',
-      dataIndex: 'pharmacyName',
-      key: 'pharmacyName',
+      title: 'Doctor Name ',
+      dataIndex: 'firstName',
+      key: 'firstName',
+      render: (_: any, record: any) => `${record?.firstName} ${record?.lastName}`,
     },
     {
       title: 'Email',
-      dataIndex: 'pharmacyAddress',
-      key: 'pharmacyAddress',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
       title: 'Doctor Type',
-      dataIndex: 'selectedArea',
-      key: 'selectedArea',
+      dataIndex: 'subCategory',
+      key: 'subCategory',
+      render: (_: any, record: any) => <p>{record?.subCategory?.name || 'N/A'}</p>,
     },
 
     {
@@ -49,22 +59,7 @@ const DoctorsDetails: React.FC = () => {
               type="text"
               icon={<BsEye size={20} className="text-blue-600" />}
             />
-          </Tooltip>  
-
-          <Tooltip title="Edit">
-                                  <Button
-                                      onClick={() => {
-                                          setShippingProfile(record);
-                                          setOpenModal(true);
-                                      }}
-                                      type="text"
-                                      icon={<CiEdit size={20} className="text-blue-600" />}
-                                  /> 
-                                   </Tooltip> 
-
-          <Tooltip title="Lock All">
-            <Button type="text" icon={<CiLock style={{ fontSize: '20px', color: 'red' }} />} />
-          </Tooltip> 
+          </Tooltip>
 
           <Tooltip title="Delete">
             <Popconfirm
@@ -82,31 +77,6 @@ const DoctorsDetails: React.FC = () => {
     },
   ];
 
-  // Sample data
-  const data = [
-    {
-      key: '1',
-      pharmacyName: 'City Pharmacy',
-      pharmacyAddress: 'doctor@gmail.com',
-      selectedArea: 'Downtown',
-      shippingPrice: 5.99,
-    },
-    {
-      key: '2',
-      pharmacyName: 'Health Plus',
-      pharmacyAddress: 'doctor@gmail.com',
-      selectedArea: 'Suburbs',
-      shippingPrice: 7.99,
-    },
-    {
-      key: '3',
-      pharmacyName: 'MediCare',
-      pharmacyAddress: 'doctor@gmail.com',
-      selectedArea: 'Rural',
-      shippingPrice: 9.99,
-    },
-  ];
-
   return (
     <div className="doctors-details">
       <div>
@@ -115,21 +85,6 @@ const DoctorsDetails: React.FC = () => {
             <h1 className="text-2xl font-semibold text-title">Doctors Details</h1>
           </div>
           <div className="mb-4 flex items-center justify-end gap-4">
-            <Tooltip title="Unlock All">
-              <Button type="text" icon={<CiUnlock style={{ fontSize: '30px', color: 'green' }} />} />
-            </Tooltip>
-            <Tooltip title="Lock All">
-              <Button type="text" icon={<CiLock style={{ fontSize: '30px', color: 'red' }} />} />
-            </Tooltip>
-            <Popconfirm
-              title="Are you sure to delete the selected items?"
-              onConfirm={() => console.log('Deleted selected')}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="text" shape="circle" icon={<BsTrash color="red" size={20} />} />
-            </Popconfirm>
-
             <Input
               type="text"
               prefix={<BsSearch className="mx-2" size={20} />}
@@ -145,7 +100,7 @@ const DoctorsDetails: React.FC = () => {
                 { value: 'pharmacy2', label: 'Pharmacy 2' },
                 { value: 'pharmacy3', label: 'Pharmacy 3' },
               ]}
-            /> 
+            />
 
             <Select
               placeholder="Action"
@@ -159,35 +114,29 @@ const DoctorsDetails: React.FC = () => {
             />
 
             <Button
-              icon={<BsPlusLg size={18} color='#fffff' />}
+              icon={<BsPlusLg size={18} color="#fffff" />}
               style={{
                 height: 42,
               }}
               type="primary"
               onClick={() => setOpenModal(true)}
             >
-              Add Doctor 
+              Add Doctor
             </Button>
           </div>
         </div>
 
         <div>
-          <Table
-            rowSelection={{
-              type: 'checkbox',
-              onChange: (selectedRowKeys: any, selectedRows: any) => {
-                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-              },
-            }}
-            columns={columns}
-            dataSource={data}
-            pagination={{ pageSize: 5 }}
-          />
+          <Table rowKey="_id" columns={columns} dataSource={DoctorData} pagination={{ pageSize: 5 }} />
         </div>
-
-      </div>  
-      <DoctorDetailsModal open={openViewModal} setOpen={setOpenViewModal} viewShippingProfile={viewShippingProfile} /> 
-      <AddDoctorDetails open={openModal} setOpen={setOpenModal} shippingProfile={shippingProfile} setShippingProfile={setShippingProfile}  />
+      </div>
+      <DoctorDetailsModal open={openViewModal} setOpen={setOpenViewModal} viewShippingProfile={viewShippingProfile} />
+      <AddDoctorDetails
+        open={openModal}
+        setOpen={setOpenModal}
+        shippingProfile={shippingProfile}
+        setShippingProfile={setShippingProfile}
+      />
     </div>
   );
 };
