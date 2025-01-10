@@ -60,8 +60,9 @@ import DoctorVideoConsultationDetails from '../components/ui/DoctorDashboard/Doc
 import DoctorConfirmVideoConsultation from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorConfirmVideoConsultation';
 import DoctorDigitalPrescriptionDetails from '../components/ui/DoctorDashboard/DoctorPatientServices/DoctorDigitalPrescriptionDetails';
 import DoctorMyTransaction from '../components/ui/DoctorDashboard/MyTransactions/DoctorMyTransaction';
-import ManageQuestions from '../pages/dashboard/manageQuestions/manageQuestions';
+
 import QuestionsPage from '../pages/dashboard/manageQuestions/QuestionsPage';
+import ManageQuestions from '../pages/dashboard/manageQuestions/ManageQuestions';
 
 const router = createBrowserRouter([
   {

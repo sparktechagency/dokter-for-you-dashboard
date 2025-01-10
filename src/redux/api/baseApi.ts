@@ -15,7 +15,19 @@ const api = createApi({
     },
   }),
   endpoints: () => ({}),
-  tagTypes: ['user', 'Doctor', 'Pharmacy', 'Discount', 'About', 'Question', 'Shipping', 'Article'],
+  tagTypes: [
+    'user',
+    'Doctor',
+    'Pharmacy',
+    'Discount',
+    'About',
+    'Question',
+    'Shipping',
+    'Article',
+    'TermsAndConditions',
+    'UserAgreement',
+    'FAQ',
+  ],
 });
 
 export const { reducer } = api;
