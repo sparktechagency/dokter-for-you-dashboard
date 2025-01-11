@@ -1,7 +1,6 @@
 import { Table, Button, Tooltip, Popconfirm, Select, Input } from 'antd';
 import { useState } from 'react';
 import { BsEye, BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
-import { CiEdit, CiLock, CiUnlock } from 'react-icons/ci';
 import DoctorDetailsModal from '../../components/ui/DoctorDetailsModal';
 import AddDoctorDetails from '../../components/ui/AddDoctorDetails';
 import { useGetDoctorQuery } from '../../redux/apiSlices/userSlice';
@@ -19,6 +18,16 @@ const DoctorsDetails: React.FC = () => {
   }
   const DoctorData = DoctorsData?.data || [];
   console.log(DoctorData);
+
+  const subCategories = [
+    ...new Set(
+      DoctorData.filter((item) => item?.subCategory !== undefined && item?.subCategory !== null).map(
+        (item) => item.subCategory,
+      ),
+    ),
+  ];
+
+  console.log('this is unique subcategories', subCategories);
 
   const columns = [
     {
@@ -127,7 +136,7 @@ const DoctorsDetails: React.FC = () => {
         </div>
 
         <div>
-          <Table rowKey="_id" columns={columns} dataSource={DoctorData} pagination={{ pageSize: 5 }} />
+          <Table rowKey="_id" columns={columns} dataSource={DoctorData} pagination={{ pageSize: 10 }} />
         </div>
       </div>
       <DoctorDetailsModal open={openViewModal} setOpen={setOpenViewModal} viewShippingProfile={viewShippingProfile} />
