@@ -9,7 +9,6 @@ const DoctorsDetails: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [viewShippingProfile, setViewShippingProfile] = useState<any>(null);
-  const [shippingProfile, setShippingProfile] = useState<any>(null);
 
   const { data: DoctorsData, isFetching } = useGetDoctorQuery(undefined);
 
@@ -18,16 +17,6 @@ const DoctorsDetails: React.FC = () => {
   }
   const DoctorData = DoctorsData?.data || [];
   console.log(DoctorData);
-
-  const subCategories = [
-    ...new Set(
-      DoctorData.filter((item) => item?.subCategory !== undefined && item?.subCategory !== null).map(
-        (item) => item.subCategory,
-      ),
-    ),
-  ];
-
-  console.log('this is unique subcategories', subCategories);
 
   const columns = [
     {
@@ -140,12 +129,7 @@ const DoctorsDetails: React.FC = () => {
         </div>
       </div>
       <DoctorDetailsModal open={openViewModal} setOpen={setOpenViewModal} viewShippingProfile={viewShippingProfile} />
-      <AddDoctorDetails
-        open={openModal}
-        setOpen={setOpenModal}
-        shippingProfile={shippingProfile}
-        setShippingProfile={setShippingProfile}
-      />
+      <AddDoctorDetails open={openModal} setOpen={setOpenModal} />
     </div>
   );
 };

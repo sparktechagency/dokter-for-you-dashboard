@@ -15,6 +15,14 @@ const userApi = api.injectEndpoints({
       }),
       providesTags: ['Doctor'],
     }),
+    createDoctor: builder.mutation({
+      query: (data) => ({
+        url: '/user/doctors',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Doctor'],
+    }),
     getPharmacy: builder.query({
       query: () => ({
         url: 'user/pharmecy/all',
@@ -33,4 +41,10 @@ const userApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetUserQuery, useGetDoctorQuery, useGetPharmacyQuery, useCreatePharmacyMutation } = userApi;
+export const {
+  useGetUserQuery,
+  useGetDoctorQuery,
+  useGetPharmacyQuery,
+  useCreateDoctorMutation,
+  useCreatePharmacyMutation,
+} = userApi;

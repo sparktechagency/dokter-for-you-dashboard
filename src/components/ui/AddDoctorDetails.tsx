@@ -1,69 +1,61 @@
 import { Button, Form, Input, Modal, Select } from 'antd';
-import { useEffect } from 'react';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-const data = [
+import { useGetConsultationSubcategoryQuery } from '../../redux/apiSlices/consultationSlice';
+import toast from 'react-hot-toast';
+import { useCreateDoctorMutation } from '../../redux/apiSlices/userSlice';
+
+const genders = [
   {
     key: '1',
-    pharmacyName: 'City Pharmacy',
-    pharmacyAddress: 'doctor@gmail.com',
-    selectedArea: 'Downtown',
-    shippingPrice: 5.99,
+    value: 'MALE',
   },
   {
     key: '2',
-    pharmacyName: 'Health Plus',
-    pharmacyAddress: 'doctor@gmail.com',
-    selectedArea: 'Suburbs',
-    shippingPrice: 7.99,
+    value: 'FEMALE',
   },
   {
     key: '3',
-    pharmacyName: 'MediCare',
-    pharmacyAddress: 'doctor@gmail.com',
-    selectedArea: 'Rural',
-    shippingPrice: 9.99,
+    value: 'OTHER',
   },
 ];
 
-const AddDoctorDetails = ({
-  open,
-  setOpen,
-  shippingProfile,
-  setShippingProfile,
-}: {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  setShippingProfile: any;
-  shippingProfile: any;
-}) => {
-  console.log('aserthaesrthbasethbaerh', shippingProfile);
+const AddDoctorDetails = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
   const [form] = Form.useForm();
-  useEffect(() => {
-    if (shippingProfile) {
-      form.setFieldsValue({
-        pharmacyName: shippingProfile.pharmacyName,
-        pharmacyAddress: shippingProfile.pharmacyAddress,
-        selectedArea: shippingProfile.selectedArea,
-        shippingPrice: shippingProfile.shippingPrice,
-      });
-    } else {
-      form.resetFields();
-    }
-  }, [shippingProfile, form]);
+
+  const { data: consultationSubCategoryData, isFetching } = useGetConsultationSubcategoryQuery(undefined);
+  const [createDoctor] = useCreateDoctorMutation();
+
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
+  const consultationSubCategories = consultationSubCategoryData?.data;
+  console.log(consultationSubCategories);
 
   const onFinish = async (values: any) => {
-    console.log('Form Values:', values);
+    // console.log('Form Values:', values);
+
+    try {
+      const response = await createDoctor(values).unwrap();
+      console.log('dgbdbhdbhdafb', response);
+      if (response?.success) {
+        toast.success('Doctor added successfully!');
+        setOpen(false);
+      } else {
+        toast.error('Failed to add doctor.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     setOpen(false);
-    setShippingProfile(null);
   };
 
   return (
     <Modal
       maskClosable={false}
       centered
-      title={
-        <p className="text-[24px] text-[#333333]"> {shippingProfile ? 'Edit Doctor Profile' : 'Add Doctor Profile'} </p>
-      }
+      title={<p className="text-[24px] text-[#333333]"> Add Doctor Profile </p>}
       footer={false}
       open={open}
       onCancel={() => setOpen(false)}
@@ -71,12 +63,16 @@ const AddDoctorDetails = ({
     >
       <div>
         <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}>
-          <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please enter pharmacy address' }]}>
-            <Input placeholder="Enter Name" />
+          <Form.Item
+            label="First Name"
+            name="firstName"
+            rules={[{ required: true, message: 'Please enter first name' }]}
+          >
+            <Input placeholder="Enter First Name" />
           </Form.Item>
 
-          <Form.Item label="Doctor Type" name="type" rules={[{ required: true, message: 'Please enter Doctor Type' }]}>
-            <Input placeholder="Enter Name doctor type" />
+          <Form.Item label="Last Name" name="lastName" rules={[{ required: true, message: 'Please enter last name' }]}>
+            <Input placeholder="Enter Last Name" />
           </Form.Item>
 
           <Form.Item
@@ -84,66 +80,63 @@ const AddDoctorDetails = ({
             name="contact"
             rules={[{ required: true, message: 'Please enter contact number' }]}
           >
-            <Input placeholder="Enter Name" />
+            <Input placeholder="Enter Contact Number" />
           </Form.Item>
 
-          <Form.Item label="Address" name="address" rules={[{ required: true, message: 'Please enter address' }]}>
-            <Input placeholder="Enter Name" />
+          <Form.Item label="Location" name="location" rules={[{ required: true, message: 'Please enter location' }]}>
+            <Input placeholder="Enter Location" />
           </Form.Item>
 
-          <div className=" flex items-center w-full gap-2">
-            <Form.Item label="Gender" name="gender" rules={[{ required: true, message: 'Please select  gender' }]}>
-              <Select
-                placeholder="Select Pharmacy Gender"
-                style={{
-                  width: '100%',
-                }}
-              >
-                {data.map((pharmacy) => (
-                  <Select.Option key={pharmacy.pharmacyName} value={pharmacy.pharmacyName}>
-                    {pharmacy.pharmacyName}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
+          <Form.Item
+            label="Doctor Type"
+            name="subCategory"
+            rules={[{ required: true, message: 'Please enter Doctor Type' }]}
+          >
+            <Select placeholder="Select Doctor Type" style={{ width: '100%' }}>
+              {consultationSubCategories?.map((sub: any) => (
+                <Select.Option key={sub._id} value={sub._id}>
+                  {sub.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-            <Form.Item
-              label="Date of Birth"
-              name="dob"
-              rules={[{ required: true, message: 'Please select  name' }]}
-              className=" w-full"
+          <Form.Item label="Gender" name="gender" rules={[{ required: true, message: 'Please select  gender' }]}>
+            <Select
+              placeholder="Select Gender"
+              style={{
+                width: '100%',
+              }}
             >
-              <Input placeholder="Enter Date of Birth" className=" w-full" />
-            </Form.Item>
-          </div>
+              {genders.map((gender) => (
+                <Select.Option key={gender.key} value={gender.value}>
+                  {gender.value}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-          {shippingProfile ? (
-            ' '
-          ) : (
-            <div>
-              <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please enter email' }]}>
-                <Input placeholder="Enter Email" />
-              </Form.Item>
+          <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please enter email' }]}>
+            <Input placeholder="Enter Email" />
+          </Form.Item>
 
-              <Form.Item
-                label="Password"
-                name="password"
-                rules={[{ required: true, message: 'Please input your password!' }]}
-              >
-                <Input.Password
-                  placeholder="******"
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                  className="rounded-lg bg-gray-100"
-                  size="large"
-                />
-              </Form.Item>
-            </div>
-          )}
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password
+              placeholder="******"
+              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+              className="rounded-lg bg-gray-100"
+              size="large"
+            />
+          </Form.Item>
 
           <div className="flex justify-end">
             <Form.Item>
               <Button htmlType="submit" type="primary" size="large">
-                Save Changes
+                Add Doctor
               </Button>
             </Form.Item>
           </div>
