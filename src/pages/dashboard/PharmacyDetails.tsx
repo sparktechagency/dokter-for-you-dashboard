@@ -1,24 +1,36 @@
 import { Button, Input, Popconfirm, Select, Table, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import { BsEye, BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
-import { CiEdit, CiLock, CiUnlock } from 'react-icons/ci';
+import { CiLock, CiUnlock } from 'react-icons/ci';
 import PharmacyDetailsModal from '../../components/ui/PharmacyDetailsModal';
-import AddPermacyDetails from '../../components/ui/AddPermacyDetails';
-import { useGetPharmacyQuery } from '../../redux/apiSlices/userSlice';
+import { useDeletePharmacyMutation, useGetPharmacyQuery } from '../../redux/apiSlices/userSlice';
+import toast from 'react-hot-toast';
 
 const PharmacyDetails: React.FC = () => {
-  const [openModal, setOpenModal] = useState(false);
+  const [setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [viewShippingProfile, setViewShippingProfile] = useState<any>(null);
-  const [shippingProfile, setShippingProfile] = useState<any>(null);
 
   const { data: pharmacyData, isFetching } = useGetPharmacyQuery(undefined);
+  const [deletePharmacy] = useDeletePharmacyMutation();
 
   if (isFetching) {
     return <div>Loading...</div>;
   }
   const pharmacyDetails = pharmacyData?.data || [];
   console.log(pharmacyDetails);
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await deletePharmacy(id).unwrap();
+      if (response?.success) {
+        toast.success('Shipping profile deleted successfully!');
+      } else {
+        toast.error('Failed to delete shipping profile.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns = [
     {
@@ -65,7 +77,7 @@ const PharmacyDetails: React.FC = () => {
               description="Are you sure to delete this shipping setting?"
               okText="Yes"
               cancelText="No"
-              onConfirm={() => console.log('Delete', record)}
+              onConfirm={() => handleDelete(record._id)}
             >
               <Button type="text" icon={<BsTrash size={18} className="text-red-500" />} />
             </Popconfirm>
@@ -148,12 +160,6 @@ const PharmacyDetails: React.FC = () => {
           open={openViewModal}
           setOpen={setOpenViewModal}
           viewShippingProfile={viewShippingProfile}
-        />
-        <AddPermacyDetails
-          open={openModal}
-          setOpen={setOpenModal}
-          shippingProfile={shippingProfile}
-          setShippingProfile={setShippingProfile}
         />
       </div>
     </div>

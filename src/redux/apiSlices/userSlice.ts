@@ -23,6 +23,13 @@ const userApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Doctor'],
     }),
+    deleteDoctor: builder.mutation({
+      query: (id) => ({
+        url: `user/doctors/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Doctor'],
+    }),
     getPharmacy: builder.query({
       query: () => ({
         url: 'user/pharmecy/all',
@@ -38,6 +45,13 @@ const userApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Pharmacy'],
     }),
+    deletePharmacy: builder.mutation({
+      query: (id) => ({
+        url: `/user/pharmecy/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Pharmacy'],
+    }),
   }),
 });
 
@@ -47,4 +61,6 @@ export const {
   useGetPharmacyQuery,
   useCreateDoctorMutation,
   useCreatePharmacyMutation,
+  useDeleteDoctorMutation,
+  useDeletePharmacyMutation,
 } = userApi;

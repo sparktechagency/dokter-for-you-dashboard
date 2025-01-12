@@ -2,12 +2,6 @@ import { Button, Modal } from 'antd';
 import { FaDownload } from 'react-icons/fa';
 import { pharmacy } from '../../pages/dashboard/user/types/types';
 
-const userDetails: pharmacy = {
-  name: 'Asaduijaman Mahfuz',
-  email: 'Asaduijaman101@bd.com',
-  contactNumber: '+0999999999999999',
-  address: '4517 Washington Ave. Manchester, Kentucky 39495',
-};
 const PharmacyDetailsModal = ({
   open,
   setOpen,
@@ -17,7 +11,13 @@ const PharmacyDetailsModal = ({
   setOpen: (open: boolean) => void;
   viewShippingProfile: any;
 }) => {
-  console.log(viewShippingProfile);
+  console.log('hellllloooooo', viewShippingProfile);
+  const userDetails: pharmacy = {
+    name: viewShippingProfile?.pharmecyName,
+    email: viewShippingProfile?.email,
+    contactNumber: viewShippingProfile?.contact,
+    address: viewShippingProfile?.location,
+  };
   return (
     <Modal
       maskClosable={false}

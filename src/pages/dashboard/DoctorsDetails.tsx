@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { BsEye, BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
 import DoctorDetailsModal from '../../components/ui/DoctorDetailsModal';
 import AddDoctorDetails from '../../components/ui/AddDoctorDetails';
-import { useGetDoctorQuery } from '../../redux/apiSlices/userSlice';
+import { useDeleteDoctorMutation, useGetDoctorQuery } from '../../redux/apiSlices/userSlice';
+import toast from 'react-hot-toast';
 
 const DoctorsDetails: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -11,12 +12,26 @@ const DoctorsDetails: React.FC = () => {
   const [viewShippingProfile, setViewShippingProfile] = useState<any>(null);
 
   const { data: DoctorsData, isFetching } = useGetDoctorQuery(undefined);
+  const [deleteDoctor] = useDeleteDoctorMutation();
 
   if (isFetching) {
     return <div>Loading...</div>;
   }
   const DoctorData = DoctorsData?.data || [];
   console.log(DoctorData);
+
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await deleteDoctor(id).unwrap();
+      if (response?.success) {
+        toast.success('Doctor deleted successfully!');
+      } else {
+        toast.error('Failed to delete doctor.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns = [
     {
@@ -65,7 +80,7 @@ const DoctorsDetails: React.FC = () => {
               description="Are you sure to delete this shipping setting?"
               okText="Yes"
               cancelText="No"
-              onConfirm={() => console.log('Delete', record)}
+              onConfirm={() => handleDelete(record._id)}
             >
               <Button type="text" icon={<BsTrash size={18} className="text-red-500" />} />
             </Popconfirm>
