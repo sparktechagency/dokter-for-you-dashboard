@@ -8,6 +8,7 @@ import {
   useCreateDiscountMutation,
   useDeleteDiscountMutation,
   useGetDiscountQuery,
+  useUpdateDiscountMutation,
 } from '../../../redux/apiSlices/shippingAndDiscountSlice';
 import toast from 'react-hot-toast';
 
@@ -20,6 +21,7 @@ const DiscountPrice = () => {
 
   const { data: discountDetails, isFetching } = useGetDiscountQuery(undefined);
   const [createDiscount] = useCreateDiscountMutation();
+  const [updateDiscount] = useUpdateDiscountMutation();
   const [deleteDiscount] = useDeleteDiscountMutation();
 
   useEffect(() => {
@@ -137,12 +139,22 @@ const DiscountPrice = () => {
     };
 
     try {
-      const response = await createDiscount(formattedValues).unwrap();
-      if (response?.success) {
-        toast.success('Discount added successfully!');
-        handleModalClose();
+      if (discountData) {
+        const response = await updateDiscount({ data: formattedValues, id: discountData._id }).unwrap();
+        if (response?.success) {
+          toast.success('Discount updated successfully!');
+          handleModalClose();
+        } else {
+          toast.error('Failed to update discount!');
+        }
       } else {
-        toast.error('Failed to add discount!');
+        const response = await createDiscount(formattedValues).unwrap();
+        if (response?.success) {
+          toast.success('Discount added successfully!');
+          handleModalClose();
+        } else {
+          toast.error('Failed to add discount!');
+        }
       }
     } catch (error) {
       toast.error('Failed to add discount!');
@@ -228,7 +240,7 @@ const DiscountPrice = () => {
       </div>
 
       <div>
-        <Table rowKey="_id" columns={columns} dataSource={discountDataList} pagination={{ pageSize: 5 }} />
+        <Table rowKey="_id" columns={columns} dataSource={discountDataList} pagination={{ pageSize: 10 }} />
       </div>
 
       <Modal

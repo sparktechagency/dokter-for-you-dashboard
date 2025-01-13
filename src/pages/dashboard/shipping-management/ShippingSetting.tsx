@@ -7,7 +7,9 @@ import { BiEuro } from 'react-icons/bi';
 import { FaDownload } from 'react-icons/fa';
 import {
   useCreateShippingDetailsMutation,
+  useDeleteShippingDetailsMutation,
   useGetShippingDetailsQuery,
+  useUpdateShippingDetailsMutation,
 } from '../../../redux/apiSlices/shippingAndDiscountSlice';
 import toast from 'react-hot-toast';
 
@@ -21,6 +23,8 @@ const ShippingSetting = () => {
 
   const { data: shippingDetails, isFetching } = useGetShippingDetailsQuery(undefined);
   const [createShippingDetails] = useCreateShippingDetailsMutation();
+  const [updateShippingDetails] = useUpdateShippingDetailsMutation();
+  const [deleteShippingDetails] = useDeleteShippingDetailsMutation();
 
   useEffect(() => {
     if (shippingProfile) {
@@ -40,6 +44,19 @@ const ShippingSetting = () => {
   }
   const shippingData = shippingDetails?.data || [];
   console.log(shippingData);
+
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await deleteShippingDetails(id).unwrap();
+      if (response?.success) {
+        toast.success('Shipping details deleted successfully!');
+      } else {
+        toast.error('Failed to delete shipping details!');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns = [
     {
@@ -103,7 +120,7 @@ const ShippingSetting = () => {
               description="Are you sure to delete this shipping setting?"
               okText="Yes"
               cancelText="No"
-              onConfirm={() => console.log('Delete', record)}
+              onConfirm={() => handleDelete(record._id)}
             >
               <Button type="text" icon={<BsTrash size={18} className="text-red-500" />} />
             </Popconfirm>
@@ -114,40 +131,38 @@ const ShippingSetting = () => {
   ];
 
   const onFinish = async (values: any) => {
-    if (shippingProfile) {
-      setIsEditMode(true);
-    } else {
-      setIsEditMode(false);
-    }
-
     values.shippingPrice = Number(values.shippingPrice);
 
-    console.log(values);
-
     try {
-      const response = await createShippingDetails(values).unwrap();
-      if (response?.success) {
-        toast.success('Shipping details updated successfully!');
-        setOpenModal(false);
-        setShippingProfile(null);
+      if (isEditMode && shippingProfile) {
+        const response = await updateShippingDetails({ data: values, id: shippingProfile._id }).unwrap();
+        if (response?.success) {
+          toast.success('Shipping details updated successfully!');
+          setOpenModal(false);
+          setShippingProfile(null);
+        }
+      } else {
+        const response = await createShippingDetails(values).unwrap();
+        if (response?.success) {
+          toast.success('Shipping details created successfully!');
+          setOpenModal(false);
+          setShippingProfile(null);
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const pharmacyNameInput = isEditMode ? (
+  const pharmacyNameInput = (
     <Select placeholder="Select Pharmacy Name">
       {shippingData?.map((pharmecy: any) => (
-        <Select.Option key={pharmecy._id} value={pharmecy?.pharmecy?.pharmecyName}>
+        <Select.Option key={pharmecy._id} value={pharmecy?.pharmecy?._id}>
           {pharmecy?.pharmecy?.pharmecyName}
         </Select.Option>
       ))}
     </Select>
-  ) : (
-    <Input placeholder="Enter Pharmacy Name" />
   );
-
   const shippingProfileForm = (
     <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}>
       <Form.Item

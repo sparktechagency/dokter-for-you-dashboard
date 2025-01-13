@@ -28,6 +28,7 @@ const api = createApi({
     'UserAgreement',
     'FAQ',
     'Admin',
+    'ShippingDetails',
   ],
 });
 
