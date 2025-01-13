@@ -64,6 +64,23 @@ const shippingAndDiscountApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Discount'],
     }),
+
+    //review api
+    getReview: builder.query({
+      query: () => ({
+        url: '/review',
+        method: 'GET',
+      }),
+      providesTags: ['Review'],
+    }),
+    updateReview: builder.mutation({
+      query: ({ data, id }: { data: any; id: any }) => ({
+        url: `/review/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['Review'],
+    }),
   }),
 });
 
@@ -78,4 +95,8 @@ export const {
   useCreateDiscountMutation,
   useUpdateDiscountMutation,
   useDeleteDiscountMutation,
+
+  //review
+  useGetReviewQuery,
+  useUpdateReviewMutation,
 } = shippingAndDiscountApi;

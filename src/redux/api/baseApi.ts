@@ -29,6 +29,7 @@ const api = createApi({
     'FAQ',
     'Admin',
     'ShippingDetails',
+    'Review',
   ],
 });
 
