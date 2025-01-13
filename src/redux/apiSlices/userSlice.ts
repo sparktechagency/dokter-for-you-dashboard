@@ -52,6 +52,28 @@ const userApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Pharmacy'],
     }),
+    getAllAdmin: builder.query({
+      query: () => ({
+        url: '/user/admins/all',
+        method: 'GET',
+      }),
+      providesTags: ['Admin'],
+    }),
+    createAdmin: builder.mutation({
+      query: (data) => ({
+        url: '/user/admins',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Admin'],
+    }),
+    deleteAdmin: builder.mutation({
+      query: (id) => ({
+        url: `/user/admins/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Admin'],
+    }),
   }),
 });
 
@@ -63,4 +85,7 @@ export const {
   useCreatePharmacyMutation,
   useDeleteDoctorMutation,
   useDeletePharmacyMutation,
+  useGetAllAdminQuery,
+  useCreateAdminMutation,
+  useDeleteAdminMutation,
 } = userApi;

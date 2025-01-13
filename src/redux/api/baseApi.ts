@@ -27,6 +27,7 @@ const api = createApi({
     'TermsAndConditions',
     'UserAgreement',
     'FAQ',
+    'Admin',
   ],
 });
 

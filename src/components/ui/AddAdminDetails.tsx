@@ -1,160 +1,99 @@
-import { Button, Form, Input, Modal, Select } from "antd";
-import { useEffect } from "react"; 
+import { Button, Form, Input, Modal, Select } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-const data = [
-    {
-      key: '1',
-      pharmacyName: 'City Pharmacy',
-      pharmacyAddress: 'doctor@gmail.com',
-      selectedArea: 'Downtown',
-      shippingPrice: 5.99,
-    },
-    {
-      key: '2',
-      pharmacyName: 'Health Plus',
-      pharmacyAddress: 'doctor@gmail.com',
-      selectedArea: 'Suburbs',
-      shippingPrice: 7.99,
-    },
-    {
-      key: '3',
-      pharmacyName: 'MediCare',
-      pharmacyAddress: 'doctor@gmail.com',
-      selectedArea: 'Rural',
-      shippingPrice: 9.99,
-    },
-  ];            
-const AddAdminDetails = ({open , setOpen , shippingProfile , setShippingProfile }:{open:boolean , setOpen:(open:boolean)=>void , setShippingProfile :any ,shippingProfile:any }) => { 
-    const [form] = Form.useForm(); 
-    useEffect(() => {
-        if (shippingProfile) {
-          form.setFieldsValue({
-            pharmacyName: shippingProfile.pharmacyName,
-            pharmacyAddress: shippingProfile.pharmacyAddress,
-            selectedArea: shippingProfile.selectedArea,
-            shippingPrice: shippingProfile.shippingPrice,
-          });
-        } else {
-          form.resetFields();
-        }
-      }, [shippingProfile, form]); 
+import { useCreateAdminMutation } from '../../redux/apiSlices/userSlice';
+import toast from 'react-hot-toast';
 
+const AddAdminDetails = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
+  const [form] = Form.useForm();
 
-    const onFinish = async (values: any) => {
-        console.log('Form Values:', values);
+  const [createAdmin] = useCreateAdminMutation();
+
+  const onFinish = async (values: any) => {
+    try {
+      const response = await createAdmin(values).unwrap();
+      if (response?.success) {
+        toast.success('Admin added successfully!');
         setOpen(false);
-        setShippingProfile(null);
-      };  
-    return (
-        <Modal
-                maskClosable={false}
-                centered
-                title={<p className="text-[24px] text-[#333333]"> {shippingProfile ? 'Edit Admin Profile' : 'Add Admin Profile' }  </p>}
-                footer={false}
-                open={open}
-                onCancel={()=>setOpen(false)}
-                width={500}
-            >   
-                <div>
-                <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}> 
-                    
-              <Form.Item
-                label="Name"
-                name="name"
-                rules={[{ required: true, message: 'Please enter pharmacy address' }]}
-              >
-                <Input placeholder="Enter Name" />
-              </Form.Item>  
-        
-              <Form.Item
-                label="Admin Type"
-                name="type"
-                rules={[{ required: true, message: 'Please enter Admin Type' }]}
-              >
-                <Input placeholder="Enter Name admin type" />
-              </Form.Item> 
-        
-              <Form.Item
-                label="Contact Number"
-                name="contact"
-                rules={[{ required: true, message: 'Please enter contact number' }]}
-              >
-                <Input placeholder="Enter contact" />
-              </Form.Item> 
-        
-              <Form.Item
-                label="Address"
-                name="address"
-                rules={[{ required: true, message: 'Please enter address' }]}
-              >
-                <Input placeholder="Enter address" />
-              </Form.Item>  
-        
-              <div className=" flex items-center w-full gap-2">  
-              <Form.Item
-                label="Gender"
-                name="gender"
-                rules={[{ required: true, message: 'Please select  gender' }]} 
-              >
-                <Select placeholder="Select Pharmacy Gender" style={{ 
-                    width:"100%"
-                }}>
-                  {data.map((pharmacy) => (
-                    <Select.Option key={pharmacy.pharmacyName} value={pharmacy.pharmacyName}>
-                      {pharmacy.pharmacyName}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item> 
-        
-              <Form.Item
-                label="Date of birth"
-                name="dob"
-                rules={[{ required: true, message: 'Please select  name' }]} 
-                className=" w-full"
-              >
-         <Input placeholder="Enter Date of Birth"  className=" w-full"/>
-              </Form.Item>
-              </div>
-          
-          {
-            shippingProfile ? " " : <div> 
-                    <Form.Item
-                label="Email"
-                name="email"
-                rules={[{ required: true, message: 'Please enter email' }]}
-              >
-                <Input placeholder="Enter Email" />
-              </Form.Item>    
-        
-              <Form.Item
-                                label="Password"
-                                name="password"
-                                rules={[{ required: true, message: 'Please input your password!' }]}
-                            >
-                                <Input.Password
-                                    placeholder="******"
-                                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                                    className="rounded-lg bg-gray-100"
-                                    size="large"
-                                />
-                            </Form.Item> 
-        
-            </div>
-          }
-        
-        
-              <div className="flex justify-end">
-                <Form.Item>
-                  <Button htmlType="submit" type="primary" size="large">
-                    Save Changes
-                  </Button>
-                </Form.Item>
-              </div>
-            </Form>
-                </div> 
-                </Modal>
-    );
+      } else {
+        toast.error('Failed to add admin.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <Modal
+      maskClosable={false}
+      centered
+      title={<p className="text-[24px] text-[#333333]"> Add Admin Profile </p>}
+      footer={false}
+      open={open}
+      onCancel={() => setOpen(false)}
+      width={500}
+    >
+      <div>
+        <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}>
+          <Form.Item
+            label="First Name"
+            name="firstName"
+            rules={[{ required: true, message: 'Please enter first name' }]}
+          >
+            <Input placeholder="Enter First Name" />
+          </Form.Item>
+
+          <Form.Item label="Last Name" name="lastName" rules={[{ required: true, message: 'Please enter last name' }]}>
+            <Input placeholder="Enter Last Name" />
+          </Form.Item>
+
+          <Form.Item
+            label="Contact Number"
+            name="contact"
+            rules={[{ required: true, message: 'Please enter contact number' }]}
+          >
+            <Input placeholder="Enter Contact Number" />
+          </Form.Item>
+
+          <Form.Item label="Location" name="location" rules={[{ required: true, message: 'Please enter location' }]}>
+            <Input placeholder="Enter Location" />
+          </Form.Item>
+
+          <Form.Item label="Gender" name="gender" rules={[{ required: true, message: 'Please select gender' }]}>
+            <Select placeholder="Select Gender" style={{ width: '100%' }}>
+              <Select.Option value="MALE">Male</Select.Option>
+              <Select.Option value="FEMALE">Female</Select.Option>
+              <Select.Option value="OTHER">Other</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please enter email' }]}>
+            <Input placeholder="Enter Email" />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password
+              placeholder="******"
+              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+              className="rounded-lg bg-gray-100"
+              size="large"
+            />
+          </Form.Item>
+
+          <div className="flex justify-end">
+            <Form.Item>
+              <Button htmlType="submit" type="primary" size="large">
+                Save Changes
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
+      </div>
+    </Modal>
+  );
 };
 
 export default AddAdminDetails;
