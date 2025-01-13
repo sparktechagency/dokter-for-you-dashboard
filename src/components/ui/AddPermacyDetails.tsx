@@ -1,43 +1,35 @@
 import { Button, Form, Input, Modal } from 'antd';
-import { useEffect } from 'react';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { useCreatePharmacyMutation } from '../../redux/apiSlices/userSlice';
+import toast from 'react-hot-toast';
 
-const AddPermacyDetails = ({
-  open,
-  setOpen,
-  shippingProfile,
-  setShippingProfile,
-}: {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  setShippingProfile: any;
-  shippingProfile: any;
-}) => {
+const AddPharmacyDetails = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
   const [form] = Form.useForm();
-  useEffect(() => {
-    if (shippingProfile) {
-      form.setFieldsValue({
-        pharmacyName: shippingProfile.pharmacyName,
-        pharmacyAddress: shippingProfile.pharmacyAddress,
-        selectedArea: shippingProfile.selectedArea,
-        shippingPrice: shippingProfile.shippingPrice,
-      });
-    } else {
-      form.resetFields();
-    }
-  }, [shippingProfile, form]);
+
+  const [createPharmacy] = useCreatePharmacyMutation();
 
   const onFinish = async (values: any) => {
-    console.log('Form Values:', values);
-    setOpen(false);
-    setShippingProfile(null);
+    try {
+      const response = await createPharmacy(values).unwrap();
+      if (response?.success) {
+        toast.success('Pharmacy added successfully!');
+        setOpen(false);
+      } else {
+        toast.error('Failed to add pharmacy.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    // console.log('Form Values:', values);
+    // setOpen(false);
   };
 
   return (
     <Modal
       maskClosable={false}
       centered
-      title={<p className="text-[24px] text-[#333333]"> {shippingProfile ? 'Edit pharmacy' : 'Add pharmacy'} </p>}
+      title={<p className="text-[24px] text-[#333333]"> Add pharmacy </p>}
       footer={false}
       open={open}
       onCancel={() => setOpen(false)}
@@ -47,8 +39,8 @@ const AddPermacyDetails = ({
         <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}>
           <Form.Item
             label="Pharmacy Name"
-            name="name"
-            rules={[{ required: true, message: 'Please enter pharmacy address' }]}
+            name="pharmecyName"
+            rules={[{ required: true, message: 'Please enter pharmacy name' }]}
           >
             <Input placeholder="Enter Name" />
           </Form.Item>
@@ -58,40 +50,34 @@ const AddPermacyDetails = ({
             name="contact"
             rules={[{ required: true, message: 'Please enter contact number' }]}
           >
-            <Input placeholder="Enter Name" />
+            <Input placeholder="Enter Contact Number" />
           </Form.Item>
 
-          <Form.Item label="Address" name="address" rules={[{ required: true, message: 'Please enter address' }]}>
-            <Input placeholder="Enter Name" />
+          <Form.Item label="Address" name="location" rules={[{ required: true, message: 'Please enter address' }]}>
+            <Input placeholder="Enter Address" />
           </Form.Item>
 
-          {shippingProfile ? (
-            ' '
-          ) : (
-            <div>
-              <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please enter email' }]}>
-                <Input placeholder="Enter Email" />
-              </Form.Item>
+          <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please enter email' }]}>
+            <Input placeholder="Enter Email" />
+          </Form.Item>
 
-              <Form.Item
-                label="Password"
-                name="password"
-                rules={[{ required: true, message: 'Please input your password!' }]}
-              >
-                <Input.Password
-                  placeholder="******"
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                  className="rounded-lg bg-gray-100"
-                  size="large"
-                />
-              </Form.Item>
-            </div>
-          )}
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password
+              placeholder="******"
+              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+              className="rounded-lg bg-gray-100"
+              size="large"
+            />
+          </Form.Item>
 
           <div className="flex justify-end">
             <Form.Item>
               <Button htmlType="submit" type="primary" size="large">
-                Save Changes
+                Add Pharmacy
               </Button>
             </Form.Item>
           </div>
@@ -101,4 +87,4 @@ const AddPermacyDetails = ({
   );
 };
 
-export default AddPermacyDetails;
+export default AddPharmacyDetails;

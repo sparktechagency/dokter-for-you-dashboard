@@ -5,9 +5,10 @@ import { CiLock, CiUnlock } from 'react-icons/ci';
 import PharmacyDetailsModal from '../../components/ui/PharmacyDetailsModal';
 import { useDeletePharmacyMutation, useGetPharmacyQuery } from '../../redux/apiSlices/userSlice';
 import toast from 'react-hot-toast';
+import AddPermacyDetails from '../../components/ui/AddPermacyDetails';
 
 const PharmacyDetails: React.FC = () => {
-  const [setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [viewShippingProfile, setViewShippingProfile] = useState<any>(null);
 
@@ -161,6 +162,7 @@ const PharmacyDetails: React.FC = () => {
           setOpen={setOpenViewModal}
           viewShippingProfile={viewShippingProfile}
         />
+        <AddPermacyDetails open={openModal} setOpen={setOpenModal} />
       </div>
     </div>
   );
