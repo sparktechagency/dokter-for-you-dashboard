@@ -8,6 +8,15 @@ const userApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
+
+    sendMessage: builder.mutation({
+      query: (data) => ({
+        url: 'notification/send/USER',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+
     getDoctor: builder.query({
       query: () => ({
         url: '/user/doctors/all',
@@ -79,6 +88,7 @@ const userApi = api.injectEndpoints({
 
 export const {
   useGetUserQuery,
+  useSendMessageMutation,
   useGetDoctorQuery,
   useGetPharmacyQuery,
   useCreateDoctorMutation,

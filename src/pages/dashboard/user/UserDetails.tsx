@@ -5,7 +5,8 @@ import { BsEye } from 'react-icons/bs';
 import { CiLock, CiSearch, CiUnlock } from 'react-icons/ci';
 import randomProfile from '../../../assets/randomProfile2.jpg';
 import { UserDataType } from './types/types';
-import { useGetUserQuery } from '../../../redux/apiSlices/userSlice';
+import { useGetUserQuery, useSendMessageMutation } from '../../../redux/apiSlices/userSlice';
+import toast from 'react-hot-toast';
 
 const UserDetails: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -13,7 +14,9 @@ const UserDetails: React.FC = () => {
   const [modalData, setModalData] = useState<UserDataType | null>(null);
 
   const { data: users, isFetching } = useGetUserQuery(undefined);
+  const [sendMessage] = useSendMessageMutation();
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
 
   if (isFetching) return <div>Loading...</div>;
   const userData = users?.data;
@@ -59,6 +62,19 @@ const UserDetails: React.FC = () => {
       ),
     },
   ];
+
+  const handleSendMessage = async (values: any) => {
+    try {
+      const response = await sendMessage(values).unwrap();
+      if (response?.success) {
+        toast.success('Message sent to all users successfully!');
+        setOpenMessageModal(false);
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      toast.error('Failed to send message!');
+    }
+  };
 
   return (
     <div className="">
@@ -147,10 +163,17 @@ const UserDetails: React.FC = () => {
         footer={null}
       >
         <div className="w-full">
-          <textarea rows={4} className="border border-slate-400 rounded-2xl p-5 w-full" placeholder="Message" />
+          <textarea
+            name="message"
+            rows={4}
+            className="border border-slate-400 rounded-2xl p-5 w-full"
+            placeholder="Message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
         </div>
         <div className="flex justify-end mt-4">
-          <Button type="primary" size="large">
+          <Button onClick={() => handleSendMessage({ message })} type="primary" size="large">
             Send Now
           </Button>
         </div>
