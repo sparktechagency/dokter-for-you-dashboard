@@ -1,15 +1,29 @@
-import { Table, Button, Tooltip, Popconfirm, Select, Input } from 'antd';
-import { BsEye, BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
+import { Table, Button, Tooltip, Select, Input } from 'antd';
+import { BsEye, BsPlusLg, BsSearch } from 'react-icons/bs';
 import { CiEdit } from 'react-icons/ci';
+import { useState } from 'react';
 import { useGetMedicineQuery } from '../../../redux/apiSlices/medicineSlice';
 
 const MedicineService = () => {
   const { data: getMedicine, isFetching } = useGetMedicineQuery(undefined);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterDosage, setFilterDosage] = useState('all');
+  const [filterCountry, setFilterCountry] = useState('all');
 
   if (isFetching) {
     return <h1>Loading...</h1>;
   }
+
   const getMedicineData = getMedicine?.data;
+  console.log(getMedicineData);
+
+  // Filtered data
+  const filteredData = getMedicineData?.filter((item: any) => {
+    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesDosage = filterDosage === 'all' || item.dosage === filterDosage;
+    const matchesCountry = filterCountry === 'all' || item.country.toLowerCase() === filterCountry.toLowerCase();
+    return matchesSearch && matchesDosage && matchesCountry;
+  });
 
   // Medication columns
   const medicationColumns = [
@@ -93,24 +107,19 @@ const MedicineService = () => {
           <h1 className="text-2xl font-semibold text-title">Medicine Lists</h1>
         </div>
         <div className="mb-4 flex items-center justify-end gap-4">
-          <Popconfirm
-            title="Are you sure to delete this medication?"
-            onConfirm={() => console.log('Deleted')}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="text" shape="circle" icon={<BsTrash color="red" size={20} />} />
-          </Popconfirm>
-
           <Input
             type="text"
             prefix={<BsSearch className="mx-2" size={20} />}
             placeholder="Search"
             style={{ width: 200 }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Select
             placeholder="Dosage"
             style={{ width: 200 }}
+            value={filterDosage}
+            onChange={(value) => setFilterDosage(value)}
             options={[
               { value: 'all', label: 'All Dosages' },
               { value: 'mg', label: 'mg' },
@@ -120,22 +129,15 @@ const MedicineService = () => {
             ]}
           />
           <Select
-            placeholder="Price"
-            style={{ width: 200 }}
-            options={[
-              { value: 'all', label: 'All Prices' },
-              { value: 'asc', label: 'Ascending' },
-              { value: 'desc', label: 'Descending' },
-            ]}
-          />
-          <Select
             placeholder="Country"
             style={{ width: 200 }}
+            value={filterCountry}
+            onChange={(value) => setFilterCountry(value)}
             options={[
               { value: 'all', label: 'All Countries' },
-              { value: 'india', label: 'India' },
-              { value: 'usa', label: 'USA' },
-              { value: 'uk', label: 'UK' },
+              { value: 'netherlands', label: 'Netherlands' },
+              { value: 'egypt', label: 'Egypt' },
+              { value: 'france', label: 'France' },
             ]}
           />
           <Button
@@ -152,7 +154,7 @@ const MedicineService = () => {
       </div>
 
       <div>
-        <Table rowKey="_id" columns={medicationColumns} dataSource={getMedicineData} pagination={{ pageSize: 5 }} />
+        <Table rowKey="_id" columns={medicationColumns} dataSource={filteredData} pagination={{ pageSize: 5 }} />
       </div>
     </div>
   );

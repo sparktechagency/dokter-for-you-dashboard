@@ -81,13 +81,6 @@ const UserDetails: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">Users Details</h1>
         <Space>
-          <Tooltip title="Unlock All">
-            <Button type="text" icon={<CiUnlock style={{ fontSize: '30px', color: 'green' }} />} />
-          </Tooltip>
-          <Tooltip title="Lock All">
-            <Button type="text" icon={<CiLock style={{ fontSize: '30px', color: 'red' }} />} />
-          </Tooltip>
-
           <Button
             onClick={() => setOpenMessageModal(true)}
             style={{ height: 40 }}

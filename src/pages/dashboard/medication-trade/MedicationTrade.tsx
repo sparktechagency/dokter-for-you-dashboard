@@ -1,13 +1,38 @@
 import { Table, Badge, Button, Tooltip, Popconfirm, Select, DatePicker, Input } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
 import { LiaHandPointRightSolid } from 'react-icons/lia';
+import { useState } from 'react';
 import { useGetConsultationsQuery } from '../../../redux/apiSlices/patientServiceSlice';
 
 const MedicationTrade = () => {
   const { data: getConsultations, isFetching } = useGetConsultationsQuery(undefined);
+  const [searchText, setSearchText] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedDate, setSelectedDate] = useState(null);
 
   if (isFetching) return <div>Loading...</div>;
   const consultationData = getConsultations?.data;
+
+  const handleSearch = (value: string) => {
+    setSearchText(value.toLowerCase());
+  };
+
+  const handleStatusFilter = (value: string) => {
+    setSelectedStatus(value);
+  };
+
+  const handleDateFilter = (date: any) => {
+    setSelectedDate(date ? date.format('YYYY-MM-DD') : null);
+  };
+
+  const filteredData = consultationData?.filter((item: any) => {
+    const matchesSearch =
+      item._id.toLowerCase().includes(searchText) || item.subCategory?.name?.toLowerCase().includes(searchText);
+    const matchesStatus = selectedStatus === 'all' || item.status.toLowerCase() === selectedStatus;
+    const matchesDate = !selectedDate || new Date(item.createdAt).toISOString().split('T')[0] === selectedDate;
+
+    return matchesSearch && matchesStatus && matchesDate;
+  });
 
   // Medication columns
   const medicationColumns = [
@@ -47,7 +72,6 @@ const MedicationTrade = () => {
     {
       title: 'Price',
       dataIndex: 'medicins',
-
       key: 'price',
       render: (medicins: any) => (
         <span>
@@ -58,7 +82,6 @@ const MedicationTrade = () => {
     {
       title: 'Profit',
       dataIndex: 'medicins',
-
       key: 'medicins',
       render: (medicins: any) => {
         if (!medicins || medicins.length === 0) {
@@ -69,7 +92,7 @@ const MedicationTrade = () => {
           .reduce((a: number, b: number) => a + b, 0);
 
         const totalPurchaseCost = medicins
-          .map((medicin: any) => medicin?._id?.purchaseCost || 0) // Default to 0 if undefined
+          .map((medicin: any) => medicin?._id?.purchaseCost || 0)
           .reduce((a: number, b: number) => a + b, 0);
 
         return <span>€ {totalSellingPrice - totalPurchaseCost}</span>;
@@ -134,10 +157,12 @@ const MedicationTrade = () => {
             prefix={<BsSearch className="mx-2" size={20} />}
             placeholder="Search"
             style={{ width: 200 }}
+            onChange={(e) => handleSearch(e.target.value)}
           />
           <Select
             placeholder="Status"
             style={{ width: 200 }}
+            onChange={handleStatusFilter}
             options={[
               { value: 'all', label: 'All Status' },
               { value: 'pending', label: 'Pending' },
@@ -145,23 +170,12 @@ const MedicationTrade = () => {
               { value: 'cancelled', label: 'Cancelled' },
             ]}
           />
-          <Select
-            placeholder="Pharmacy"
-            style={{ width: 200 }}
-            options={[
-              { value: 'all', label: 'All Pharmacies' },
-              { value: 'pharmacy1', label: 'Pharmacy 1' },
-              { value: 'pharmacy2', label: 'Pharmacy 2' },
-              { value: 'pharmacy3', label: 'Pharmacy 3' },
-            ]}
-          />
-          <DatePicker style={{ width: 200 }} placeholder="Order Date" />
-          <DatePicker style={{ width: 200 }} placeholder="Delivery Date" />
+          <DatePicker style={{ width: 200 }} placeholder="Order Date" onChange={handleDateFilter} />
         </div>
       </div>
 
       <div>
-        <Table columns={medicationColumns} rowKey="_id" dataSource={consultationData} pagination={{ pageSize: 5 }} />
+        <Table columns={medicationColumns} rowKey="_id" dataSource={filteredData} pagination={{ pageSize: 10 }} />
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ const SingleMedicineDetails = () => {
   }
 
   const medicineData = getMedicineById?.data;
+  console.log(medicineData);
 
   return (
     <div className="bg-white p-6 ">
@@ -31,7 +32,7 @@ const SingleMedicineDetails = () => {
                 : `${import.meta.env.VITE_BASE_URL}${medicineData?.image}`
             }
             alt="Medication"
-            className=""
+            className="object-contain w-full h-full"
           />
         </div>
 

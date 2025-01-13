@@ -1,4 +1,4 @@
-import { Table, Badge, Button, Tooltip, Popconfirm, Select, DatePicker, Input, Tabs } from 'antd';
+import { Table, Badge, Button, Tooltip, Popconfirm, Select, Input, Tabs } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
 import { LiaHandPointRightSolid } from 'react-icons/lia';
 import { useState } from 'react';
@@ -13,11 +13,16 @@ interface ConsultationItem {
   };
   forwardToPartner: boolean;
   medicins: any[];
+  doctorId: {
+    firstName: string;
+    lastName: string;
+  };
 }
 
 const PatientServices = () => {
   const [activeTab, setActiveTab] = useState('1');
-  // const [selectedData, setSelectedData] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string | undefined>(undefined);
 
   // console.log(selectedData);
 
@@ -25,6 +30,8 @@ const PatientServices = () => {
 
   if (isFetching) return <div>Loading...</div>;
   const consultationData = getConsultations?.data;
+
+  const subCategories = [...new Set(consultationData?.map((item: any) => item.subCategory.name))];
 
   const regularConsultationData = consultationData?.filter(
     (item: ConsultationItem) => item?.consultationType === 'regular',
@@ -36,6 +43,17 @@ const PatientServices = () => {
   const digitalPrescriptionWithOrderData = consultationData?.filter(
     (item: ConsultationItem) => item?.medicins?.length > 0,
   );
+
+  const filteredConsultationData = (data: any[]) => {
+    return data.filter((item: ConsultationItem) => {
+      const subCategoryMatch = item.subCategory.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const doctorNameMatch = `${item.doctorId?.firstName || ''} ${item.doctorId?.lastName || ''}`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const selectedSubCategoryMatch = selectedSubCategory ? item.subCategory.name === selectedSubCategory : true;
+      return (subCategoryMatch || doctorNameMatch) && selectedSubCategoryMatch;
+    });
+  };
 
   // Regular Consultation columns
   const regularColumns = [
@@ -399,19 +417,24 @@ const PatientServices = () => {
           <Table
             columns={regularColumns}
             rowKey="_id"
-            dataSource={regularConsultationData}
+            dataSource={filteredConsultationData(regularConsultationData)}
             pagination={{ pageSize: 10 }}
           />
         );
       case '2':
         return (
-          <Table columns={videoColumns} dataSource={videoConsultationData} rowKey="_id" pagination={{ pageSize: 10 }} />
+          <Table
+            columns={videoColumns}
+            dataSource={filteredConsultationData(videoConsultationData)}
+            rowKey="_id"
+            pagination={{ pageSize: 10 }}
+          />
         );
       case '3':
         return (
           <Table
             columns={prescriptionColumns}
-            dataSource={digitalPrescriptionData}
+            dataSource={filteredConsultationData(digitalPrescriptionData)}
             rowKey="_id"
             pagination={{ pageSize: 10 }}
           />
@@ -420,7 +443,7 @@ const PatientServices = () => {
         return (
           <Table
             columns={medicationColumns}
-            dataSource={digitalPrescriptionWithOrderData}
+            dataSource={filteredConsultationData(digitalPrescriptionWithOrderData)}
             rowKey="_id"
             pagination={{ pageSize: 10 }}
           />
@@ -442,28 +465,16 @@ const PatientServices = () => {
             prefix={<BsSearch className="mx-2" size={20} />}
             placeholder="Search"
             style={{ width: 200 }}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Select
-            placeholder="Consult Category"
-            style={{ width: 200 }}
-            options={[
-              { value: 'all', label: 'All Categories' },
-              { value: 'general', label: 'General' },
-              { value: 'specialist', label: 'Specialist' },
-              { value: 'dental', label: 'Dental' },
-            ]}
-          />
+
           <Select
             placeholder="Consult Subcategory"
             style={{ width: 200 }}
-            options={[
-              { value: 'all', label: 'All Subcategories' },
-              { value: 'checkup', label: 'Regular Checkup' },
-              { value: 'followup', label: 'Follow-up' },
-              { value: 'emergency', label: 'Emergency' },
-            ]}
+            options={subCategories.map((subCategory) => ({ value: subCategory, label: subCategory }))}
+            onChange={(value) => setSelectedSubCategory(value)}
           />
-          <DatePicker style={{ width: 200 }} placeholder="Date & Time" showTime format="YYYY-MM-DD HH:mm" />
         </div>
       </div>
       <div className="flex justify-start">

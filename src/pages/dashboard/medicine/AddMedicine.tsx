@@ -1,6 +1,9 @@
 import { Form, Input, Select, Button, Upload, InputNumber } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { useGetConsultationSubcategoryQuery } from '../../../redux/apiSlices/consultationSlice';
+import { useCreateMedicineMutation } from '../../../redux/apiSlices/medicineSlice';
+import toast from 'react-hot-toast';
 
 const AddMedication = () => {
   const [form] = Form.useForm();
@@ -8,6 +11,16 @@ const AddMedication = () => {
   const [unitInput, setUnitInput] = useState('');
   const [dosages, setDosages] = useState<string[]>([]);
   const [dosageInput, setDosageInput] = useState('');
+
+  const { data: getAllSubCategories, isFetching } = useGetConsultationSubcategoryQuery(undefined);
+  const [createMedicine] = useCreateMedicineMutation();
+
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
+  const subCategories = getAllSubCategories?.data || [];
+  console.log(subCategories);
 
   const handleAddUnit = () => {
     setUnits([...units, unitInput]);
@@ -27,8 +40,37 @@ const AddMedication = () => {
     setDosages(dosages.filter((_dosage, i) => i !== index));
   };
 
-  const onFinish = (values: any) => {
-    console.log('Form Values:', { ...values, units, dosages });
+  const onFinish = async (values: any) => {
+    const formData = new FormData();
+    formData.append('name', values.name);
+    formData.append('company', values.company);
+    formData.append('country', values.country);
+    formData.append('image', values.image.fileList[0].originFileObj);
+    formData.append('medicineType', values.medicineType);
+    formData.append('form', values.form);
+    formData.append('description', values.description);
+    formData.append('purchaseCost', values.purchaseCost);
+    formData.append('tax', values.tax);
+    formData.append('externalExpenses', values.externalExpenses);
+    formData.append('sellingPrice', values.sellingPrice);
+    formData.append('subCategory', values.subCategory);
+
+    // Append units and dosages directly as arrays
+    units.forEach((unit) => formData.append('unitPerBox', unit));
+    dosages.forEach((dosage) => formData.append('dosage', dosage));
+
+    console.log(formData);
+
+    try {
+      const response = await createMedicine(formData).unwrap();
+      if (response?.success) {
+        toast.success('Medicine added successfully!');
+      } else {
+        toast.error('Failed to add medicine.');
+      }
+    } catch (error) {
+      toast.error('Failed to add medicine.');
+    }
   };
 
   return (
@@ -40,7 +82,7 @@ const AddMedication = () => {
           <div className="space-y-4">
             <Form.Item
               label="Medicine Name"
-              name="medicineName"
+              name="name"
               rules={[{ required: true, message: 'Please enter medicine name' }]}
             >
               <Input placeholder="Ceevit" className="w-full" />
@@ -54,8 +96,18 @@ const AddMedication = () => {
               <Input placeholder="Square" className="w-full" />
             </Form.Item>
 
-            <Form.Item label="Dosage" name="dosage" rules={[{ required: true, message: 'Please enter dosage' }]}>
-              <Input placeholder="250 mg" className="w-full" />
+            <Form.Item
+              label="Sub Category"
+              name="subCategory"
+              rules={[{ required: true, message: 'Please select sub category' }]}
+            >
+              <Select placeholder="Select a sub category" className="w-full">
+                {subCategories.map((category: any) => (
+                  <Select.Option key={category.id} value={category._id}>
+                    {category.name}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Form.Item label="Country" name="country" rules={[{ required: true, message: 'Please enter country' }]}>
@@ -105,8 +157,8 @@ const AddMedication = () => {
             </Form.Item>
 
             <Form.Item
-              label="Dosage"
-              name="dosageAmount"
+              label="Dosages"
+              name="dosage"
               rules={[{ required: true, message: 'Please enter dosage amount' }]}
             >
               <div className="flex flex-col w-full items-center gap-2">

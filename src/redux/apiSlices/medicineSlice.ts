@@ -8,13 +8,40 @@ const medicineApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
+
+    createMedicine: builder.mutation({
+      query: (data) => ({
+        url: '/medicine/create',
+        method: 'POST',
+        body: data,
+      }),
+    }),
     getMedicineById: builder.query({
       query: (id) => ({
         url: `/medicine/${id}`,
         method: 'GET',
       }),
     }),
+    updateMedicine: builder.mutation({
+      query: ({ data, id }: { data: any; id: any }) => ({
+        url: `/medicine/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+    }),
+    deleteMedicine: builder.mutation({
+      query: (id) => ({
+        url: `medicine/${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
-export const { useGetMedicineQuery, useGetMedicineByIdQuery } = medicineApi;
+export const {
+  useGetMedicineQuery,
+  useCreateMedicineMutation,
+  useGetMedicineByIdQuery,
+  useUpdateMedicineMutation,
+  useDeleteMedicineMutation,
+} = medicineApi;
