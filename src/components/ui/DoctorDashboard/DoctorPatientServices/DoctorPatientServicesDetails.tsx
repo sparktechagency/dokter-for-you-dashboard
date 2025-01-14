@@ -34,7 +34,7 @@ const DoctorPatientServicesDetails = () => {
 
   const handleConfirmOk = () => {
     setIsConfirmModalVisible(false);
-    navigate(`/doctor-patient-services/details/${153543}/confirm-prescription`);
+    navigate(`/doctor-patient-services/details/${id}/confirm-prescription`);
   };
 
   const handleConfirmCancel = () => {
