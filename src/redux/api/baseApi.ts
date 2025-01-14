@@ -4,7 +4,7 @@ import { getFromLocalStorage } from '../../utils/local-storage';
 const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://139.59.0.25:5002/api/v1',
+    baseUrl: 'http://10.0.70.127:8000/api/v1',
     prepareHeaders: (headers) => {
       const token = getFromLocalStorage('authToken');
 

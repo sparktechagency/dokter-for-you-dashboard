@@ -1,5 +1,6 @@
 import { Button, DatePicker, Input, Select, Table, Tooltip } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
+import { useGetDoctorConsultationsQuery } from '../../redux/apiSlices/DoctorConsultationSlice';
 
 export const data = [
   {
