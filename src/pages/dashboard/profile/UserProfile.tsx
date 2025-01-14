@@ -1,39 +1,45 @@
 import { useEffect, useState } from 'react';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { Form, Input } from 'antd';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { useGetCurrentAdminQuery, useUpdateUserProfileMutation } from '../../../redux/apiSlices/authSlice';
+// import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { useGetCurrentUserProfileQuery, useUpdateUserProfileMutation } from '../../../redux/apiSlices/authSlice';
 import toast from 'react-hot-toast';
 import logo from '../../../assets/whiteBg.png';
 
-interface CustomJwtPayload extends JwtPayload {
-  id: string;
-}
+// interface CustomJwtPayload extends JwtPayload {
+//   id: string;
+// }
 
 const UserProfile = () => {
   const [form] = Form.useForm();
   const [imgURL, setImgURL] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<File | null>(null);
 
-  const getUserToken = localStorage.getItem('authToken');
-  if (!getUserToken) {
-    console.error('No auth token found');
-    return;
-  }
-  const decodedToken = jwtDecode<CustomJwtPayload>(getUserToken);
-  const { id } = decodedToken;
+  //   const getUserToken = localStorage.getItem('authToken');
+  //   if (!getUserToken) {
+  //     console.error('No auth token found');
+  //     return;
+  //   }
+  //   const decodedToken = jwtDecode<CustomJwtPayload>(getUserToken);
+  //   const { id } = decodedToken;
 
-  const { data: currentAdminData, isFetching } = useGetCurrentAdminQuery(id);
+  //   const { data: currentAdminData, isFetching } = useGetCurrentAdminQuery(id);
+
+  const { data: currentUser, isFetching, refetch } = useGetCurrentUserProfileQuery(undefined);
 
   const [updateAdmin] = useUpdateUserProfileMutation();
 
-  const user = currentAdminData?.data;
+  const user = currentUser?.data;
   //   console.log(user);
 
   useEffect(() => {
     if (user) {
       form.setFieldsValue({
-        firstName: user?.firstName,
+        firstName: user?.firstName
+          ? `${user?.firstName} ${user?.lastName}`
+          : user?.pharmecyName
+          ? user?.pharmecyName
+          : 'Random Doctor',
         lastName: user?.lastName,
         email: user?.email,
         location: user?.location || 'unknown',
@@ -42,6 +48,10 @@ const UserProfile = () => {
       setImgURL(user?.profile.startsWith('http') ? user?.profile : `${import.meta.env.VITE_BASE_URL}${user?.profile}`);
     }
   }, [form, user]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   if (isFetching) {
     return <div>Loading...</div>;

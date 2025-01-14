@@ -119,6 +119,14 @@ const authApi = api.injectEndpoints({
       }),
       invalidatesTags: ['user'],
     }),
+
+    getCurrentUserProfile: builder.query({
+      query: () => ({
+        url: '/user/profile',
+        method: 'GET',
+      }),
+      providesTags: ['user'],
+    }),
   }),
 });
 
@@ -138,4 +146,5 @@ export const {
   useAddAdminProfileMutation,
   useGetCurrentAdminQuery,
   useUpdateUserProfileMutation,
+  useGetCurrentUserProfileQuery,
 } = authApi;

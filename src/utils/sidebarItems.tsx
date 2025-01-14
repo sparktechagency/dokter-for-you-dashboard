@@ -42,13 +42,13 @@ const adminSidebarItems: TSidebarItem[] = [
     icon: <AiOutlineMedicineBox size={24} />,
     roles: ['ADMIN'],
   },
-  {
-    key: 'refund',
-    label: 'Refund',
-    path: 'refund',
-    icon: <AiOutlineUnorderedList size={24} />,
-    roles: ['ADMIN'],
-  },
+  // {
+  //   key: 'refund',
+  //   label: 'Refund',
+  //   path: 'refund',
+  //   icon: <AiOutlineUnorderedList size={24} />,
+  //   roles: ['ADMIN'],
+  // },
   {
     key: 'medicine-service',
     label: 'Add Medicine',
