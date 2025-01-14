@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Table, Select, Row, Col } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useGetConsultationSubcategoryQuery } from '../../../redux/apiSlices/consultationSlice';
 
 const { Option } = Select;
 
@@ -9,67 +10,42 @@ const ManageQuestions = () => {
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(undefined);
   const [subCategoryFilter, setSubCategoryFilter] = useState<string | undefined>(undefined);
 
-  // Dummy data for the table
-  const data = [
-    {
-      key: '1',
-      subCategory: 'General Health',
-      category: 'For Men',
-      totalQuestions: 10,
-    },
-    {
-      key: '2',
-      subCategory: 'Pregnancy',
-      category: 'For Women',
-      totalQuestions: 5,
-    },
-    {
-      key: '3',
-      subCategory: 'Child Growth',
-      category: 'For Children',
-      totalQuestions: 8,
-    },
-    {
-      key: '4',
-      subCategory: 'Mental Health',
-      category: 'For Men',
-      totalQuestions: 12,
-    },
-    {
-      key: '5',
-      subCategory: 'Nutrition',
-      category: 'For Women',
-      totalQuestions: 6,
-    },
-  ];
+  const { data: getSubCategories, isFetching } = useGetConsultationSubcategoryQuery(undefined);
+
+  if (isFetching) return <div>Loading...</div>;
+
+  const subCategories = getSubCategories?.data;
+  console.log(subCategories);
 
   const columns = [
     {
-      title: 'Srl No',
-      dataIndex: 'key',
-      render: (text: string) => <span>{text}</span>,
+      title: 'S.no',
+      dataIndex: 'sno',
+      key: 'sno',
+      render: (_: any, __: any, index: number) => index + 1,
     },
     {
       title: 'Sub-Category',
-      dataIndex: 'subCategory',
-      render: (text: string) => <span>{text}</span>,
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: 'Category',
-      dataIndex: 'category',
-      render: (text: string) => <span>{text}</span>,
+      dataIndex: ['category', 'name'],
+      key: 'category',
     },
     {
       title: 'Total Questions',
       dataIndex: 'totalQuestions',
-      render: (text: number) => <span>{text}</span>,
+      key: 'totalQuestions',
     },
     {
       title: 'Action',
+      dataIndex: 'action',
       key: 'action',
       render: (_: any, record: any) => (
-        <Link to={`/question-details-page/${record?._id}`}>
-          <ArrowRightOutlined size={24} className="text-blue-600 font-bold" />
+        <Link to={`/question-details-page/${record._id}`}>
+          <ArrowRightOutlined />
         </Link>
       ),
     },
@@ -102,7 +78,7 @@ const ManageQuestions = () => {
           </Col>
         </Row>
       </div>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} rowKey="_id" dataSource={subCategories} />
     </div>
   );
 };
