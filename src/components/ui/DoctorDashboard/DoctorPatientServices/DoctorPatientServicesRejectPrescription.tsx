@@ -1,12 +1,23 @@
 import { Button } from 'antd';
 import { BsArrowLeft } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetConsultationByIdQuery } from '../../../../redux/apiSlices/patientServiceSlice';
+import moment from 'moment';
 
 const DoctorPatientServicesRejectPrescription = () => {
   const navigate = useNavigate();
   const handleBack = () => {
     navigate(-1);
   };
+
+  const { id } = useParams();
+
+  const { data: getConsultationById, isFetching } = useGetConsultationByIdQuery(id);
+
+  if (isFetching) return <div>Loading...</div>;
+
+  const consultationData = getConsultationById?.data;
+  console.log(consultationData);
 
   const topSection = (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">
@@ -32,17 +43,17 @@ const DoctorPatientServicesRejectPrescription = () => {
   const detailsSection = (
     <div className="bg-[#E7FBF2] p-6  flex justify-between items-center mb-4">
       <div className="text-gray-600  flex flex-col gap-1  ">
-        <p className="text-[16px] ">S No. #2164564615</p>
-        <p className="text-[16px]">Man problem/Erectile dysfunction</p>
-        <p className="text-[16px]">1/1/2025, 5:30 pm</p>
+        <p className="text-[16px] ">Reg No. #{consultationData?._id}</p>
+        <p className="text-[16px]">{consultationData?.subCategory?.name}</p>
+        <p className="text-[16px]">{moment(consultationData?.createdAt).format('LL')}</p>
       </div>
       <div className="text-center ">
         <p className="text-lg  font-normal text-[#0A2369] pb-1">Consultation Report</p>
-        <p className="text-sm text-gray">Appointment date: 22 nov, 2024 . 08:30am</p>
+        <p className="text-sm text-gray">Appointment date: {moment(consultationData?.createdAt).format('LL')}</p>
       </div>
       <div className="text-center ">
         <p className="text-lg font-normal text-[#0A2369] pb-1">Price</p>
-        <p className="text-sm text-gray">220$</p>
+        <p className="text-sm text-gray">€ 25.00</p>
       </div>
       <div></div>
     </div>
@@ -57,34 +68,41 @@ const DoctorPatientServicesRejectPrescription = () => {
             {/* Profile Picture */}
 
             <img
-              src="/user.svg" // Replace with the real image URL
+              src={
+                consultationData?.userId?.profile.startsWith('http')
+                  ? consultationData?.userId?.profile
+                  : `${import.meta.env.VITE_BASE_URL}${consultationData?.userId?.profile}`
+              }
               alt="Patient"
               className="object-cover size-32 rounded-full"
             />
 
             {/* Patient Info */}
             <div>
-              <h2 className="text-xl font-semibold text-[#0A2369]">Asadujjaman</h2>
-              <p className="text-lg text-[#11D279]">Netherlands</p>
+              <h2 className="text-xl font-semibold text-[#0A2369]">
+                {consultationData?.userId?.firstName} {consultationData?.userId?.lastName}
+              </h2>
+              <p className="text-lg text-[#11D279]">{consultationData?.userId?.country}</p>
             </div>
           </div>
 
           {/* Details Section */}
           <div className="mt-4 w-[70%] text-sm text-gray-800 space-y-4">
             <p className="flex">
-              <span className="font-semibold w-[20%]">Name</span> : Asadujjaman Mahfuz
+              <span className="font-semibold w-[20%]">Name</span> : {consultationData?.userId?.firstName}{' '}
+              {consultationData?.userId?.lastName}
             </p>
             <p className="flex">
-              <span className="font-semibold w-[20%]">Email</span> : Asadujjaman101@bd.com
+              <span className="font-semibold w-[20%]">Email</span> : {consultationData?.userId?.email}
             </p>
             <p className="flex">
-              <span className="font-semibold w-[20%]">Contact Number</span> : +0999999999999999
+              <span className="font-semibold w-[20%]">Contact Number</span> : {consultationData?.userId?.contact}
             </p>
             <p className="flex">
-              <span className="font-semibold w-[20%]">Gender</span> : Male
+              <span className="font-semibold w-[20%]">Gender</span> : {consultationData?.userId?.gender}
             </p>
             <p className="flex">
-              <span className="font-semibold w-[20%]">Date of birth</span> : 12 Nov, 2024
+              <span className="font-semibold w-[20%]">Date of birth</span> : {consultationData?.userId?.dateOfBirth}
             </p>
           </div>
         </div>

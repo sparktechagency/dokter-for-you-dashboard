@@ -35,6 +35,21 @@ const medicineApi = api.injectEndpoints({
         method: 'DELETE',
       }),
     }),
+
+    // getMedicineBySubCategory
+    getMedicineBySubCategory: builder.query({
+      query: (id) => ({
+        url: `medicine?subCategory=${id}`,
+        method: 'GET',
+      }),
+    }),
+    makePrescription: builder.mutation({
+      query: ({ data, id }) => ({
+        url: `/consultation/prescribe/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -44,4 +59,6 @@ export const {
   useGetMedicineByIdQuery,
   useUpdateMedicineMutation,
   useDeleteMedicineMutation,
+  useGetMedicineBySubCategoryQuery,
+  useMakePrescriptionMutation,
 } = medicineApi;

@@ -1,82 +1,39 @@
-import { Button, Input, Select, Modal, Form } from 'antd';
+import { Button, Input, Select, Modal } from 'antd';
 import { BsArrowLeft, BsSearch } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
-import medicine1 from '../../../../assets/ceevit.png';
-import medicine2 from '../../../../assets/ceevit2.png';
-import medicine3 from '../../../../assets/ceevit.png';
-import medicine4 from '../../../../assets/ceevit2.png';
 import { FaTrash } from 'react-icons/fa';
 import { useState } from 'react';
 import { useGetConsultationByIdQuery } from '../../../../redux/apiSlices/patientServiceSlice';
 import moment from 'moment';
+import {
+  useGetMedicineBySubCategoryQuery,
+  useMakePrescriptionMutation,
+} from '../../../../redux/apiSlices/medicineSlice';
+import toast from 'react-hot-toast';
 
 interface Medicine {
-  id: number;
+  _id: string;
   name: string;
-  type: string;
+  medicineType: string;
   image: string;
   description: string;
-  dosage: string;
-  bestTaken: string;
-  storage: string;
-  price: number;
+  dosage: string[];
+  unitPerBox: string[];
+  sellingPrice: number;
+  company: string;
+  form: string;
 }
-
-const medicinesData: Medicine[] = [
-  {
-    id: 1,
-    name: 'Ceevit',
-    type: 'Vitamin C',
-    image: medicine1,
-    description:
-      'Ceevit is a vitamin C supplement that helps boost immunity and maintain healthy skin. Ceevit is a vitamin C supplement that helps boost immunity and maintain healthy skin. Ceevit is a vitamin C supplement that helps boost immunity and maintain healthy skin.',
-    dosage: '1 tablet daily',
-    bestTaken: 'After meals',
-    storage: 'Store in a cool, dry place',
-    price: 13.99,
-  },
-  {
-    id: 2,
-    name: 'Vitamin D3',
-    type: 'Vitamin D',
-    image: medicine2,
-    description: 'Essential vitamin D3 supplement for strong bones and immune system support.',
-    dosage: '1 capsule daily',
-    bestTaken: 'With breakfast',
-    storage: 'Keep away from direct sunlight',
-    price: 15.99,
-  },
-  {
-    id: 3,
-    name: 'Omega-3',
-    type: 'Fish Oil',
-    image: medicine3,
-    description: 'High-quality fish oil supplement rich in EPA and DHA for heart and brain health.',
-    dosage: '2 softgels daily',
-    bestTaken: 'With meals',
-    storage: 'Refrigerate after opening',
-    price: 24.99,
-  },
-  {
-    id: 4,
-    name: 'Zinc Plus',
-    type: 'Mineral',
-    image: medicine4,
-    description: 'Advanced zinc formula for immune support and skin health.',
-    dosage: '1 tablet daily',
-    bestTaken: 'Before bedtime',
-    storage: 'Store at room temperature',
-    price: 11.99,
-  },
-];
 
 const DoctorPatientServicesConfirmPrescription = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMedicineDetails, setSelectedMedicineDetails] = useState<Medicine | null>(null);
-  const [selectedDosage, setSelectedDosage] = useState('250 mg');
-  const [selectedUnit, setSelectedUnit] = useState('50 Pcs');
+  const [selectedDosage, setSelectedDosage] = useState<string | undefined>();
+  const [selectedUnit, setSelectedUnit] = useState<string | undefined>();
   const [quantity, setQuantity] = useState(0);
+  const [selectedMedicines, setSelectedMedicines] = useState<
+    { medicineId: Medicine; dosage: string; unit: string; quantity: number }[]
+  >([]);
 
   const { id } = useParams();
 
@@ -85,28 +42,61 @@ const DoctorPatientServicesConfirmPrescription = () => {
   };
 
   const { data: getConsultationById, isFetching } = useGetConsultationByIdQuery(id);
-
-  if (isFetching) return <div>Loading...</div>;
-
+  const [makePrescription] = useMakePrescriptionMutation();
   const consultation = getConsultationById?.data;
 
-  console.log(consultation);
+  const { data: getMedicineById } = useGetMedicineBySubCategoryQuery(consultation?.subCategory?._id);
+
+  const medicines = getMedicineById?.data;
+
+  if (isFetching) return <div>Loading...</div>;
+  // console.log(consultation, medicines);
 
   const showMedicineDetails = (medicine: Medicine) => {
+    console.log('adrshsaethaesrhaerh', medicine);
+
     setSelectedMedicineDetails(medicine);
     setIsModalOpen(true);
     // Reset selections when opening modal
-    setSelectedDosage('250 mg');
-    setSelectedUnit('50 Pcs');
+    setSelectedDosage(medicine.dosage[0]);
+    setSelectedUnit(medicine.unitPerBox[0]);
     setQuantity(0);
+  };
+
+  const handleUploadPrescription = async () => {
+    const opinion = (document.querySelector('textarea[name="opinion"]') as HTMLTextAreaElement).value;
+    const data = {
+      suggestedMedicine: selectedMedicines.map((medicine) => ({
+        _id: medicine.medicineId._id,
+        dosage: medicine.dosage,
+        total: medicine.unit,
+        count: medicine.quantity,
+      })),
+      opinion,
+    };
+    console.log(data);
+
+    try {
+      const response = await makePrescription({ data: data, id }).unwrap();
+      console.log(response);
+      if (response?.success) {
+        toast.success('Prescription uploaded successfully!');
+        navigate('/doctor-patient-services-list');
+      } else {
+        toast.error('Failed to upload prescription.');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to upload prescription.');
+    }
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
     setSelectedMedicineDetails(null);
     // Reset selections when closing modal
-    setSelectedDosage('250 mg');
-    setSelectedUnit('50 Pcs');
+    setSelectedDosage(selectedMedicineDetails?.dosage[0]);
+    setSelectedUnit(selectedMedicineDetails?.unitPerBox[0]);
     setQuantity(0);
   };
 
@@ -209,7 +199,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
   );
 
   const givePrescription = (
-    <div className=" h-[600px]">
+    <div className="">
       <h1 className="text-2xl font-bold">Give Prescription</h1>
       <h1 className="text-2xl font-bold border-t my-5 pt-3 border-slate-300">Select your preferred medication</h1>
       <div className="mb-4 flex items-center justify-start gap-4">
@@ -265,39 +255,26 @@ const DoctorPatientServicesConfirmPrescription = () => {
         />
       </div>
       <div className="grid grid-cols-4 gap-4">
-        {medicinesData.map((medicine) => (
+        {medicines?.map((medicine: any) => (
           <div
-            key={medicine.id}
+            key={medicine?._id}
             className="flex bg-slate-100 shadow-md hover:shadow-lg p-3 rounded-xl flex-col items-center cursor-pointer"
             onClick={() => showMedicineDetails(medicine)}
           >
-            <img className="w-[120px] h-[120px]" src={medicine.image} alt={medicine.name} />
-            <h1 className="text-xl mt-3 font-bold">{medicine.name}</h1>
-            <p className="text-lg">{medicine.type}</p>
-            <p className="text-sm text-gray-600 mt-2">${medicine.price}</p>
+            <img
+              className="w-[120px] h-[120px] object-cover"
+              src={
+                medicine?.image.startsWith('http')
+                  ? medicine?.image
+                  : `${import.meta.env.VITE_BASE_URL}${medicine?.image}`
+              }
+              alt={medicine?.name}
+            />
+            <h1 className="text-xl mt-3 font-bold">{medicine?.name}</h1>
+            <p className="text-lg">{medicine?.medicineType}</p>
+            <p className="text-sm text-gray-600 mt-2">€ {medicine?.sellingPrice}</p>
           </div>
         ))}
-      </div>
-    </div>
-  );
-
-  const selectedMedicine = (
-    <div className="bg-[#e7fbf2] p-8 shadow-md flex justify-between items-center">
-      <img className="w-24 h-20" src={medicine1} alt="" />
-      <div>
-        <h1 className="text-xl font-bold">Ceevit</h1>
-        <h1 className="text-sm text-gray">Vitamin C 250 mg</h1>
-      </div>
-      <div>
-        <h1 className="text-xl font-bold">Dosage</h1>
-        <h1 className="text-sm text-gray">250 mg</h1>
-      </div>
-      <div>
-        <h1 className="text-xl font-bold">Contents of the box</h1>
-        <h1 className="text-sm text-gray">1</h1>
-      </div>
-      <div>
-        <FaTrash className="text-red-600" size={24} />
       </div>
     </div>
   );
@@ -306,14 +283,83 @@ const DoctorPatientServicesConfirmPrescription = () => {
     <div className="p-3">
       <h1>Expert Opinion</h1>
       <textarea
+        name="opinion"
         placeholder="Where your health is concerned, we believe you have the right to decide what to do with your body. That is why we offer you the opportunity to consult a licensed and registered EU "
         className="w-full border rounded-xl border-slate-300 p-5 my-5 h-32"
       ></textarea>
       <div className="text-center">
-        <button className="bg-[#0a2369] text-white py-4 px-20 rounded">Upload Now</button>
+        <button onClick={() => handleUploadPrescription()} className="bg-[#0a2369] text-white py-4 px-20 rounded">
+          Upload Now
+        </button>
       </div>
     </div>
   );
+
+  // console.log(selectedMedicineDetails);
+
+  const handleAddToCart = ({
+    medicine,
+    dosage,
+    unit,
+    quantity,
+  }: {
+    medicine: Medicine;
+    dosage: string;
+    unit: string;
+    quantity: number;
+  }) => {
+    const data = {
+      medicineId: medicine,
+      dosage,
+      unit,
+      quantity,
+    };
+
+    setIsModalOpen(false);
+
+    console.log('adbhaerhbar', data);
+    setSelectedMedicines((prevState) => [...prevState, data]);
+  };
+  console.log(selectedMedicines);
+  const selectedMedicine = selectedMedicines.map((medicine) => (
+    <div
+      className="bg-[#e7fbf2] mt-10 border-t-4 border-[#0a2369] p-8 shadow-md flex justify-between items-center"
+      key={medicine.medicineId._id}
+    >
+      <img
+        className="w-24 h-20 object-cover"
+        src={
+          medicine?.medicineId?.image.startsWith('http')
+            ? medicine?.medicineId?.image
+            : `${import.meta.env.VITE_BASE_URL}${medicine?.medicineId?.image}`
+        }
+        alt=""
+      />
+      <div>
+        <h1 className="text-xl font-bold">{medicine.medicineId.name}</h1>
+        <h1 className="text-sm text-gray">{medicine.medicineId.medicineType}</h1>
+      </div>
+      <div>
+        <h1 className="text-xl font-bold">Dosage</h1>
+        <h1 className="text-sm text-gray">{medicine.dosage}</h1>
+      </div>
+      <div>
+        <h1 className="text-xl font-bold">Contents of the box</h1>
+        <h1 className="text-sm text-gray">{medicine.quantity}</h1>
+      </div>
+      <div>
+        <FaTrash
+          className="text-red-600"
+          size={24}
+          onClick={() =>
+            setSelectedMedicines((prevState) =>
+              prevState.filter((item) => item.medicineId._id !== medicine.medicineId._id),
+            )
+          }
+        />
+      </div>
+    </div>
+  ));
 
   return (
     <div>
@@ -340,90 +386,62 @@ const DoctorPatientServicesConfirmPrescription = () => {
           <div className="flex items-center gap-8">
             <div className="w-1/2">
               <img
-                src={selectedMedicineDetails.image}
+                src={
+                  selectedMedicineDetails?.image.startsWith('http')
+                    ? selectedMedicineDetails?.image
+                    : `${import.meta.env.VITE_BASE_URL}${selectedMedicineDetails?.image}`
+                }
                 alt={selectedMedicineDetails.name}
                 className="w-full object-contain"
               />
             </div>
             <div className="w-1/2 space-y-6">
               <div>
-                <p className="text-blue-600 font-medium mb-2">SQUARE</p>
-                <h2 className="text-3xl font-bold mb-1">{selectedMedicineDetails.name}</h2>
-                <p className="text-xl text-gray-600">{selectedMedicineDetails.type}</p>
+                <p className="text-blue-600 font-medium mb-2">{selectedMedicineDetails?.company}</p>
+                <h2 className="text-3xl font-bold mb-1">{selectedMedicineDetails?.name}</h2>
+                <p className="text-xl text-gray-600">{selectedMedicineDetails?.medicineType}</p>
               </div>
               <div>
-                <p className="text-blue-500 mb-4">Tablet</p>
-                <p className="text-gray-600">{selectedMedicineDetails.description}</p>
+                <p className="text-blue-500 mb-4">{selectedMedicineDetails?.form}</p>
+                <p className="text-gray-600">{selectedMedicineDetails?.description}</p>
               </div>
               <div>
                 <p className="font-medium mb-4">Dosage</p>
                 <div className="flex gap-4 mb-4">
-                  <button
-                    className={`px-4 py-2 rounded transition-colors ${
-                      selectedDosage === '250 mg'
-                        ? 'bg-[#0a2369] text-white'
-                        : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
-                    }`}
-                    onClick={() => setSelectedDosage('250 mg')}
-                  >
-                    250 mg
-                  </button>
-                  <button
-                    className={`px-4 py-2 rounded transition-colors ${
-                      selectedDosage === '500 gm'
-                        ? 'bg-[#0a2369] text-white'
-                        : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
-                    }`}
-                    onClick={() => setSelectedDosage('500 gm')}
-                  >
-                    500 gm
-                  </button>
+                  {selectedMedicineDetails?.dosage?.map((dosage: any) => (
+                    <button
+                      key={dosage}
+                      className={`px-4 py-2 rounded transition-colors ${
+                        selectedDosage === dosage
+                          ? 'bg-[#0a2369] text-white'
+                          : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
+                      }`}
+                      onClick={() => setSelectedDosage(dosage)}
+                    >
+                      {dosage}
+                    </button>
+                  ))}
                 </div>
+                {selectedDosage ? null : <p className="text-red-600 text-sm">Please select dosage</p>}
               </div>
               <div>
                 <p className="font-medium mb-4">Select Units per Box</p>
                 <div className="flex gap-4 mb-6">
-                  <button
-                    className={`px-4 py-2 rounded transition-colors ${
-                      selectedUnit === '10 Pcs'
-                        ? 'bg-[#0a2369] text-white'
-                        : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
-                    }`}
-                    onClick={() => setSelectedUnit('10 Pcs')}
-                  >
-                    10 Pcs
-                  </button>
-                  <button
-                    className={`px-4 py-2 rounded transition-colors ${
-                      selectedUnit === '50 Pcs'
-                        ? 'bg-[#0a2369] text-white'
-                        : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
-                    }`}
-                    onClick={() => setSelectedUnit('50 Pcs')}
-                  >
-                    50 Pcs
-                  </button>
-                  <button
-                    className={`px-4 py-2 rounded transition-colors ${
-                      selectedUnit === '100 Pcs'
-                        ? 'bg-[#0a2369] text-white'
-                        : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
-                    }`}
-                    onClick={() => setSelectedUnit('100 Pcs')}
-                  >
-                    100 Pcs
-                  </button>
-                  <button
-                    className={`px-4 py-2 rounded transition-colors ${
-                      selectedUnit === '200 Pcs'
-                        ? 'bg-[#0a2369] text-white'
-                        : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
-                    }`}
-                    onClick={() => setSelectedUnit('200 Pcs')}
-                  >
-                    200 Pcs
-                  </button>
+                  {selectedMedicineDetails?.unitPerBox?.map((unit: any) => (
+                    <button
+                      key={unit}
+                      className={`px-4 py-2 rounded transition-colors ${
+                        selectedUnit === unit
+                          ? 'bg-[#0a2369] text-white'
+                          : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
+                      }`}
+                      onClick={() => setSelectedUnit(unit)}
+                    >
+                      {unit}
+                    </button>
+                  ))}
                 </div>
+                {selectedUnit ? null : <p className="text-red-600 text-sm">Please select unit per box</p>}
               </div>
               <div>
                 <p className="font-medium mb-4">Contents of the Box</p>
@@ -442,19 +460,19 @@ const DoctorPatientServicesConfirmPrescription = () => {
                     +
                   </button>
                 </div>
+                {quantity ? null : <p className="text-red-600 text-sm">Please select contents of the box</p>}
               </div>
               <button
                 className="w-full bg-[#00865A] hover:bg-[#007a52] text-white py-4 rounded flex items-center justify-center gap-2"
-                onClick={() => {
-                  // Handle adding to preferences with selected options
-                  console.log({
+                disabled={!selectedDosage || !selectedUnit || !quantity}
+                onClick={() =>
+                  handleAddToCart({
                     medicine: selectedMedicineDetails,
-                    dosage: selectedDosage,
-                    unit: selectedUnit,
+                    dosage: selectedDosage || '',
+                    unit: selectedUnit || '',
                     quantity,
-                  });
-                  handleModalClose();
-                }}
+                  })
+                }
               >
                 <span className="text-xl">+</span> My preference
               </button>

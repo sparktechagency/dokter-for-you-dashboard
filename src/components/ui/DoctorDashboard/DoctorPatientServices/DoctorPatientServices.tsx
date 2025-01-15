@@ -2,7 +2,7 @@ import { Table, Badge, Button, Tooltip, Select, DatePicker, Input, Tabs } from '
 import { BsEye, BsSearch } from 'react-icons/bs';
 import { useState } from 'react';
 import { useGetDoctorConsultationsQuery } from '../../../../redux/apiSlices/DoctorConsultationSlice';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 // export const data = [
 //   {
@@ -42,14 +42,23 @@ interface ConsultationItem {
   };
 }
 
+interface CustomJwtPayload extends JwtPayload {
+  id: string;
+}
+
 const DoctorPatientServices = () => {
   const [activeTab, setActiveTab] = useState('1');
 
   const token = localStorage.getItem('authToken');
-  const decode = token ? jwtDecode(token) : { id: '' };
-  const id = typeof decode === 'string' ? JSON.parse(decode).id : '';
+  if (token === null) {
+    // Handle the case where the token is null, e.g., redirect to login
+    console.error('No auth token found');
+    return <div>Please log in again.</div>;
+  }
+  const payload = jwtDecode(token) as CustomJwtPayload;
+  const { id } = payload;
 
-  //   console.log(decode);
+  console.log(id);
 
   const { data: getConsultations, isFetching } = useGetDoctorConsultationsQuery(id);
 
@@ -57,11 +66,13 @@ const DoctorPatientServices = () => {
 
   const consultations = getConsultations?.data;
 
+  console.log(consultations);
+
   const regularConsultationData = consultations?.filter(
     (item: ConsultationItem) => item?.consultationType === 'regular',
   );
   const videoConsultationData = consultations?.filter((item: ConsultationItem) => item?.consultationType === 'video');
-  const digitalPrescriptionData = consultations?.filter((item: ConsultationItem) => item?.forwardToPartner === true);
+  const digitalPrescriptionData = consultations?.filter((item: ConsultationItem) => item?.forwardToPartner === false);
   const digitalPrescriptionWithOrderData = consultations?.filter(
     (item: ConsultationItem) => item?.medicins?.length > 0,
   );
@@ -413,6 +424,7 @@ const DoctorPatientServices = () => {
         return (
           <Table
             columns={medicationColumns}
+            rowKey="_id"
             dataSource={digitalPrescriptionWithOrderData}
             pagination={{ pageSize: 10 }}
           />
