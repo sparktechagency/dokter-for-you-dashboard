@@ -4,7 +4,6 @@ import {
   AiOutlineMedicineBox,
   AiOutlinePlusCircle,
   AiOutlineSetting,
-  AiOutlineUnorderedList,
   AiOutlineSearch,
   AiOutlineStar,
 } from 'react-icons/ai';
@@ -212,11 +211,17 @@ const adminSidebarItems: TSidebarItem[] = [
     roles: ['DOCTOR'],
   },
   {
-    key: 'login',
+    key: 'logout',
     label: 'Log Out',
     path: 'login',
     icon: <LuLogOut size={24} />,
     roles: ['ADMIN', 'DOCTOR', 'PHARMACY'],
+    onClick: () => {
+      ['authToken', 'oneTimeCodeToken', 'role'].forEach((key) => {
+        localStorage.removeItem(key);
+      });
+      window.location.href = '/login';
+    },
   },
 ];
 

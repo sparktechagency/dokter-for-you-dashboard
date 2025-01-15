@@ -3,6 +3,8 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetConsultationByIdQuery } from '../../../../redux/apiSlices/patientServiceSlice';
 import moment from 'moment';
+import { useRejectConsultationMutation } from '../../../../redux/apiSlices/DoctorConsultationSlice';
+import toast from 'react-hot-toast';
 
 const DoctorPatientServicesRejectPrescription = () => {
   const navigate = useNavigate();
@@ -13,6 +15,8 @@ const DoctorPatientServicesRejectPrescription = () => {
   const { id } = useParams();
 
   const { data: getConsultationById, isFetching } = useGetConsultationByIdQuery(id);
+
+  const [rejectConsultation] = useRejectConsultationMutation();
 
   if (isFetching) return <div>Loading...</div>;
 
@@ -116,6 +120,24 @@ const DoctorPatientServicesRejectPrescription = () => {
     </div>
   );
 
+  const handleRejectPrescription = async () => {
+    const opinion = (document.querySelector('textarea[name="opinion"]') as HTMLTextAreaElement).value;
+
+    try {
+      const response = await rejectConsultation({ id, data: { opinion } }).unwrap();
+      console.log(response);
+      if (response?.success) {
+        toast.success('Prescription rejected successfully!');
+        navigate('/doctor-patient-services-list');
+      } else {
+        toast.error('Failed to reject prescription.');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to reject prescription.');
+    }
+  };
+
   return (
     <div>
       <div className=" bg-white p-3">
@@ -128,14 +150,19 @@ const DoctorPatientServicesRejectPrescription = () => {
         <div className="p-5">
           <h1 className="text-xl text-gray">Expert Opinion</h1>
           <textarea
-            name="expert-opinion"
+            name="opinion"
             className="w-full h-[200px] border border-slate-300 p-5 my-5 rounded-lg"
             placeholder="Write your opinion here..."
             id=""
           ></textarea>
         </div>
         <div className="text-center">
-          <button className="text-xl font-bold bg-red-600 text-white py-2 px-32 rounded-lg">Upload Now</button>
+          <button
+            onClick={() => handleRejectPrescription()}
+            className="text-xl font-bold bg-red-600 text-white py-2 px-32 rounded-lg"
+          >
+            Upload Now
+          </button>
         </div>
       </div>
     </div>

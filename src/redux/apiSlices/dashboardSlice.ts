@@ -30,6 +30,29 @@ const dashboardApi = api.injectEndpoints({
       }),
       providesTags: ['user'],
     }),
+
+    //doctor dashboard
+    getDoctorGeneralStates: builder.query({
+      query: () => ({
+        url: '/user/doctors/status',
+        method: 'GET',
+      }),
+      providesTags: ['user'],
+    }),
+    getWorkActivityStates: builder.query({
+      query: (year) => ({
+        url: `/user/doctors/activity/status?year=${year}`,
+        method: 'GET',
+      }),
+      providesTags: ['user'],
+    }),
+    getDoctorEarningStates: builder.query({
+      query: (year) => ({
+        url: `/user/doctors/earning/status?year=${year}`,
+        method: 'GET',
+      }),
+      providesTags: ['user'],
+    }),
   }),
 });
 
@@ -38,4 +61,9 @@ export const {
   useGetEarningStatesQuery,
   useGetUserStatisticsQuery,
   useGetWorkloadStatesQuery,
+
+  //doctor dashboard
+  useGetDoctorGeneralStatesQuery,
+  useGetWorkActivityStatesQuery,
+  useGetDoctorEarningStatesQuery,
 } = dashboardApi;

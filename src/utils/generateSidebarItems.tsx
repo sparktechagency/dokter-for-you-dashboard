@@ -9,13 +9,20 @@ export type TSidebarItem = {
   icon?: ReactNode;
   children?: TSidebarItem[];
   roles?: string[];
+  onClick?: () => void;
 };
 
 // Sidebar Generator for Ant Design Menu
 export const sidebarItemsGenerator = (items: TSidebarItem[]) => {
   const sidebarItems = items.reduce((acc: TSidebarItem[], item) => {
-    // If the item has children, create a parent item with nested children
-    if (item.children && item.children.length > 0) {
+    if (item.key === 'logout') {
+      acc.push({
+        key: item.key,
+        icon: item.icon,
+        label: <>{item.label}</>,
+        onClick: item.onClick,
+      });
+    } else if (item.children && item.children.length > 0) {
       acc.push({
         key: item.key,
         icon: item.icon,

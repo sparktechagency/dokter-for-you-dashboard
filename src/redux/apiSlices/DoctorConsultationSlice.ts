@@ -17,7 +17,16 @@ const doctorPatientServiceApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
+
+    rejectConsultation: builder.mutation({
+      query: ({ data, id }: { data: any; id: any }) => ({
+        url: `/consultation/reject/${id}`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetDoctorConsultationsQuery, useGetDoctorConsultationByIdQuery } = doctorPatientServiceApi;
+export const { useGetDoctorConsultationsQuery, useGetDoctorConsultationByIdQuery, useRejectConsultationMutation } =
+  doctorPatientServiceApi;

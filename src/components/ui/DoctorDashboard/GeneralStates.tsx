@@ -4,14 +4,23 @@ import { RiStethoscopeLine } from 'react-icons/ri';
 import { TbReportMedical } from 'react-icons/tb';
 import { MdOutlineMedication } from 'react-icons/md';
 import { FaMoneyBill } from 'react-icons/fa';
+import { useGetDoctorGeneralStatesQuery } from '../../../redux/apiSlices/dashboardSlice';
 
 const GeneralStates = () => {
+  const { data: getDoctorGeneralStates, isFetching } = useGetDoctorGeneralStatesQuery(undefined);
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
+  const doctorGeneralStates = getDoctorGeneralStates?.data;
+  console.log(doctorGeneralStates);
+
   // This would come from your database/API
   const values = {
-    daily: 1000,
-    totalEarn: 30000,
-    raisedAmount: 20000,
-    balanceAvailable: 10000,
+    daily: doctorGeneralStates?.dailyEarning,
+    totalEarn: doctorGeneralStates?.totalEarning,
+    raisedAmount: doctorGeneralStates?.raisedAmount || 25,
+    balanceAvailable: doctorGeneralStates?.balance || 25,
   };
 
   const data = [
@@ -26,34 +35,47 @@ const GeneralStates = () => {
   const statsData = [
     {
       title: 'Regular Consultation',
-      date: '13 NOV, 2024',
-      load: 100,
-      resolve: 25,
-      price: 250,
+      date: new Date().toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }),
+      total: doctorGeneralStates?.totalRegularConsultation || 0,
+
+      price: doctorGeneralStates?.totalRegularConsultation * 25 || 0,
       icon: <RiStethoscopeLine className="text-5xl text-blue-500" />,
     },
     {
       title: 'Video Consultation',
-      date: '13 NOV, 2024',
-      load: 100,
-      resolve: 25,
-      price: 250,
+      date: new Date().toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }),
+      total: doctorGeneralStates?.totalVideoConsultation || 0,
+      price: doctorGeneralStates?.totalVideoConsultation * 25 || 0,
       icon: <BsCameraVideo className="text-5xl text-blue-500" />,
     },
     {
       title: 'Medication by Patient',
-      date: '13 NOV, 2024',
-      load: 100,
-      resolve: 25,
-      price: 250,
+      date: new Date().toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }),
+      total: doctorGeneralStates?.totalMedicationByPatient || 0,
+      price: doctorGeneralStates?.totalMedicationByPatient * 25 || 0,
       icon: <MdOutlineMedication className="text-5xl text-blue-500" />,
     },
     {
       title: 'Digital Prescription Details',
-      date: '13 NOV, 2024',
-      load: 100,
-      resolve: 25,
-      price: 250,
+      date: new Date().toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }),
+      total: doctorGeneralStates?.totalDigitalPrescription || 0,
+      price: doctorGeneralStates?.totalDigitalPrescription * 25 || 0,
       icon: <TbReportMedical className="text-5xl text-blue-500" />,
     },
   ];
@@ -75,10 +97,7 @@ const GeneralStates = () => {
               <div className="flex justify-between items-center mt-4">
                 <div className="flex items-center justify-between w-full">
                   <p className="text-xl font-semibold">
-                    load: <span className="text-[#1854F9]">{stat.load}</span>
-                  </p>
-                  <p className="text-xl font-semibold">
-                    resolve: <span className="text-[#00B3CC]">{stat.resolve}</span>
+                    Total: <span className="text-[#1854F9]">{stat.total}</span>
                   </p>
                   <p className="text-xl font-semibold">
                     Price <span className="text-[#11D279]">€{stat.price}</span>

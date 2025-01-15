@@ -16,6 +16,7 @@ const MedicationDetails = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultationData = getConsultationById?.data;
+  console.log(consultationData);
 
   const topSection = (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">
@@ -164,7 +165,7 @@ const MedicationDetails = () => {
           <span className="text-[#0A2369]">
             €{' '}
             {consultationData?.medicins
-              ?.map((medicine: any) => medicine._id.sellingPrice)
+              ?.map((medicine: any) => medicine?._id?.sellingPrice)
               .reduce((total: number, price: number) => total + price, 0) + 25}
           </span>
         </div>

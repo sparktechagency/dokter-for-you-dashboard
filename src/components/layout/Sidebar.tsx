@@ -5,7 +5,7 @@ import adminSidebarItems from '../../utils/sidebarItems';
 const { Sider } = Layout;
 
 const Sidebar = () => {
-  const userRole = localStorage.getItem('role');
+  const userRole = localStorage.getItem('role') || sessionStorage.getItem('role');
 
   const filteredSidebarItems = adminSidebarItems
     .filter((item) => !item.roles || (userRole && item.roles.includes(userRole)))

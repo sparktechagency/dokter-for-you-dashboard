@@ -74,7 +74,7 @@ const DoctorPatientServices = () => {
   const videoConsultationData = consultations?.filter((item: ConsultationItem) => item?.consultationType === 'video');
   const digitalPrescriptionData = consultations?.filter((item: ConsultationItem) => item?.forwardToPartner === false);
   const digitalPrescriptionWithOrderData = consultations?.filter(
-    (item: ConsultationItem) => item?.medicins?.length > 0,
+    (item: ConsultationItem) => item?.forwardToPartner === true,
   );
 
   console.log(consultations);
@@ -384,12 +384,7 @@ const DoctorPatientServices = () => {
       render: (record: any) => (
         <div className="flex items-center space-x-2">
           <Tooltip title="Details">
-            <Button
-              href={`/doctor-digital-prescription/details/${record?._id}`}
-              type="text"
-              shape="circle"
-              icon={<BsEye size={20} />}
-            />
+            <Button href={`/medication/details/${record._id}`} type="text" shape="circle" icon={<BsEye size={20} />} />
           </Tooltip>
         </div>
       ),

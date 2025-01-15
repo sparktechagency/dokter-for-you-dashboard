@@ -63,11 +63,16 @@ import DoctorMyTransaction from '../components/ui/DoctorDashboard/MyTransactions
 
 import QuestionsPage from '../pages/dashboard/manageQuestions/QuestionsPage';
 import ManageQuestions from '../pages/dashboard/manageQuestions/ManageQuestions';
+import PrivateRoute from './PrivetRoute';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <PrivateRoute>
+        <App />
+      </PrivateRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
       { path: 'admin-dashboard', element: <Dashboard /> },
