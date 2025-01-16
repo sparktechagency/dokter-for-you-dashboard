@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useGetConsultationSubcategoryQuery } from '../../../redux/apiSlices/consultationSlice';
 import { useCreateMedicineMutation } from '../../../redux/apiSlices/medicineSlice';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const AddMedication = () => {
   const [form] = Form.useForm();
@@ -11,7 +12,7 @@ const AddMedication = () => {
   const [unitInput, setUnitInput] = useState('');
   const [dosages, setDosages] = useState<string[]>([]);
   const [dosageInput, setDosageInput] = useState('');
-
+  const navigate = useNavigate();
   const { data: getAllSubCategories, isFetching } = useGetConsultationSubcategoryQuery(undefined);
   const [createMedicine] = useCreateMedicineMutation();
 
@@ -55,16 +56,28 @@ const AddMedication = () => {
     formData.append('sellingPrice', values.sellingPrice);
     formData.append('subCategory', values.subCategory);
 
+    // const finalUnits = Array.isArray(units) ? units : [units];
+    // const finalDosages = Array.isArray(dosages) ? dosages : [dosages];
+
     // Append units and dosages directly as arrays
-    units.forEach((unit) => formData.append('unitPerBox', unit));
+    units.forEach((unit) => {
+      formData.append('unitPerBox', unit);
+    });
     dosages.forEach((dosage) => formData.append('dosage', dosage));
 
-    console.log(formData);
+    // if (finalUnits.length === 0) {
+    //   formData.append('unitPerBox', ''); // Append an empty string if no units are added
+    // }
+    // if (finalDosages.length === 0) {
+    //   formData.append('dosage', ''); // Append an empty string if no dosages are added
+    // }
 
     try {
       const response = await createMedicine(formData).unwrap();
+      console.log('dasgargrg', response);
       if (response?.success) {
         toast.success('Medicine added successfully!');
+        navigate('/medicine-service');
       } else {
         toast.error('Failed to add medicine.');
       }

@@ -32,16 +32,6 @@ const MedicationTradeDetails = () => {
         >
           {consultationData?.status}
         </Button>
-        <Button
-          type="text"
-          style={{
-            height: 42,
-          }}
-        >
-          <Tooltip title="Poke Therapist">
-            <LiaHandPointRightSolid color="#00B3CC" size={20} />
-          </Tooltip>
-        </Button>
       </div>
     </div>
   );

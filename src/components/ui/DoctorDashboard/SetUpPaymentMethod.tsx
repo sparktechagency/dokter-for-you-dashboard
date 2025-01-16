@@ -5,7 +5,7 @@ const SetUpPaymentMethod = () => {
   const [form] = Form.useForm();
   //   const [createPaymentMethod, { isLoading }] = useCreatePaymentMethodMutation();
 
-  const onFinish = async (values) => {
+  const onFinish = async (values: any) => {
     console.log(values);
     // try {
     //   await createPaymentMethod(values).unwrap();

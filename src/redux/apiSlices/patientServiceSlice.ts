@@ -16,7 +16,16 @@ const patientServiceApi = api.injectEndpoints({
       }),
       providesTags: ['consultation'],
     }),
+    updateConsultation: builder.mutation({
+      query: ({ data, id }: { data: any; id: any }) => ({
+        url: `/consultation/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['consultation'],
+    }),
   }),
 });
 
-export const { useGetConsultationsQuery, useGetConsultationByIdQuery } = patientServiceApi;
+export const { useGetConsultationsQuery, useGetConsultationByIdQuery, useUpdateConsultationMutation } =
+  patientServiceApi;

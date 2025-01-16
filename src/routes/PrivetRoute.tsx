@@ -15,7 +15,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    console.log(authToken);
+    // console.log(authToken);
     if (!authToken) {
       toast.error('You are not authorized to access this. Please login first.');
       navigate('/login', { replace: true, state: { from: location } });

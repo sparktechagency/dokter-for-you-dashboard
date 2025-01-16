@@ -1,63 +1,74 @@
-import { Button, DatePicker, Input, Select, Table, Tooltip } from 'antd';
+import { Button, Input, Select, Table, Tooltip } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
-import { useGetDoctorConsultationsQuery } from '../../redux/apiSlices/DoctorConsultationSlice';
-
-export const data = [
-  {
-    key: '1',
-    sno: '#1239',
-    regNo: '190653',
-    consultFor: 'Man problem/Erectile dysfunction',
-    consultant: 'Dr. Arco Verhoog',
-    dateTime: '14/11/2022, 10:09',
-    price: 25.0,
-    status: 'Resented',
-  },
-  {
-    key: '2',
-    sno: '#1238',
-    regNo: '190653',
-    consultFor: 'Man problem/Erectile dysfunction',
-    consultant: 'Dr. Arco Verhoog',
-    dateTime: '01/11/2022, 14:35',
-    price: 25.0,
-    status: 'Reported',
-  },
-  // Add more rows here
-];
+import { useState } from 'react';
+import { useGetConsultationsQuery } from '../../redux/apiSlices/patientServiceSlice';
 
 const PharmacyPatientServices = () => {
+  const { data: getConsultations, isFetching } = useGetConsultationsQuery(undefined);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>('all');
+
+  if (isFetching) return <div>Loading...</div>;
+
+  const consultations = getConsultations?.data;
+
+  const forwardToPartnerOptions = consultations?.filter(
+    (item: any) => item?.forwardToPartner === true && item?.suggestedMedicine?.length > 0,
+  );
+
+  const uniqueSubCategories = Array.from(
+    new Set(forwardToPartnerOptions?.map((item: any) => item.subCategory?.name)),
+  ).map((subCategory) => ({ value: subCategory, label: subCategory }));
+
+  const filteredOptions = forwardToPartnerOptions?.filter(
+    (item: any) =>
+      (selectedSubCategory === 'all' || item?.subCategory?.name === selectedSubCategory) &&
+      (item?.doctorId?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item?.doctorId?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item?.subCategory?.name?.toLowerCase().includes(searchTerm.toLowerCase())),
+  );
+
   const Columns = [
     {
       title: 'S.no',
       dataIndex: 'sno',
       key: 'sno',
+      render: (_: any, __: any, index: number) => index + 1,
     },
     {
       title: 'Reg. No',
-      dataIndex: 'regNo',
-      key: 'regNo',
+      dataIndex: '_id',
+      key: '_id',
+      render: (_: any, record: any) => record._id.slice(0, 10),
     },
     {
       title: 'Consult for',
-      dataIndex: 'consultFor',
+      dataIndex: ['subCategory', 'name'],
       key: 'consultFor',
     },
     {
       title: 'Consultant',
-      dataIndex: 'consultant',
-      key: 'consultant',
+      dataIndex: 'doctorId',
+      key: 'doctorId',
+      render: (doctorId: any) => (
+        <span>
+          {doctorId?.firstName} {doctorId?.lastName}
+        </span>
+      ),
     },
     {
       title: 'Date & Time',
-      dataIndex: 'dateTime',
-      key: 'dateTime',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (createdAt: any) => (
+        <span>{new Date(createdAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</span>
+      ),
     },
     {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      render: (price: number) => `€ ${price.toFixed(2)}`,
+      render: () => `€ 25.00`,
     },
     {
       title: 'Status',
@@ -78,11 +89,11 @@ const PharmacyPatientServices = () => {
     {
       title: 'Action',
       key: 'action',
-      render: () => (
+      render: (_: any, record: any) => (
         <div className="flex items-center space-x-2">
           <Tooltip title="Details">
             <Button
-              href="/pharmacy-patient-services/details/2222"
+              href={`/pharmacy-patient-services/details/${record._id}`}
               type="text"
               shape="circle"
               icon={<BsEye size={20} />}
@@ -92,6 +103,7 @@ const PharmacyPatientServices = () => {
       ),
     },
   ];
+
   return (
     <div>
       <div>
@@ -103,34 +115,21 @@ const PharmacyPatientServices = () => {
             <Input
               type="text"
               prefix={<BsSearch className="mx-2" size={20} />}
-              placeholder="Search"
+              placeholder="Search by doctor or registration number"
               style={{ width: 200 }}
-            />
-            <Select
-              placeholder="Consult Category"
-              style={{ width: 200 }}
-              options={[
-                { value: 'all', label: 'All Categories' },
-                { value: 'general', label: 'General' },
-                { value: 'specialist', label: 'Specialist' },
-                { value: 'dental', label: 'Dental' },
-              ]}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Select
               placeholder="Consult Subcategory"
               style={{ width: 200 }}
-              options={[
-                { value: 'all', label: 'All Subcategories' },
-                { value: 'checkup', label: 'Regular Checkup' },
-                { value: 'followup', label: 'Follow-up' },
-                { value: 'emergency', label: 'Emergency' },
-              ]}
+              value={selectedSubCategory}
+              onChange={(value) => setSelectedSubCategory(value)}
+              options={[{ value: 'all', label: 'All Subcategories' }, ...uniqueSubCategories]}
             />
-            <DatePicker style={{ width: 200 }} placeholder="Date & Time" showTime format="YYYY-MM-DD HH:mm" />
           </div>
         </div>
         <p className=" text-[#0A2369] text-[20px] pb-3 font-normal">Forward Prescription from our Partner</p>
-        <Table columns={Columns} dataSource={data} pagination={{ pageSize: 10 }} />;
+        <Table columns={Columns} rowKey="_id" dataSource={filteredOptions} pagination={{ pageSize: 10 }} />
       </div>
     </div>
   );

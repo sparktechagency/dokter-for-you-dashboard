@@ -1,11 +1,13 @@
 import { Table, Button, Tooltip, Select, Input } from 'antd';
-import { BsEye, BsPlusLg, BsSearch } from 'react-icons/bs';
+import { BsEye, BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
 import { CiEdit } from 'react-icons/ci';
 import { useState } from 'react';
-import { useGetMedicineQuery } from '../../../redux/apiSlices/medicineSlice';
+import { useDeleteMedicineMutation, useGetMedicineQuery } from '../../../redux/apiSlices/medicineSlice';
+import toast from 'react-hot-toast';
 
 const MedicineService = () => {
-  const { data: getMedicine, isFetching } = useGetMedicineQuery(undefined);
+  const { data: getMedicine, isFetching, refetch } = useGetMedicineQuery(undefined);
+  const [deleteMedicine] = useDeleteMedicineMutation();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDosage, setFilterDosage] = useState('all');
   const [filterCountry, setFilterCountry] = useState('all');
@@ -24,6 +26,18 @@ const MedicineService = () => {
     const matchesCountry = filterCountry === 'all' || item.country.toLowerCase() === filterCountry.toLowerCase();
     return matchesSearch && matchesDosage && matchesCountry;
   });
+
+  const handleDeleteMedicine = async (medicineId: string) => {
+    try {
+      const response = await deleteMedicine(medicineId).unwrap();
+      if (response?.success) {
+        toast.success('Medicine deleted successfully!');
+        refetch();
+      }
+    } catch (error) {
+      console.error('Error deleting medicine:', error);
+    }
+  };
 
   // Medication columns
   const medicationColumns = [
@@ -93,6 +107,15 @@ const MedicineService = () => {
               type="text"
               shape="circle"
               icon={<CiEdit color="#004B56" size={20} />}
+            />
+          </Tooltip>
+
+          <Tooltip title="Delete">
+            <Button
+              onClick={() => handleDeleteMedicine(record._id)}
+              type="text"
+              shape="circle"
+              icon={<BsTrash size={20} color="red" />}
             />
           </Tooltip>
         </div>

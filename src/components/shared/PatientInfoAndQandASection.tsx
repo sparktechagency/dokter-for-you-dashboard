@@ -47,7 +47,7 @@ const PatientInfoAndQandASection = ({ id }: { id: string }) => {
 
       {topSectionData.loading && (
         <Button
-          className={`py-5 px-6 text-lg ${consultation.status === 'pending' ? 'bg-yellow-500' : 'bg-blue-500'}`}
+          className={`py-5 px-6 text-lg ${consultation?.status === 'pending' ? 'bg-yellow-500' : 'bg-blue-500'}`}
           type="primary"
         >
           {consultation.status}

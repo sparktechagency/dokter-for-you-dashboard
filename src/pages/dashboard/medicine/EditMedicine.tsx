@@ -2,7 +2,7 @@ import { Form, Input, Select, Button, Upload, InputNumber } from 'antd';
 import whiteBg from '../../../assets/whiteBg.png';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetMedicineByIdQuery, useUpdateMedicineMutation } from '../../../redux/apiSlices/medicineSlice';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 
@@ -28,7 +28,7 @@ const EditMedication = () => {
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
   const [imgURL, setImgURL] = useState<string | null>(null);
   const [file, setFile] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   console.log(file);
 
   console.log(id);
@@ -111,6 +111,7 @@ const EditMedication = () => {
       const response = await updateMedicine({ data: formData, id }).unwrap();
       if (response?.success) {
         toast.success('Medication updated successfully!');
+        navigate('/medicine-service');
       } else {
         toast.error('Failed to update medication.');
       }

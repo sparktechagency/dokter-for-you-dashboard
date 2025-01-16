@@ -69,6 +69,14 @@ const consultationApi = api.injectEndpoints({
         method: 'DELETE',
       }),
     }),
+
+    //medication trade
+    getMedicationTrade: builder.query({
+      query: () => ({
+        url: 'consultation/all?paid=true',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -85,4 +93,7 @@ export const {
   useCreateConsultationSubcategoryMutation,
   useEditConsultationSubcategoryMutation,
   useDeleteConsultationSubcategoryMutation,
+
+  //medication trade
+  useGetMedicationTradeQuery,
 } = consultationApi;

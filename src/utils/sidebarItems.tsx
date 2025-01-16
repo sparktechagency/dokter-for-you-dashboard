@@ -188,7 +188,7 @@ const adminSidebarItems: TSidebarItem[] = [
   {
     key: 'add-medicine',
     label: 'Add Medicine',
-    path: 'pharmacy-add-medicine',
+    path: 'medicine-service',
     roles: ['PHARMACY'],
   },
   //doctor
@@ -225,6 +225,7 @@ const adminSidebarItems: TSidebarItem[] = [
     onClick: () => {
       ['authToken', 'oneTimeCodeToken', 'role'].forEach((key) => {
         localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
       });
       window.location.href = '/login';
     },
