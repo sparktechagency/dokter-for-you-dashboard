@@ -7,12 +7,14 @@ const patientServiceApi = api.injectEndpoints({
         url: '/consultation/all',
         method: 'GET',
       }),
+      providesTags: ['consultation'],
     }),
     getConsultationById: builder.query({
       query: (id) => ({
         url: `/consultation/${id}`,
         method: 'GET',
       }),
+      providesTags: ['consultation'],
     }),
   }),
 });

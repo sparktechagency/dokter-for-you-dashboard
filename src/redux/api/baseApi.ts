@@ -30,6 +30,7 @@ const api = createApi({
     'Admin',
     'ShippingDetails',
     'Review',
+    'consultation',
   ],
 });
 

@@ -64,6 +64,7 @@ import DoctorMyTransaction from '../components/ui/DoctorDashboard/MyTransactions
 import QuestionsPage from '../pages/dashboard/manageQuestions/QuestionsPage';
 import ManageQuestions from '../pages/dashboard/manageQuestions/ManageQuestions';
 import PrivateRoute from './PrivetRoute';
+import SetUpPaymentMethod from '../components/ui/DoctorDashboard/SetUpPaymentMethod';
 
 const router = createBrowserRouter([
   {
@@ -158,6 +159,7 @@ const router = createBrowserRouter([
         element: <DoctorConfirmVideoConsultation />,
       },
       { path: 'doctor-my-transaction', element: <DoctorMyTransaction /> },
+      { path: 'doctor-set-up-payment-method', element: <SetUpPaymentMethod /> },
     ],
   },
   { path: '/login', element: <Login /> },

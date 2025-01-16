@@ -211,6 +211,12 @@ const adminSidebarItems: TSidebarItem[] = [
     roles: ['DOCTOR'],
   },
   {
+    key: 'doctor-set-up-payment-method',
+    label: 'Payment Method',
+    path: 'doctor-set-up-payment-method',
+    roles: ['DOCTOR'],
+  },
+  {
     key: 'logout',
     label: 'Log Out',
     path: 'login',

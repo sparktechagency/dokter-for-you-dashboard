@@ -16,6 +16,7 @@ const doctorPatientServiceApi = api.injectEndpoints({
         url: `/consultation/${id}`,
         method: 'GET',
       }),
+      providesTags: ['consultation'],
     }),
 
     rejectConsultation: builder.mutation({
@@ -25,8 +26,30 @@ const doctorPatientServiceApi = api.injectEndpoints({
         body: data,
       }),
     }),
+
+    setScheduleVideoCall: builder.mutation({
+      query: ({ data, id }: { data: any; id: any }) => ({
+        url: `consultation/schedule/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+    }),
+
+    setUpVideoCallLink: builder.mutation({
+      query: ({ data, id }: { data: any; id: any }) => ({
+        url: `consultation/link/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['consultation'],
+    }),
   }),
 });
 
-export const { useGetDoctorConsultationsQuery, useGetDoctorConsultationByIdQuery, useRejectConsultationMutation } =
-  doctorPatientServiceApi;
+export const {
+  useGetDoctorConsultationsQuery,
+  useGetDoctorConsultationByIdQuery,
+  useRejectConsultationMutation,
+  useSetScheduleVideoCallMutation,
+  useSetUpVideoCallLinkMutation,
+} = doctorPatientServiceApi;

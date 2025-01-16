@@ -40,6 +40,7 @@ interface ConsultationItem {
     firstName: string;
     lastName: string;
   };
+  status: string;
 }
 
 interface CustomJwtPayload extends JwtPayload {
@@ -48,6 +49,9 @@ interface CustomJwtPayload extends JwtPayload {
 
 const DoctorPatientServices = () => {
   const [activeTab, setActiveTab] = useState('1');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string | undefined>(undefined);
+  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined);
 
   const token = localStorage.getItem('authToken');
   if (token === null) {
@@ -68,12 +72,36 @@ const DoctorPatientServices = () => {
 
   console.log(consultations);
 
-  const regularConsultationData = consultations?.filter(
+  const uniqueSubCategories = Array.from(new Set(consultations?.map((item: any) => item.subCategory.name)));
+
+  const subCategoryOptions = uniqueSubCategories.map((subCategory) => ({
+    value: subCategory,
+    label: subCategory,
+  }));
+
+  const statusOptions = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'prescribed', label: 'Prescribed' },
+    { value: 'rejected', label: 'Rejected' },
+  ];
+
+  const filteredConsultations = consultations?.filter((item: ConsultationItem) => {
+    const matchesSearch = item.subCategory.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSubCategory = selectedSubCategory ? item.subCategory.name === selectedSubCategory : true;
+    const matchesStatus = selectedStatus ? item.status === selectedStatus : true;
+    return matchesSearch && matchesSubCategory && matchesStatus;
+  });
+
+  const regularConsultationData = filteredConsultations?.filter(
     (item: ConsultationItem) => item?.consultationType === 'regular',
   );
-  const videoConsultationData = consultations?.filter((item: ConsultationItem) => item?.consultationType === 'video');
-  const digitalPrescriptionData = consultations?.filter((item: ConsultationItem) => item?.forwardToPartner === false);
-  const digitalPrescriptionWithOrderData = consultations?.filter(
+  const videoConsultationData = filteredConsultations?.filter(
+    (item: ConsultationItem) => item?.consultationType === 'video',
+  );
+  const digitalPrescriptionData = filteredConsultations?.filter(
+    (item: ConsultationItem) => item?.forwardToPartner === false,
+  );
+  const digitalPrescriptionWithOrderData = filteredConsultations?.filter(
     (item: ConsultationItem) => item?.forwardToPartner === true,
   );
 
@@ -429,6 +457,14 @@ const DoctorPatientServices = () => {
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSubCategoryChange = (value: string) => {
+    setSelectedSubCategory(value);
+  };
+
   return (
     <div>
       <div className="flex justify-between">
@@ -441,28 +477,20 @@ const DoctorPatientServices = () => {
             prefix={<BsSearch className="mx-2" size={20} />}
             placeholder="Search"
             style={{ width: 200 }}
-          />
-          <Select
-            placeholder="Consult Category"
-            style={{ width: 200 }}
-            options={[
-              { value: 'all', label: 'All Categories' },
-              { value: 'general', label: 'General' },
-              { value: 'specialist', label: 'Specialist' },
-              { value: 'dental', label: 'Dental' },
-            ]}
+            onChange={handleSearchChange}
           />
           <Select
             placeholder="Consult Subcategory"
             style={{ width: 200 }}
-            options={[
-              { value: 'all', label: 'All Subcategories' },
-              { value: 'checkup', label: 'Regular Checkup' },
-              { value: 'followup', label: 'Follow-up' },
-              { value: 'emergency', label: 'Emergency' },
-            ]}
+            onChange={handleSubCategoryChange}
+            options={subCategoryOptions}
           />
-          <DatePicker style={{ width: 200 }} placeholder="Date & Time" showTime format="YYYY-MM-DD HH:mm" />
+          <Select
+            placeholder="Consult Status"
+            style={{ width: 200 }}
+            onChange={setSelectedStatus}
+            options={statusOptions}
+          />
         </div>
       </div>
       <div className="flex justify-start">

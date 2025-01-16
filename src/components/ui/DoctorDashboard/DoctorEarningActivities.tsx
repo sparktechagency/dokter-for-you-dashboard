@@ -9,7 +9,7 @@ const DoctorEarningActivities = () => {
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
-  const { data: userState, isFetching, refetch } = useGetDoctorEarningStatesQuery('2024');
+  const { data: userState, isFetching, refetch } = useGetDoctorEarningStatesQuery(selectedYear);
 
   useEffect(() => {
     refetch();
