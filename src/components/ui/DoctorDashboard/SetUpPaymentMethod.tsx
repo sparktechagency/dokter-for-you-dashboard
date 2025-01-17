@@ -1,31 +1,89 @@
-import { Form, Input, Button, Select, Row, Col } from 'antd';
-// import { useCreatePaymentMethodMutation } from '../../../redux/apiSlices/paymentSlice';
+import { Form, Input, Button, Select, Row, Col, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import { useDoctorPaymentSetUpMutation } from '../../../redux/apiSlices/userSlice';
+import toast from 'react-hot-toast';
 
 const SetUpPaymentMethod = () => {
   const [form] = Form.useForm();
-  //   const [createPaymentMethod, { isLoading }] = useCreatePaymentMethodMutation();
+  const [kycImages, setKycImages] = useState<File[]>([]);
+
+  const [setUpPaymentMethod] = useDoctorPaymentSetUpMutation();
 
   const onFinish = async (values: any) => {
-    console.log(values);
-    // try {
-    //   await createPaymentMethod(values).unwrap();
-    //   notification.success({ message: 'Payment method created successfully.' });
-    //   form.resetFields();
-    // } catch (error) {
-    //   notification.error({ message: 'Error creating payment method.' });
-    // }
+    const formData = new FormData();
+
+    // Create data object
+    const data = {
+      dateOfBirth: values.dateOfBirth,
+      name: values.name,
+      phoneNumber: values.phoneNumber,
+      email: values.email,
+      idNumber: values.idNumber,
+      bank_info: {
+        account_holder_name: values.account_holder_name,
+        account_holder_type: values.account_holder_type,
+        account_number: values.account_number,
+        currency: values.currency,
+        routing_number: values.routing_number,
+        country: values.country,
+      },
+      address: {
+        line1: values.address.line1,
+        city: values.address.city,
+        state: values.address.state,
+        postal_code: values.address.postal_code,
+        country: values.country,
+      },
+    };
+
+    // Append data object to formData
+    formData.append('data', JSON.stringify(data));
+
+    // Append KYC images separately
+    kycImages.forEach((file) => {
+      formData.append('KYC', file);
+    });
+
+    try {
+      const response = await setUpPaymentMethod(formData).unwrap();
+      if (response?.success) {
+        toast.success('Payment method set up successfully!');
+      } else {
+        toast.error('Failed to set up payment method.');
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error?.data?.message || 'An error occurred while setting up payment method.');
+    }
+
+    console.log(data);
   };
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Set up payment method</h1>
+      <h1 className="text-2xl font-bold mb-4">Set Up Payment Method</h1>
       <Form form={form} onFinish={onFinish} layout="vertical">
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
-              name="userName"
-              label="User Name"
-              rules={[{ required: true, message: 'Please enter your name.' }]}
+              name="dateOfBirth"
+              label="Date of Birth"
+              rules={[{ required: true, message: 'Please enter your date of birth.' }]}
+            >
+              <Input type="date" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter your name.' }]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="phoneNumber"
+              label="Phone Number"
+              rules={[{ required: true, message: 'Please enter your phone number.' }]}
             >
               <Input />
             </Form.Item>
@@ -41,72 +99,136 @@ const SetUpPaymentMethod = () => {
           </Col>
           <Col span={12}>
             <Form.Item
-              name="contactNo"
-              label="Contact Number"
-              rules={[{ required: true, message: 'Please enter your contact number.' }]}
+              name="idNumber"
+              label="ID Number"
+              rules={[{ required: true, message: 'Please enter your ID number.' }]}
             >
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
-              name="address"
-              label="Address"
-              rules={[{ required: true, message: 'Please enter your address.' }]}
+              name="account_holder_name"
+              label="Account Holder Name"
+              rules={[{ required: true, message: 'Please enter account holder name.' }]}
             >
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
-              name="paymentGateway"
-              label="Payment Gateway"
-              rules={[{ required: true, message: 'Please select a payment gateway.' }]}
+              name="account_holder_type"
+              label="Account Holder Type"
+              rules={[{ required: true, message: 'Please select account holder type.' }]}
             >
               <Select>
-                <Select.Option value="paypal">PayPal</Select.Option>
-                <Select.Option value="creditCard">Credit Card</Select.Option>
-                <Select.Option value="bankTransfer">Bank Transfer</Select.Option>
+                <Select.Option value="individual">Individual</Select.Option>
+                <Select.Option value="business">Business</Select.Option>
               </Select>
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
-              name="expiryDate"
-              label="Expiry Date"
-              rules={[{ required: true, message: 'Please enter the expiry date.' }]}
+              name="account_number"
+              label="Account Number"
+              rules={[{ required: true, message: 'Please enter your account number.' }]}
             >
-              <Input type="date" />
+              <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
-              name="accountNumber"
-              label="Account/Card Number"
-              rules={[{ required: true, message: 'Please enter your account/card number.' }]}
+              name="currency"
+              label="Currency"
+              rules={[{ required: true, message: 'Please select currency.' }]}
+            >
+              <Select>
+                <Select.Option value="USD">USD</Select.Option>
+                <Select.Option value="EUR">EUR</Select.Option>
+                <Select.Option value="GBP">GBP</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="routing_number"
+              label="Routing Number"
+              rules={[{ required: true, message: 'Please enter your routing number.' }]}
             >
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="cvc" label="CVC/CVV" rules={[{ required: true, message: 'Please enter your CVC/CVV.' }]}>
-              <Input.Password />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item name="iban" label="IBAN" rules={[{ required: true, message: 'Please enter your IBAN.' }]}>
+            <Form.Item
+              name="address.line1"
+              label="Address Line 1"
+              rules={[{ required: true, message: 'Please enter your address line.' }]}
+            >
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="bic" label="BIC" rules={[{ required: true, message: 'Please enter your BIC.' }]}>
+            <Form.Item
+              name="country"
+              label="Country"
+              rules={[{ required: true, message: 'Please enter your country.' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name={['address', 'city']}
+              label="City"
+              rules={[{ required: true, message: 'Please enter your city.' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name={['address', 'state']}
+              label="State"
+              rules={[{ required: true, message: 'Please enter your state.' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name={['address', 'postal_code']}
+              label="Postal Code"
+              rules={[{ required: true, message: 'Please enter your postal code.' }]}
+            >
               <Input />
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item label="KYC Images">
+          <Upload
+            name="kycImages"
+            multiple
+            beforeUpload={(file) => {
+              setKycImages((prev) => [...prev, file]);
+              return false; // Prevent automatic upload
+            }}
+            onChange={(info) => {
+              if (info.file.status !== 'uploading') {
+                console.log(info.file, info.fileList);
+              }
+              if (info.file.status === 'done') {
+                console.log('Upload success:', info.file.response);
+              } else if (info.file.status === 'error') {
+                console.error('Upload failed:', info.file.response);
+              }
+            }}
+          >
+            <Button icon={<UploadOutlined />}>Upload KYC Images</Button>
+          </Upload>
+        </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            Set up payment method
+            Set Up Payment Method
           </Button>
         </Form.Item>
       </Form>

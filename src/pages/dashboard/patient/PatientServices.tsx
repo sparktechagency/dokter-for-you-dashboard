@@ -39,9 +39,11 @@ const PatientServices = () => {
   const videoConsultationData = consultationData?.filter(
     (item: ConsultationItem) => item?.consultationType === 'video',
   );
-  const digitalPrescriptionData = consultationData?.filter((item: ConsultationItem) => item?.forwardToPartner === true);
+  const digitalPrescriptionData = consultationData?.filter(
+    (item: ConsultationItem) => item?.forwardToPartner === false,
+  );
   const digitalPrescriptionWithOrderData = consultationData?.filter(
-    (item: ConsultationItem) => item?.medicins?.length > 0,
+    (item: ConsultationItem) => item?.forwardToPartner === true,
   );
 
   const filteredConsultationData = (data: any[]) => {

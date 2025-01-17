@@ -5,7 +5,7 @@ import { useGetCurrentUserProfileQuery } from '../../redux/apiSlices/authSlice';
 const { Header } = Layout;
 
 const HeaderDashboard = () => {
-  const { data: currentUser, isFetching, refetch } = useGetCurrentUserProfileQuery(undefined);
+  const { data: currentUser, isFetching } = useGetCurrentUserProfileQuery(undefined);
 
   if (isFetching) return <div>Loading...</div>;
 

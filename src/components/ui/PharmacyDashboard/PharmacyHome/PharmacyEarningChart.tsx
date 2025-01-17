@@ -24,7 +24,7 @@ const PharmacyEarningChart = () => {
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
-  const { data: earningState, isFetching, refetch } = useGetPharmacyTotalEarningQuery(selectedYear);
+  const { data: earningState, isFetching } = useGetPharmacyTotalEarningQuery(selectedYear);
 
   if (isFetching) return <div>Loading...</div>;
 

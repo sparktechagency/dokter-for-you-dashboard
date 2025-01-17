@@ -31,6 +31,7 @@ const api = createApi({
     'ShippingDetails',
     'Review',
     'consultation',
+    'Notification',
   ],
 });
 

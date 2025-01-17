@@ -24,6 +24,16 @@ const userApi = api.injectEndpoints({
       }),
       providesTags: ['Doctor'],
     }),
+
+    doctorPaymentSetUp: builder.mutation({
+      query: (data) => ({
+        url: 'user/doctors/setup-payment',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Doctor'],
+    }),
+
     createDoctor: builder.mutation({
       query: (data) => ({
         url: '/user/doctors',
@@ -90,6 +100,7 @@ export const {
   useGetUserQuery,
   useSendMessageMutation,
   useGetDoctorQuery,
+  useDoctorPaymentSetUpMutation,
   useGetPharmacyQuery,
   useCreateDoctorMutation,
   useCreatePharmacyMutation,
