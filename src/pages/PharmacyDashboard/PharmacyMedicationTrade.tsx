@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { DatePicker, Input, Select, Table, Button, Tooltip, Modal, Form } from 'antd';
+import { useState } from 'react';
+import { Input, Table, Button, Tooltip, Modal, Form } from 'antd';
 import { BsSearch, BsEye } from 'react-icons/bs';
 import { FaEdit } from 'react-icons/fa';
 import { useGetMedicationTradeQuery } from '../../redux/apiSlices/consultationSlice';
@@ -130,6 +130,8 @@ const PharmacyMedicationTrade = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const pharmacyMedicationTrade = getPharmacyMedicationTrade?.data;
+
+  console.log(pharmacyMedicationTrade);
 
   // Filter data based on search term and selected date
   const filteredData = pharmacyMedicationTrade.filter((item: any) => {

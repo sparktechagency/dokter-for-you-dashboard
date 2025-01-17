@@ -48,6 +48,7 @@ const FAQ = () => {
         const response = await updateFaq({ data: values, id: editFaqData._id }).unwrap();
         if (response?.success) {
           toast.success('FAQ updated successfully!');
+          setEditFaqData(null);
           setOpenModal(false);
         } else {
           toast.error('Failed to update FAQ.');
@@ -58,9 +59,11 @@ const FAQ = () => {
       }
     } else {
       try {
-        const response = await createFaq(values).unwrap();
+        console.log('rfsdd', values);
+        const response = await createFaq({ data: values }).unwrap();
         if (response?.success) {
           toast.success('FAQ added successfully!');
+
           setOpenModal(false);
         } else {
           toast.error('Failed to add FAQ.');

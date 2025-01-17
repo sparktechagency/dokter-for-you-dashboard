@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useGetPharmacyWorkLoadQuery } from '../../../../redux/apiSlices/pharmacyDashboardSlice';
 
 const data = [
   { name: 'Jan', consultation: 1400, pharmacy: 1200 },
@@ -21,6 +22,14 @@ const PharmacyWorkActivitiesChart = () => {
   const years = Array.from({ length: 12 }, (_, i) => currentYear - 10 + i);
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
+
+  const { data: pharmacyWorkState, isFetching } = useGetPharmacyWorkLoadQuery(selectedYear);
+
+  if (isFetching) return <div>Loading...</div>;
+
+  const pharmacyWorkStates = pharmacyWorkState?.data;
+  console.log('work load', pharmacyWorkStates);
+
   return (
     <div className="w-full h-[347px]">
       <div className="flex justify-between mx-8">
@@ -52,7 +61,7 @@ const PharmacyWorkActivitiesChart = () => {
       </div>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={data}
+          data={pharmacyWorkStates}
           margin={{
             top: 5,
             right: 30,
@@ -61,18 +70,11 @@ const PharmacyWorkActivitiesChart = () => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="month" />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line
-            type="monotone"
-            dataKey="consultation"
-            stroke="#2884FF"
-            strokeWidth={2}
-            dot={{ r: 4 }}
-            activeDot={{ r: 6 }}
-          />
+          <Line type="monotone" dataKey="total" stroke="#2884FF" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
           <Line
             type="monotone"
             dataKey="pharmacy"

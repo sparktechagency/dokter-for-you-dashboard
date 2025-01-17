@@ -12,6 +12,7 @@ import {
   useUpdateShippingDetailsMutation,
 } from '../../../redux/apiSlices/shippingAndDiscountSlice';
 import toast from 'react-hot-toast';
+import { useGetPharmacyQuery } from '../../../redux/apiSlices/userSlice';
 
 const ShippingSetting = () => {
   const [form] = Form.useForm();
@@ -20,8 +21,11 @@ const ShippingSetting = () => {
   const [viewShippingProfile, setViewShippingProfile] = useState<any>(null);
   const [shippingProfile, setShippingProfile] = useState<any>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedPharmacy, setSelectedPharmacy] = useState<string | undefined>(undefined);
 
   const { data: shippingDetails, isFetching } = useGetShippingDetailsQuery(undefined);
+  const { data: pharmacy } = useGetPharmacyQuery(undefined);
   const [createShippingDetails] = useCreateShippingDetailsMutation();
   const [updateShippingDetails] = useUpdateShippingDetailsMutation();
   const [deleteShippingDetails] = useDeleteShippingDetailsMutation();
@@ -43,7 +47,15 @@ const ShippingSetting = () => {
     return <div>Loading...</div>;
   }
   const shippingData = shippingDetails?.data || [];
+  const pharmacyList = pharmacy?.data || [];
   console.log(shippingData);
+
+  const filteredShippingData = shippingData.filter((item: any) => {
+    const matchesSearch = item?.selectedArea.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesPharmacy = selectedPharmacy ? item.pharmecy?._id === selectedPharmacy : true;
+    return matchesSearch && matchesPharmacy;
+  });
 
   const handleDelete = async (id: string) => {
     try {
@@ -156,9 +168,9 @@ const ShippingSetting = () => {
 
   const pharmacyNameInput = (
     <Select placeholder="Select Pharmacy Name">
-      {shippingData?.map((pharmecy: any) => (
-        <Select.Option key={pharmecy._id} value={pharmecy?.pharmecy?._id}>
-          {pharmecy?.pharmecy?.pharmecyName}
+      {pharmacyList?.map((pharmecy: any) => (
+        <Select.Option key={pharmecy._id} value={pharmecy?._id}>
+          {pharmecy?.pharmecyName}
         </Select.Option>
       ))}
     </Select>
@@ -206,11 +218,12 @@ const ShippingSetting = () => {
     </Form>
   );
 
+  console.log(viewShippingProfile);
   const viewShippingProfileModal = (
     <div>
       <div className="text-lg text-gray space-y-8">
-        <p>Pharmacy Name: {viewShippingProfile?.pharmacyName}</p>
-        <p>Pharmacy Address: {viewShippingProfile?.pharmacyAddress}</p>
+        <p>Pharmacy Name: {viewShippingProfile?.pharmecy?.pharmecyName}</p>
+        <p>Pharmacy Address: {viewShippingProfile?.pharmecy?.location}</p>
         <hr className="my-4" />
         <p>
           Selected Area: <span className="text-red-500">{viewShippingProfile?.selectedArea}</span>
@@ -241,30 +254,23 @@ const ShippingSetting = () => {
           <h1 className="text-2xl font-semibold text-title">Shipping Management</h1>
         </div>
         <div className="mb-4 flex items-center justify-end gap-4">
-          <Popconfirm
-            title="Are you sure to delete the selected items?"
-            onConfirm={() => console.log('Deleted selected')}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="text" shape="circle" icon={<BsTrash color="red" size={20} />} />
-          </Popconfirm>
-
           <Input
             type="text"
             prefix={<BsSearch className="mx-2" size={20} />}
             placeholder="Search"
             style={{ width: 200 }}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Select
             placeholder="Pharmacy"
             style={{ width: 200 }}
-            options={[
-              { value: 'all', label: 'All Pharmacies' },
-              { value: 'pharmacy1', label: 'Pharmacy 1' },
-              { value: 'pharmacy2', label: 'Pharmacy 2' },
-              { value: 'pharmacy3', label: 'Pharmacy 3' },
-            ]}
+            value={selectedPharmacy}
+            onChange={(value) => setSelectedPharmacy(value)}
+            options={pharmacyList.map((pharmacy: any) => ({
+              value: pharmacy._id,
+              label: pharmacy.pharmecyName,
+            }))}
           />
 
           <Button
@@ -283,7 +289,7 @@ const ShippingSetting = () => {
       </div>
 
       <div>
-        <Table rowKey="id" columns={columns} dataSource={shippingData} pagination={{ pageSize: 5 }} />
+        <Table rowKey="_id" columns={columns} dataSource={filteredShippingData} pagination={{ pageSize: 5 }} />
       </div>
 
       <Modal

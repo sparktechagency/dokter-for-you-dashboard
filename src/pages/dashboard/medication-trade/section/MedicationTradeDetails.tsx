@@ -1,7 +1,6 @@
-import { Button, Tooltip } from 'antd';
+import { Button } from 'antd';
 import { BsArrowLeft } from 'react-icons/bs';
 import { FaDownload } from 'react-icons/fa';
-import { LiaHandPointRightSolid } from 'react-icons/lia';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetConsultationByIdQuery } from '../../../../redux/apiSlices/patientServiceSlice';
 
@@ -17,6 +16,7 @@ const MedicationTradeDetails = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultationData = getConsultationById?.data;
+  console.log(consultationData);
 
   const topSection = (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">
@@ -126,14 +126,22 @@ const MedicationTradeDetails = () => {
 
   const medicineDetailsSection = (
     <div>
-      {consultationData?.medicins?.map((medicine: any, index: number) => {
+      {consultationData?.suggestedMedicine?.map((medicine: any, index: number) => {
         return (
           <div
             key={index}
             className="flex items-center border-b border-slate-200 justify-between my-2 rounded-lg p-4 text-gray"
           >
             <div className="flex items-center space-x-4">
-              <img src="/ceevit.png" alt="Ceevit" className="w-20 h-auto rounded" />
+              <img
+                src={
+                  medicine?._id?.image.startsWith('http')
+                    ? medicine?._id?.image
+                    : `${import.meta.env.VITE_BASE_URL}${medicine?._id?.image}`
+                }
+                alt="Ceevit"
+                className="w-20 h-auto rounded"
+              />
 
               <div>
                 <h3 className="font-semibold text-lg text-gray-800">{medicine?._id?.name}</h3>
@@ -151,7 +159,7 @@ const MedicationTradeDetails = () => {
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-600">Price</p>
-              <p className="font-semibold text-gray-800">€ {medicine?._id?.sellingPrice || '25.00'}</p>
+              <p className="font-semibold text-gray-800">€ {medicine?._id?.sellingPrice || 25}</p>
             </div>
           </div>
         );
@@ -159,8 +167,8 @@ const MedicationTradeDetails = () => {
     </div>
   );
 
-  const subTotal = consultationData?.medicins?.reduce((acc: number, medicine: any) => {
-    return acc + medicine._id.sellingPrice;
+  const subTotal = consultationData?.suggestedMedicine?.reduce((acc: number, medicine: any) => {
+    return acc + medicine?._id?.sellingPrice;
   }, 0);
 
   const consultationDetailsSection = (

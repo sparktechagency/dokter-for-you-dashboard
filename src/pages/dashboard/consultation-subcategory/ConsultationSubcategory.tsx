@@ -76,11 +76,18 @@ const ConsultationSubCategory: React.FC = () => {
         response = await editConsultationSubcategory({ data: formData, id: editCategoryData._id }).unwrap();
         if (response?.success) {
           toast.success('Subcategory updated successfully!');
+          // form.resetFields();
+          // setCategoryImagePreview(undefined);
+          setEditCategoryData(null);
+          setOpenModal(false);
         }
       } else {
         response = await createConsultationSubcategory(formData).unwrap();
         if (response?.success) {
           toast.success('Subcategory added successfully!');
+          form.resetFields();
+          setCategoryImagePreview('');
+          setOpenModal(false);
         }
       }
       refetch();

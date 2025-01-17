@@ -177,7 +177,7 @@ const MedicineService = () => {
       </div>
 
       <div>
-        <Table rowKey="_id" columns={medicationColumns} dataSource={filteredData} pagination={{ pageSize: 5 }} />
+        <Table rowKey="_id" columns={medicationColumns} dataSource={filteredData} pagination={{ pageSize: 10 }} />
       </div>
     </div>
   );

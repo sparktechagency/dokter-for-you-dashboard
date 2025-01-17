@@ -48,7 +48,7 @@ const AddMedication = () => {
     formData.append('country', values.country);
     formData.append('image', values.image.fileList[0].originFileObj);
     formData.append('medicineType', values.medicineType);
-    formData.append('form', values.form);
+    formData.append('form', values.from);
     formData.append('description', values.description);
     formData.append('purchaseCost', values.purchaseCost);
     formData.append('tax', values.tax);

@@ -43,6 +43,7 @@ const termsAndConditionsAndUserAgreementApi = api.injectEndpoints({
       }),
       providesTags: ['FAQ'],
     }),
+
     createFaq: builder.mutation({
       query: ({ data }) => {
         console.log('slice', data);
@@ -54,6 +55,7 @@ const termsAndConditionsAndUserAgreementApi = api.injectEndpoints({
       },
       invalidatesTags: ['FAQ'],
     }),
+
     updateFaq: builder.mutation({
       query: ({ data, id }: { data: any; id: any }) => ({
         url: `/faq/${id}`,

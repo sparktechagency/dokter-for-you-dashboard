@@ -10,7 +10,7 @@ const HeaderDashboard = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const user = currentUser?.data;
-  //   console.log(user);
+  console.log(user);
 
   return (
     <Header
@@ -67,7 +67,9 @@ const HeaderDashboard = () => {
             }}
           >
             <img
-              src={user?.profile.startsWith('http') ? user?.profile : `${import.meta.env.VITE_APP_URL}${user?.profile}`}
+              src={
+                user?.profile.startsWith('http') ? user?.profile : `${import.meta.env.VITE_BASE_URL}${user?.profile}`
+              }
               style={{
                 width: '44px',
                 height: '44px',

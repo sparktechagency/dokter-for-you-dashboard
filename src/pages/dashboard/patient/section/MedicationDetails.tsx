@@ -114,7 +114,15 @@ const MedicationDetails = () => {
             className="flex items-center border-b border-slate-200 justify-between my-2 rounded-lg p-4 text-gray"
           >
             <div className="flex items-center space-x-4">
-              <img src="/ceevit.png" alt="Ceevit" className="w-20 h-auto rounded" />
+              <img
+                src={
+                  medicine?._id?.image.startsWith('http')
+                    ? medicine?._id?.image
+                    : `${import.meta.env.VITE_BASE_URL}${medicine?._id?.image}`
+                }
+                alt="Ceevit"
+                className="w-20 h-auto rounded"
+              />
 
               <div>
                 <h3 className="font-semibold text-lg text-gray-800">{medicine?._id?.name}</h3>

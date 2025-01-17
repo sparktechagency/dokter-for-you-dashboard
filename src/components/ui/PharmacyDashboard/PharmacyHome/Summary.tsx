@@ -27,6 +27,7 @@ const Summary = () => {
     },
     {
       name: 'Total Earning',
+
       total: pharmacyGeneralStates?.totalEarning,
       daily: pharmacyGeneralStates?.dailyEarning || 0,
       icon: <GrMoney size={24} />,

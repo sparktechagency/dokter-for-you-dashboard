@@ -35,11 +35,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (user) {
       form.setFieldsValue({
-        firstName: user?.firstName
-          ? `${user?.firstName} ${user?.lastName}`
-          : user?.pharmecyName
-          ? user?.pharmecyName
-          : 'Random Doctor',
+        firstName: user?.firstName ? `${user?.firstName}` : user?.pharmecyName ? user?.pharmecyName : 'Random Doctor',
         lastName: user?.lastName,
         email: user?.email,
         location: user?.location || 'unknown',
@@ -123,13 +119,13 @@ const UserProfile = () => {
       <div className="flex flex-col w-[70%] mt-5 justify-center items-center">
         <h1 className="text-xl my-5">Edit Profile</h1>
         <Form name="normal_login" layout="vertical" className="w-3/4" onFinish={handleSubmit} form={form}>
-          <Form.Item name="firstName" label={<p className="block">Full Name</p>} className="mb-0">
+          <Form.Item name="firstName" label={<p className="block">First Name</p>} className="mb-0">
             <Input
               placeholder="Enter Your First Name"
               className="border border-gray-300 h-[45px] bg-white rounded-lg"
             />
           </Form.Item>
-          <Form.Item name="lastName" label={<p className="block">Full Name</p>} className="mb-0">
+          <Form.Item name="lastName" label={<p className="block">Last Name</p>} className="mb-0">
             <Input placeholder="Enter Your Last Name" className="border border-gray-300 h-[45px] bg-white rounded-lg" />
           </Form.Item>
 

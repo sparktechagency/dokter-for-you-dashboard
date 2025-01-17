@@ -1,155 +1,154 @@
-import { Table, Badge, Button, Tooltip, Popconfirm, Select, DatePicker, Input } from 'antd';
-import { BsEye, BsSearch } from 'react-icons/bs';
-import { LiaHandPointRightSolid } from 'react-icons/lia';
 import { useState } from 'react';
-import { useGetConsultationsQuery } from '../../../redux/apiSlices/patientServiceSlice';
+import { Input, Table, Button, Tooltip, Modal, Form } from 'antd';
+import { BsSearch, BsEye } from 'react-icons/bs';
+import { FaEdit } from 'react-icons/fa';
+
+import moment from 'moment';
+
+import toast from 'react-hot-toast';
+import { useUpdateConsultationMutation } from '../../../redux/apiSlices/patientServiceSlice';
+import { useGetMedicationTradeQuery } from '../../../redux/apiSlices/consultationSlice';
+
+const columns = (onEdit: (record: any) => void) => [
+  {
+    title: 'S.No',
+    dataIndex: 'sNo',
+    key: 'sNo',
+    render: (_: any, __: any, index: number) => index + 1,
+  },
+  {
+    title: 'Tracking No',
+    dataIndex: 'trackingNo',
+    key: 'trackingNo',
+    render: (_: any, record: any) => <span>{record?.trackingNo ? record?.trackingNo : '.......'}</span>,
+  },
+  {
+    title: 'User Name',
+    dataIndex: 'userId',
+    key: 'userId',
+    render: (_: any, record: any) => (
+      <span>
+        {record?.userId?.firstName} {record?.userId?.lastName}
+      </span>
+    ),
+  },
+  {
+    title: 'Date & Time',
+    dataIndex: 'orderDate',
+    key: 'orderDate',
+    render: (orderDate: string) => <span>{moment(orderDate).format('YYYY-MM-DD HH:mm')}</span>,
+  },
+  {
+    title: 'Price',
+    dataIndex: 'suggestedMedicine',
+    key: 'suggestedMedicine',
+    render: (_: any, record: any) => (
+      <span>
+        {record?.suggestedMedicine
+          ?.map((item: any) => item?._id?.sellingPrice)
+          ?.reduce((previousValue: number, currentValue: number) => previousValue + currentValue, 0)}
+      </span>
+    ),
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    render: (status: string) => (
+      <div>
+        <button
+          className={`${
+            status === 'processing' ? 'bg-[#cfa423]' : 'bg-[#1854F9]'
+          } text-white text-[14px] py-1.5 w-[70%] px-2 rounded-md`}
+        >
+          {status}
+        </button>
+      </div>
+    ),
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: (_: any, record: any) => (
+      <div className="flex items-center space-x-2">
+        <Tooltip title="Details">
+          <Button
+            href={`/medication-trade/details/${record?._id}`}
+            type="text"
+            shape="circle"
+            icon={<BsEye size={20} />}
+          />
+        </Tooltip>
+        <Tooltip title="Edit">
+          <Button type="text" shape="circle" icon={<FaEdit size={20} />} onClick={() => onEdit(record)} />
+        </Tooltip>
+      </div>
+    ),
+  },
+];
 
 const MedicationTrade = () => {
-  const { data: getConsultations, isFetching } = useGetConsultationsQuery(undefined);
-  const [searchText, setSearchText] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const { data: getPharmacyMedicationTrade, isFetching, refetch } = useGetMedicationTradeQuery(undefined);
+  const [updateMedicationTrade] = useUpdateConsultationMutation();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<any>(null);
+  const [form] = Form.useForm();
+
+  // New state for search and date filtering
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
 
-  if (isFetching) return <div>Loading...</div>;
-  const consultationData = getConsultations?.data;
-
-  const handleSearch = (value: string) => {
-    setSearchText(value.toLowerCase());
+  const handleEdit = (record: any) => {
+    setSelectedRecord(record);
+    form.setFieldsValue({ trackingNo: record.trackingNo });
+    setIsModalVisible(true);
   };
 
-  const handleStatusFilter = (value: string) => {
-    setSelectedStatus(value);
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setSelectedRecord(null);
   };
 
-  const handleDateFilter = (date: any) => {
-    setSelectedDate(date ? date.format('YYYY-MM-DD') : null);
-  };
-
-  const filteredData = consultationData?.filter((item: any) => {
-    const matchesSearch =
-      item._id.toLowerCase().includes(searchText) || item.subCategory?.name?.toLowerCase().includes(searchText);
-    const matchesStatus = selectedStatus === 'all' || item.status.toLowerCase() === selectedStatus;
-    const matchesDate = !selectedDate || new Date(item.createdAt).toISOString().split('T')[0] === selectedDate;
-
-    return matchesSearch && matchesStatus && matchesDate;
-  });
-
-  // Medication columns
-  const medicationColumns = [
-    {
-      title: 'S.no',
-      dataIndex: 'sno',
-      key: 'sno',
-      render: (_: any, __: any, index: number) => index + 1,
-    },
-    {
-      title: 'Reg No.',
-      dataIndex: '_id',
-      key: 'regNo',
-      render: (regNo: string) => (
-        <span className="font-mono">
-          <Tooltip title={regNo}># {regNo.slice(0, 8)}</Tooltip>
-        </span>
-      ),
-    },
-    {
-      title: 'Consult for',
-      dataIndex: ['subCategory', 'name'],
-      key: 'consultFor',
-    },
-    {
-      title: 'Pharmacy',
-      dataIndex: 'Pharmacy',
-      key: 'Pharmacy',
-      render: () => 'Dokter For You',
-    },
-    {
-      title: 'Date',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      render: (createdAt: string) => <span className="font-mono">{new Date(createdAt).toLocaleDateString()}</span>,
-    },
-    {
-      title: 'Price',
-      dataIndex: 'medicins',
-      key: 'price',
-      render: (medicins: any) => (
-        <span>
-          € {medicins?.map((medicin: any) => medicin?._id?.sellingPrice).reduce((a: number, b: number) => a + b, 0)}
-        </span>
-      ),
-    },
-    {
-      title: 'Profit',
-      dataIndex: 'medicins',
-      key: 'medicins',
-      render: (medicins: any) => {
-        if (!medicins || medicins.length === 0) {
-          return <span>€ 0</span>;
+  const handleSubmit = async () => {
+    form.validateFields().then(async (values) => {
+      try {
+        const response = await updateMedicationTrade({
+          id: selectedRecord._id,
+          data: { trackingNo: values.trackingNo },
+        }).unwrap();
+        if (response?.success) {
+          toast.success('Tracking Number updated successfully!');
+          refetch();
+          setIsModalVisible(false);
+        } else {
+          toast.error('Failed to update tracking number.');
         }
-        const totalSellingPrice = medicins
-          .map((medicin: any) => medicin?._id?.sellingPrice || 0)
-          .reduce((a: number, b: number) => a + b, 0);
+      } catch (error) {
+        toast.error('Failed to update tracking number.');
+      }
+    });
+  };
 
-        const totalPurchaseCost = medicins
-          .map((medicin: any) => medicin?._id?.purchaseCost || 0)
-          .reduce((a: number, b: number) => a + b, 0);
+  if (isFetching) return <div>Loading...</div>;
 
-        return <span>€ {totalSellingPrice - totalPurchaseCost}</span>;
-      },
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: string) => (
-        <Badge
-          status={status === 'Loading...' ? 'processing' : status === 'Reported' ? 'success' : 'default'}
-          text={
-            <span
-              style={{
-                color: status === 'Loading...' ? '#FAAD14' : status === 'Reported' ? '#52C41A' : '#1890FF',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </span>
-          }
-        />
-      ),
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_: any, record: any) => (
-        <div className="flex items-center space-x-2">
-          <Tooltip title="Details">
-            <Button
-              href={`/medication-trade/details/${record._id}`}
-              type="text"
-              shape="circle"
-              icon={<BsEye size={20} />}
-            />
-          </Tooltip>
+  const pharmacyMedicationTrade = getPharmacyMedicationTrade?.data;
 
-          <Popconfirm
-            title="Are you sure to poke your therapist?"
-            onConfirm={() => console.log('Poked')}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="text" shape="circle" icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />} />
-          </Popconfirm>
-        </div>
-      ),
-    },
-  ];
+  console.log(pharmacyMedicationTrade);
+
+  // Filter data based on search term and selected date
+  const filteredData = pharmacyMedicationTrade.filter((item: any) => {
+    const matchesSearch =
+      item.trackingNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `${item.userId.firstName} ${item.userId.lastName}`.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesDate = selectedDate ? moment(item.orderDate).isSame(selectedDate, 'day') : true;
+    return matchesSearch && matchesDate;
+  });
 
   return (
     <div>
       <div className="flex justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-title">Medication trade</h1>
+          <h1 className="text-2xl font-semibold text-title">Medication Trade</h1>
         </div>
         <div className="mb-4 flex items-center justify-end gap-4">
           <Input
@@ -157,26 +156,35 @@ const MedicationTrade = () => {
             prefix={<BsSearch className="mx-2" size={20} />}
             placeholder="Search"
             style={{ width: 200 }}
-            onChange={(e) => handleSearch(e.target.value)}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Select
-            placeholder="Status"
-            style={{ width: 200 }}
-            onChange={handleStatusFilter}
-            options={[
-              { value: 'all', label: 'All Status' },
-              { value: 'pending', label: 'Pending' },
-              { value: 'delivered', label: 'Delivered' },
-              { value: 'cancelled', label: 'Cancelled' },
-            ]}
-          />
-          <DatePicker style={{ width: 200 }} placeholder="Order Date" onChange={handleDateFilter} />
         </div>
       </div>
-
-      <div>
-        <Table columns={medicationColumns} rowKey="_id" dataSource={filteredData} pagination={{ pageSize: 10 }} />
-      </div>
+      <Table columns={columns(handleEdit)} rowKey="_id" dataSource={filteredData} />
+      <Modal
+        title="Edit Tracking Number"
+        open={isModalVisible}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="cancel" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleSubmit}>
+            Submit
+          </Button>,
+        ]}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="trackingNo"
+            label="Tracking Number"
+            rules={[{ required: true, message: 'Please enter the tracking number!' }]}
+          >
+            <Input placeholder="Enter tracking number" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
