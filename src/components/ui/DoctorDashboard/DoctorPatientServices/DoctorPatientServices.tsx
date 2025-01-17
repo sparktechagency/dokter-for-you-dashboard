@@ -1,4 +1,4 @@
-import { Table, Badge, Button, Tooltip, Select, DatePicker, Input, Tabs } from 'antd';
+import { Table, Badge, Button, Tooltip, Select, Input, Tabs } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
 import { useState } from 'react';
 import { useGetDoctorConsultationsQuery } from '../../../../redux/apiSlices/DoctorConsultationSlice';

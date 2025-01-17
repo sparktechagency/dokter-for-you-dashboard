@@ -1,17 +1,10 @@
-import { Form, Input, Select, Button, Upload, InputNumber } from 'antd';
+import { Form, Input, Select, Button } from 'antd';
 import whiteBg from '../../../assets/whiteBg.png';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetMedicineByIdQuery, useUpdateMedicineMutation } from '../../../redux/apiSlices/medicineSlice';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
-
-interface FileItem {
-  uid: string;
-  name: string;
-  status: string;
-  url: string | undefined;
-}
 
 interface SubCategory {
   _id: string;

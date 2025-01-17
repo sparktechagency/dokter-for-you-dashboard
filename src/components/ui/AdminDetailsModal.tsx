@@ -1,5 +1,4 @@
 import { Button, Modal } from 'antd';
-import { CiLock } from 'react-icons/ci';
 import { FaDownload } from 'react-icons/fa';
 import { doctorDetails } from '../../pages/dashboard/user/types/types';
 

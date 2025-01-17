@@ -2,21 +2,6 @@ import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useGetPharmacyWorkLoadQuery } from '../../../../redux/apiSlices/pharmacyDashboardSlice';
 
-const data = [
-  { name: 'Jan', consultation: 1400, pharmacy: 1200 },
-  { name: 'Feb', consultation: 1500, pharmacy: 1300 },
-  { name: 'Mar', consultation: 1300, pharmacy: 1400 },
-  { name: 'Apr', consultation: 1600, pharmacy: 1500 },
-  { name: 'May', consultation: 1400, pharmacy: 1600 },
-  { name: 'Jun', consultation: 1500, pharmacy: 1550 },
-  { name: 'Jul', consultation: 1600, pharmacy: 1650 },
-  { name: 'Aug', consultation: 1550, pharmacy: 1700 },
-  { name: 'Sep', consultation: 1700, pharmacy: 1600 },
-  { name: 'Oct', consultation: 1800, pharmacy: 1575 },
-  { name: 'Nov', consultation: 1750, pharmacy: 1650 },
-  { name: 'Dec', consultation: 1900, pharmacy: 1700 },
-];
-
 const PharmacyWorkActivitiesChart = () => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 12 }, (_, i) => currentYear - 10 + i);
