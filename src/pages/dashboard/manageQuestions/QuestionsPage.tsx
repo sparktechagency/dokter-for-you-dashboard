@@ -82,6 +82,17 @@ const QuestionsPage = () => {
             <h2 className="text-2xl mb-5 font-bold">Basic Question:</h2>
             <p className="text-xl font-bold">1. What is your Height?</p>
             <p className="text-xl font-bold">2. What is your Weight?</p>
+            <p className="text-xl font-bold">3. Do you have one or more conditions?</p>
+            <p className="text-xl font-bold">4. Did you had a surgery before?</p>
+            <p className="text-xl font-bold">5. Do you take other medications?</p>
+            <p className="text-xl font-bold">6. Have you ever experienced any adverse reactions to medications?</p>
+            <p className="text-xl font-bold">7. Do you have allergies?</p>
+            <p className="text-xl font-bold">8. Do you smoke or have smoked?</p>
+            <p className="text-xl font-bold">9. Do you drink alcohol?</p>
+            <p className="text-xl font-bold">10. Do you have close family with a hereditary condition?</p>
+            <p className="text-xl font-bold">10. Do you use drugs?</p>
+            <p className="text-xl font-bold">10. Is your blood pressure lower than 90/60hg or higher than 140/90hg?</p>
+            <p className="text-xl font-bold">10. Would you like to add more information?</p>
           </div>
         </div>
         <div className="bg-white p-8 rounded-2xl mt-5">
