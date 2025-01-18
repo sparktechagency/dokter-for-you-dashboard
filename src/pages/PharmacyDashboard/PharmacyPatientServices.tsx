@@ -11,10 +11,9 @@ const PharmacyPatientServices = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultations = getConsultations?.data;
+  console.log(consultations);
 
-  const forwardToPartnerOptions = consultations?.filter(
-    (item: any) => item?.forwardToPartner === true && item?.suggestedMedicine?.length > 0,
-  );
+  const forwardToPartnerOptions = consultations?.filter((item: any) => item?.suggestedMedicine?.length > 0);
 
   const uniqueSubCategories = Array.from(
     new Set(forwardToPartnerOptions?.map((item: any) => item.subCategory?.name)),
@@ -78,7 +77,7 @@ const PharmacyPatientServices = () => {
         <div>
           <button
             className={`${
-              status === 'Resented' ? 'bg-[#FFBE00]' : 'bg-[#1854F9]'
+              status === 'prescribed' ? 'bg-green-600' : status === 'rejected' ? 'bg-red-500' : 'bg-[#1854F9]'
             } text-white text-[14px] py-1.5 px-2 rounded-md`}
           >
             {status}
@@ -128,7 +127,7 @@ const PharmacyPatientServices = () => {
             />
           </div>
         </div>
-        <p className=" text-[#0A2369] text-[20px] pb-3 font-normal">Forward Prescription from our Partner</p>
+        <p className=" text-[#0A2369] text-[20px] pb-3 font-normal"></p>
         <Table columns={Columns} rowKey="_id" dataSource={filteredOptions} pagination={{ pageSize: 10 }} />
       </div>
     </div>

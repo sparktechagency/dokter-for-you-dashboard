@@ -1,47 +1,40 @@
 import { useEffect, useState } from 'react';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { Form, Input } from 'antd';
-// import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { useGetCurrentUserProfileQuery, useUpdateUserProfileMutation } from '../../../redux/apiSlices/authSlice';
 import toast from 'react-hot-toast';
 import logo from '../../../assets/whiteBg.png';
 
-// interface CustomJwtPayload extends JwtPayload {
-//   id: string;
-// }
-
 const UserProfile = () => {
   const [form] = Form.useForm();
-  const [imgURL, setImgURL] = useState<string | undefined>(undefined);
-  const [file, setFile] = useState<File | null>(null);
+  const [profileImgURL, setProfileImgURL] = useState<string | undefined>(undefined);
+  const [profileFile, setProfileFile] = useState<File | null>(null);
+  const [signatureImgURL, setSignatureImgURL] = useState<string | undefined>(undefined);
+  const [signatureFile, setSignatureFile] = useState<File | null>(null);
 
-  //   const getUserToken = localStorage.getItem('authToken');
-  //   if (!getUserToken) {
-  //     console.error('No auth token found');
-  //     return;
-  //   }
-  //   const decodedToken = jwtDecode<CustomJwtPayload>(getUserToken);
-  //   const { id } = decodedToken;
-
-  //   const { data: currentAdminData, isFetching } = useGetCurrentAdminQuery(id);
+  console.log(signatureFile);
 
   const { data: currentUser, isFetching, refetch } = useGetCurrentUserProfileQuery(undefined);
-
   const [updateAdmin] = useUpdateUserProfileMutation();
 
   const user = currentUser?.data;
-  //   console.log(user);
+  console.log(user);
 
   useEffect(() => {
     if (user) {
       form.setFieldsValue({
-        firstName: user?.firstName ? `${user?.firstName}` : user?.pharmecyName ? user?.pharmecyName : 'Random Doctor',
+        firstName: user?.firstName || user?.pharmecyName || 'Random Doctor',
         lastName: user?.lastName,
         email: user?.email,
         location: user?.location || 'unknown',
         contact: user?.contact || 'unknown',
       });
-      setImgURL(user?.profile.startsWith('http') ? user?.profile : `${import.meta.env.VITE_BASE_URL}${user?.profile}`);
+      setProfileImgURL(
+        user?.profile.startsWith('http') ? user?.profile : `${import.meta.env.VITE_BASE_URL}${user?.profile}`,
+      );
+      setSignatureImgURL(
+        user?.signature?.startsWith('http') ? user?.signature : `${import.meta.env.VITE_BASE_URL}${user?.signature}`,
+      );
     }
   }, [form, user]);
 
@@ -53,8 +46,23 @@ const UserProfile = () => {
     return <div>Loading...</div>;
   }
 
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setProfileImgURL(URL.createObjectURL(selectedFile));
+      setProfileFile(selectedFile);
+    }
+  };
+
+  const handleSignatureImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setSignatureImgURL(URL.createObjectURL(selectedFile));
+      setSignatureFile(selectedFile);
+    }
+  };
+
   const handleSubmit = async (values: any) => {
-    // console.log(values);
     try {
       const formData = new FormData();
       formData.append('firstName', values.firstName);
@@ -63,47 +71,39 @@ const UserProfile = () => {
       formData.append('location', values.location);
       formData.append('contact', values.contact);
 
-      if (file) {
-        console.log('image file', file);
-        formData.append('profile', file);
-      } else if (imgURL) {
-        formData.append('profile', imgURL);
-      } else {
-        console.error('No file or image URL provided.');
-        return;
+      if (profileFile) {
+        formData.append('profile', profileFile);
       }
-      //   console.log(formData);
+      if (signatureFile) {
+        formData.append('signature', signatureFile);
+      }
+
+      console.log([...formData.entries()]); // Debugging: Check the formData content
 
       const response = await updateAdmin({ data: formData }).unwrap();
-      console.log('in response', response);
       if (response?.success) {
         toast.success('Profile updated successfully!');
+        if (response.updatedSignature) {
+          setSignatureImgURL(response.updatedSignature); // Update the signature preview with the new URL
+        }
       } else {
         toast.error('Failed to update profile.');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-    }
-  };
-
-  const onChangeImage = (e: any) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const imgUrl = URL.createObjectURL(selectedFile);
-      setImgURL(imgUrl);
-      setFile(selectedFile);
+      toast.error('Something went wrong.');
     }
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center">
+    <div className=" flex flex-col items-center justify-center">
       {/* Profile Image */}
-      <div className="flex justify-center flex-col items-center">
-        <input onChange={onChangeImage} type="file" id="img" className="hidden" />
+      <div className="flex flex-col items-center">
+        <input onChange={handleProfileImageChange} type="file" id="profileImg" className="hidden" />
         <label
-          htmlFor="img"
+          htmlFor="profileImg"
           className="relative w-48 h-48 cursor-pointer rounded-full border border-primary bg-white bg-cover bg-center"
-          style={{ backgroundImage: `url(${imgURL ? imgURL : logo})` }}
+          style={{ backgroundImage: `url(${profileImgURL || logo})` }}
         >
           <div className="absolute bottom-1 right-1 w-12 h-12 rounded-full border-2 border-primary bg-gray-100 flex items-center justify-center">
             <MdOutlineAddPhotoAlternate size={22} className="text-primary" />
@@ -119,35 +119,43 @@ const UserProfile = () => {
       <div className="flex flex-col w-[70%] mt-5 justify-center items-center">
         <h1 className="text-xl my-5">Edit Profile</h1>
         <Form name="normal_login" layout="vertical" className="w-3/4" onFinish={handleSubmit} form={form}>
-          <Form.Item name="firstName" label={<p className="block">First Name</p>} className="mb-0">
+          <Form.Item name="firstName" label="First Name">
             <Input
               placeholder="Enter Your First Name"
               className="border border-gray-300 h-[45px] bg-white rounded-lg"
             />
           </Form.Item>
-          <Form.Item name="lastName" label={<p className="block">Last Name</p>} className="mb-0">
+          <Form.Item name="lastName" label="Last Name">
             <Input placeholder="Enter Your Last Name" className="border border-gray-300 h-[45px] bg-white rounded-lg" />
           </Form.Item>
-
-          <Form.Item name="email" label={<p className="block">Email</p>} className="mb-0">
-            <Input
-              type="text"
-              placeholder="Enter Email"
-              className="border border-gray-300 h-[45px] bg-white rounded-lg"
-            />
+          <Form.Item name="email" label="Email">
+            <Input placeholder="Enter Email" className="border border-gray-300 h-[45px] bg-white rounded-lg" />
           </Form.Item>
-
-          <Form.Item name="contact" label={<p>Phone Number</p>} className="mb-0">
-            <Input
-              type="text"
-              placeholder="Enter Phone Number"
-              className="border border-gray-300 h-[45px] bg-white rounded-lg"
-            />
+          <Form.Item name="contact" label="Phone Number">
+            <Input placeholder="Enter Phone Number" className="border border-gray-300 h-[45px] bg-white rounded-lg" />
           </Form.Item>
-
-          <Form.Item name="location" label={<p className="block">Location</p>} className="mb-0">
+          <Form.Item name="location" label="Location">
             <Input placeholder="Enter Location" className="border border-gray-300 h-[45px] bg-white rounded-lg" />
           </Form.Item>
+
+          {user?.role === 'DOCTOR' && (
+            <div className="flex flex-col items-center my-10">
+              <input onChange={handleSignatureImageChange} type="file" id="signatureImg" className="!hidden" />
+              <label
+                htmlFor="signatureImg"
+                className="relative w-48 h-28 cursor-pointer border border-primary bg-white bg-cover bg-center"
+              >
+                <div
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url(${signatureImgURL || logo})` }}
+                />
+                {/* <div className="absolute bottom-1 right-1 w-12 h-12 rounded-full border-2 border-primary bg-gray-100 flex items-center justify-center">
+                <MdOutlineAddPhotoAlternate size={22} className="text-primary" />
+              </div> */}
+              </label>
+              <p className="text-center mt-5">Signature</p>
+            </div>
+          )}
 
           <div className="text-center mt-6">
             <Form.Item>

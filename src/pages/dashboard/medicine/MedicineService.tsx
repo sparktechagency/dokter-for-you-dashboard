@@ -4,20 +4,25 @@ import { CiEdit } from 'react-icons/ci';
 import { useState } from 'react';
 import { useDeleteMedicineMutation, useGetMedicineQuery } from '../../../redux/apiSlices/medicineSlice';
 import toast from 'react-hot-toast';
+import { useGetCurrentUserProfileQuery } from '../../../redux/apiSlices/authSlice';
 
 const MedicineService = () => {
   const { data: getMedicine, isFetching, refetch } = useGetMedicineQuery(undefined);
+
+  const { data: currentUser, isLoading } = useGetCurrentUserProfileQuery(undefined);
+
   const [deleteMedicine] = useDeleteMedicineMutation();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDosage, setFilterDosage] = useState('all');
   const [filterCountry, setFilterCountry] = useState('all');
 
-  if (isFetching) {
+  if (isFetching || isLoading) {
     return <h1>Loading...</h1>;
   }
 
   const getMedicineData = getMedicine?.data;
-  console.log(getMedicineData);
+  const userProfile = currentUser?.data;
+  console.log(userProfile);
 
   // Filtered data
   const filteredData = getMedicineData?.filter((item: any) => {
@@ -163,16 +168,18 @@ const MedicineService = () => {
               { value: 'france', label: 'France' },
             ]}
           />
-          <Button
-            href="/medicine-service/add-medicine"
-            icon={<BsPlusLg size={18} />}
-            style={{
-              height: 42,
-            }}
-            type="primary"
-          >
-            Add Medicine
-          </Button>
+          {userProfile?.role === 'ADMIN' && (
+            <Button
+              href="/medicine-service/add-medicine"
+              icon={<BsPlusLg size={18} />}
+              style={{
+                height: 42,
+              }}
+              type="primary"
+            >
+              Add Medicine
+            </Button>
+          )}
         </div>
       </div>
 

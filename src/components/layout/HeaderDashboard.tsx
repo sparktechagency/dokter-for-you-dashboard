@@ -1,16 +1,33 @@
 import { Layout } from 'antd';
 import { Link } from 'react-router-dom';
 import { useGetCurrentUserProfileQuery } from '../../redux/apiSlices/authSlice';
+import { useGetNotificationQuery, useUpdateNotificationMutation } from '../../redux/apiSlices/notificationSlice';
 
 const { Header } = Layout;
 
 const HeaderDashboard = () => {
   const { data: currentUser, isFetching } = useGetCurrentUserProfileQuery(undefined);
 
+  const { data: notification } = useGetNotificationQuery(undefined);
+  const [readNotification] = useUpdateNotificationMutation();
+
   if (isFetching) return <div>Loading...</div>;
 
   const user = currentUser?.data;
-  console.log(user);
+  const notifications = notification;
+
+  console.log(notifications);
+
+  const handleReadNotification = async () => {
+    try {
+      const response = await readNotification(undefined).unwrap();
+      if (response?.success) {
+        console.log(response.success);
+      }
+    } catch (error) {
+      console.error('Error reading notification:', error);
+    }
+  };
 
   return (
     <Header
@@ -29,8 +46,11 @@ const HeaderDashboard = () => {
             <div className="size-10 bg-[#F2F2F2] rounded-full flex items-center justify-center ">
               <button className="py-4 px-1 relative border-2 border-transparent text-gray-800 rounded-full hover:text-gray-400 focus:outline-none focus:text-gray-500 transition duration-150 ease-in-out">
                 <span className="absolute inset-0 -top-4  -mr-6">
-                  <div className="inline-flex items-center px-1.5 py-0.5 border-2 border-white rounded-full text-xs font-semibold leading-4 bg-primary text-white">
-                    6
+                  <div
+                    onClick={() => handleReadNotification()}
+                    className="inline-flex items-center px-1.5 py-0.5 border-2 border-white rounded-full text-xs font-semibold leading-4 bg-primary text-white"
+                  >
+                    {notifications?.unreadCount}
                   </div>
                 </span>
                 <svg width={14} height={16} viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">

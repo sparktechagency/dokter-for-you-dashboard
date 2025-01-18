@@ -28,7 +28,7 @@ const PharmacyEarningChart = () => {
 
   if (isFetching) return <div>Loading...</div>;
 
-  const earningStates = earningState;
+  const earningStates = earningState?.data;
   console.log(earningStates);
 
   const handleMouseEnter = (index: number) => {
@@ -69,7 +69,7 @@ const PharmacyEarningChart = () => {
       </div>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={data}
+          data={earningStates}
           margin={{
             top: 5,
             right: 30,
@@ -78,13 +78,13 @@ const PharmacyEarningChart = () => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="month" />
           <YAxis />
           <Tooltip cursor={{ fill: 'transparent' }} />
           <Legend />
           <Bar
             barSize={30}
-            dataKey="value"
+            dataKey="total"
             onMouseEnter={(_, index) => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >

@@ -93,6 +93,13 @@ const userApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Admin'],
     }),
+
+    generatePdf: builder.mutation({
+      query: (id) => ({
+        url: `pdf/generate-pdf/${id}`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -109,4 +116,5 @@ export const {
   useGetAllAdminQuery,
   useCreateAdminMutation,
   useDeleteAdminMutation,
+  useGeneratePdfMutation,
 } = userApi;

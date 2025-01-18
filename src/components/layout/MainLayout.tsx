@@ -6,32 +6,32 @@ import Sidebar from './Sidebar';
 const { Content } = Layout;
 
 const MainLayout: React.FC = () => {
-    return (
-        <Layout
+  return (
+    <Layout
+      style={{
+        minHeight: '100vh',
+      }}
+    >
+      <Sidebar />
+      <Layout>
+        {/* header */}
+
+        <HeaderDashboard />
+        <Content>
+          <div
             style={{
-                minHeight: '100vh',
+              minHeight: '50vh',
+              width: '100%',
+
+              padding: 16,
             }}
-        >
-            <Sidebar />
-            <Layout>
-                {/* header */}
-
-                <HeaderDashboard />
-                <Content>
-                    <div
-                        style={{
-                            minHeight: '50vh',
-                            width: '100%',
-
-                            padding: 16,
-                        }}
-                    >
-                        <Outlet />
-                    </div>
-                </Content>
-            </Layout>
-        </Layout>
-    );
+          >
+            <Outlet />
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
+  );
 };
 
 export default MainLayout;

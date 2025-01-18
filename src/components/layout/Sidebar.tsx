@@ -33,7 +33,15 @@ const Sidebar = () => {
     >
       <Sider width={250} theme="light" breakpoint="lg" collapsedWidth="0">
         {/* logo of the website */}
-        <Link to="/">
+        <Link
+          to={
+            userRole === 'ADMIN'
+              ? '/admin-dashboard'
+              : userRole === 'DOCTOR'
+              ? '/doctor-dashboard'
+              : '/pharmacy-dashboard'
+          }
+        >
           <img src="/logo.svg" className="w-[180px] object-cover m-5" alt="" />
         </Link>
 

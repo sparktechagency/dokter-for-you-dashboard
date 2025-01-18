@@ -53,7 +53,7 @@ const DoctorPatientServices = () => {
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | undefined>(undefined);
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined);
 
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
   if (token === null) {
     // Handle the case where the token is null, e.g., redirect to login
     console.error('No auth token found');

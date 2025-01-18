@@ -47,7 +47,12 @@ const MedicationDetails = () => {
         </p>
       </div>
       <div>
-        <Button type="primary" icon={<FaDownload />} size="large">
+        <Button
+          href={`${import.meta.env.VITE_BASE_URL}api/v1/pdf/generate-pdf/${consultationData?._id}`}
+          type="primary"
+          icon={<FaDownload />}
+          size="large"
+        >
           Download
         </Button>
       </div>
@@ -107,7 +112,7 @@ const MedicationDetails = () => {
 
   const medicineDetailsSection = (
     <div>
-      {consultationData?.medicins?.map((medicine: any, index: number) => {
+      {consultationData?.suggestedMedicine?.map((medicine: any, index: number) => {
         return (
           <div
             key={index}
@@ -140,7 +145,7 @@ const MedicationDetails = () => {
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-600">Price</p>
-              <p className="font-semibold text-gray-800">€ {medicine?._id?.sellingPrice || '25.00'}</p>
+              <p className="font-semibold text-gray-800">€ {medicine?._id?.sellingPrice}</p>
             </div>
           </div>
         );
@@ -167,21 +172,25 @@ const MedicationDetails = () => {
           <span>Discount -</span>
           <span>{consultationData?.medicins?._id?.discount || '€0.00'}</span>
         </div>
+        <div className="flex justify-end gap-20">
+          <span>Shipping Cost -</span>
+          <span>{consultationData?.medicins?._id?.shippingCost || '€10.00'}</span>
+        </div>
         <hr className="h-0.5 bg-gray" />
         <div className="flex justify-end gap-20 text-lg font-semibold text-gray-900 mt-2">
           <span>Total -</span>
-          <span className="text-[#0A2369]">
-            €{' '}
-            {consultationData?.medicins
-              ?.map((medicine: any) => medicine?._id?.sellingPrice)
-              .reduce((total: number, price: number) => total + price, 0) + 25}
-          </span>
+          <span className="text-[#0A2369]">€ {consultationData?.totalPrice + 25 + 10}</span>
         </div>
       </div>
 
       {/* Download Button */}
       <div className="mt-6 text-right">
-        <Button style={{ height: 42 }} type="primary" icon={<FaDownload size={20} />}>
+        <Button
+          href={`${import.meta.env.VITE_BASE_URL}api/v1/pdf/generate-pdf/${consultationData?._id}`}
+          style={{ height: 42 }}
+          type="primary"
+          icon={<FaDownload size={20} />}
+        >
           Download
         </Button>
       </div>

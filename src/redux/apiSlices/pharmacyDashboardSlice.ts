@@ -16,7 +16,7 @@ const pharmacyDashboardApi = api.injectEndpoints({
     }),
     getPharmacyTotalEarning: builder.query({
       query: (year: number) => ({
-        url: `/user/pharmecy/earning?year=${year}`,
+        url: `/user/pharmecy/workload/earnings?year=${year}`,
         method: 'GET',
       }),
     }),

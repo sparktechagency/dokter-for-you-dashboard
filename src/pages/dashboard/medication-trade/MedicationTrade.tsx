@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { Input, Table, Button, Tooltip, Modal, Form } from 'antd';
+import { Input, Table, Button, Tooltip, Modal, Form, Upload } from 'antd';
 import { BsSearch, BsEye } from 'react-icons/bs';
 import { FaEdit } from 'react-icons/fa';
+import { UploadOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
 
 import toast from 'react-hot-toast';
 import { useUpdateConsultationMutation } from '../../../redux/apiSlices/patientServiceSlice';
-import { useGetMedicationTradeQuery } from '../../../redux/apiSlices/consultationSlice';
+
+import { useGetMedicationTradeDataQuery, useUploadExcelMutation } from '../../../redux/apiSlices/medicineSlice';
+import { Link } from 'react-router-dom';
 
 const columns = (onEdit: (record: any) => void) => [
   {
@@ -24,13 +27,8 @@ const columns = (onEdit: (record: any) => void) => [
   },
   {
     title: 'User Name',
-    dataIndex: 'userId',
-    key: 'userId',
-    render: (_: any, record: any) => (
-      <span>
-        {record?.userId?.firstName} {record?.userId?.lastName}
-      </span>
-    ),
+    dataIndex: 'name',
+    key: 'name',
   },
   {
     title: 'Date & Time',
@@ -40,15 +38,8 @@ const columns = (onEdit: (record: any) => void) => [
   },
   {
     title: 'Price',
-    dataIndex: 'suggestedMedicine',
-    key: 'suggestedMedicine',
-    render: (_: any, record: any) => (
-      <span>
-        {record?.suggestedMedicine
-          ?.map((item: any) => item?._id?.sellingPrice)
-          ?.reduce((previousValue: number, currentValue: number) => previousValue + currentValue, 0)}
-      </span>
-    ),
+    dataIndex: 'price',
+    key: 'price',
   },
   {
     title: 'Status',
@@ -88,20 +79,36 @@ const columns = (onEdit: (record: any) => void) => [
 ];
 
 const MedicationTrade = () => {
-  const { data: getPharmacyMedicationTrade, isFetching, refetch } = useGetMedicationTradeQuery(undefined);
+  const { data: getPharmacyMedicationTrade, isFetching, refetch } = useGetMedicationTradeDataQuery(undefined);
   const [updateMedicationTrade] = useUpdateConsultationMutation();
+  const [uploadExcel] = useUploadExcelMutation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [form] = Form.useForm();
 
   // New state for search and date filtering
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleEdit = (record: any) => {
     setSelectedRecord(record);
     form.setFieldsValue({ trackingNo: record.trackingNo });
     setIsModalVisible(true);
+  };
+
+  const handleFileUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await uploadExcel(formData).unwrap();
+      if (response?.success) {
+        toast.success('Excel file uploaded successfully!');
+        refetch();
+      } else {
+        toast.error('Failed to upload Excel file.');
+      }
+    } catch (error) {
+      toast.error('Failed to upload Excel file.');
+    }
   };
 
   const handleCancel = () => {
@@ -140,8 +147,8 @@ const MedicationTrade = () => {
     const matchesSearch =
       item.trackingNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
       `${item.userId.firstName} ${item.userId.lastName}`.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDate = selectedDate ? moment(item.orderDate).isSame(selectedDate, 'day') : true;
-    return matchesSearch && matchesDate;
+
+    return matchesSearch;
   });
 
   return (
@@ -159,6 +166,12 @@ const MedicationTrade = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <Upload beforeUpload={handleFileUpload} accept=".xlsx" maxCount={1}>
+            <Button icon={<UploadOutlined />}>Upload Excel</Button>
+          </Upload>
+          <Link to={`${import.meta.env.VITE_BASE_URL}api/v1/order/export`}>
+            <button className="px-5 py-1 border-slate-400 rounded-lg border">Export</button>
+          </Link>
         </div>
       </div>
       <Table columns={columns(handleEdit)} rowKey="_id" dataSource={filteredData} />

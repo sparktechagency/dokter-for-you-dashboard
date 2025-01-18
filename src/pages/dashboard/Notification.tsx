@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import { useGetNotificationQuery } from '../../redux/apiSlices/notificationSlice';
 import { useEffect, useState } from 'react';
 import { connectSocket } from '../../utils/connectSocket';
@@ -22,8 +21,8 @@ interface CustomJwtPayload extends JwtPayload {
 const Notification = () => {
   const [notification, setNotification] = useState<NotificationType[]>([]);
 
-  const token = getFromLocalStorage('authToken');
-  
+  const token = getFromLocalStorage('authToken') || sessionStorage.getItem('authToken');
+
   // Check if token is not null before decoding
   if (token) {
     const decodedToken = jwtDecode<CustomJwtPayload>(token);
@@ -41,7 +40,7 @@ const Notification = () => {
 
       const handleNewNotification = (data: NotificationType) => {
         setNotification((prev) => [...prev, data]);
-        console.log(data);
+        // console.log(data);
       };
 
       socket.on(`NEW_NOTIFICATION::${id}`, handleNewNotification);
@@ -59,24 +58,6 @@ const Notification = () => {
           <div className="flex items-center justify-between my-4">
             <div>
               <h1 className="text-2xl font-semibold text-primary">Notification</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button
-                style={{
-                  height: '40px',
-
-                  borderRadius: '8px',
-                  border: '2px solid #2461CB',
-
-                  background: 'white',
-
-                  color: '#2461CB',
-                  fontWeight: '400',
-                  fontSize: 14,
-                }}
-              >
-                <span>Read all</span>
-              </Button>
             </div>
           </div>
           <div>
@@ -107,7 +88,7 @@ const Notification = () => {
       </div>
     );
   } else {
-    console.error("No auth token found");
+    console.error('No auth token found');
     return <div>No auth token found</div>;
   }
 };

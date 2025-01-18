@@ -108,9 +108,8 @@ const MedicationTradeDetails = () => {
             <p>{consultationData?.address?.country}</p>
           </div>
           <div className="space-y-1">
-            <h3 className="font-medium mb-2">Pharmacy Address</h3>
-            <p>4517 Washington Ave.</p>
-            <p>Manchester</p>
+            <h3 className="font-medium mb-2">Pharmacy Name</h3>
+            <p>Apotheek Zaandam Oost</p>
           </div>
           <div className="flex justify-between">
             <div className="space-y-1">
@@ -192,7 +191,12 @@ const MedicationTradeDetails = () => {
         <p>€ {subTotal + 10}</p>
       </div>
       <div className="mt-6 text-right">
-        <Button style={{ height: 42 }} type="primary" icon={<FaDownload size={20} />}>
+        <Button
+          href={`${import.meta.env.VITE_BASE_URL}api/v1/pdf/generate-pdf/${consultationData?._id}`}
+          style={{ height: 42 }}
+          type="primary"
+          icon={<FaDownload size={20} />}
+        >
           Download
         </Button>
       </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Space, Tooltip, Table, Modal, Input } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import { BsEye } from 'react-icons/bs';
-import { CiLock, CiSearch, CiUnlock } from 'react-icons/ci';
+import { CiLock, CiSearch } from 'react-icons/ci';
 import randomProfile from '../../../assets/randomProfile2.jpg';
 import { UserDataType } from './types/types';
 import { useGetUserQuery, useSendMessageMutation } from '../../../redux/apiSlices/userSlice';

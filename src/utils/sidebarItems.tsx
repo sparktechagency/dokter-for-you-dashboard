@@ -187,7 +187,7 @@ const adminSidebarItems: TSidebarItem[] = [
   },
   {
     key: 'add-medicine',
-    label: 'Add Medicine',
+    label: 'Medicine List',
     path: 'medicine-service',
     roles: ['PHARMACY'],
   },

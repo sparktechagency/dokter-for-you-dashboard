@@ -16,6 +16,7 @@ const DigitalPrescriptionDetails = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultationData = getConsultationById?.data;
+  console.log('dddd', consultationData);
 
   const topSection = (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">
@@ -100,6 +101,49 @@ const DigitalPrescriptionDetails = () => {
     </div>
   );
 
+  const medicineDetailsSection = (
+    <div>
+      {consultationData?.suggestedMedicine?.map((medicine: any, index: number) => {
+        return (
+          <div
+            key={index}
+            className="flex items-center border-b border-slate-200 justify-between my-2 rounded-lg p-4 text-gray"
+          >
+            <div className="flex items-center space-x-4">
+              <img
+                src={
+                  medicine?._id?.image.startsWith('http')
+                    ? medicine?._id?.image
+                    : `${import.meta.env.VITE_BASE_URL}${medicine?._id?.image}`
+                }
+                alt="Ceevit"
+                className="w-20 h-auto rounded"
+              />
+
+              <div>
+                <h3 className="font-semibold text-lg text-gray-800">{medicine?._id?.name}</h3>
+                <p className="text-sm text-gray-600">{medicine?._id?.medicineType}</p>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <p className="text-sm text-gray-600">Dosage</p>
+              <p className="font-semibold text-gray-800">{medicine?._id?.dosage}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-gray-600">Unit Per Box</p>
+              <p className="font-semibold text-gray-800">{medicine?._id?.unitPerBox}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-gray-600">Price</p>
+              <p className="font-semibold text-gray-800">€ {medicine?._id?.sellingPrice || 0}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
   const consultationDetailsSection = (
     <div className=" p-4 text-gray">
       {/* Consultation Details */}
@@ -122,13 +166,18 @@ const DigitalPrescriptionDetails = () => {
         <hr className="h-0.5 bg-gray" />
         <div className="flex justify-end gap-20 text-lg font-semibold text-gray-900 mt-2">
           <span>Total -</span>
-          <span className="text-[#0A2369]">$25.00</span>
+          <span className="text-[#0A2369]">{consultationData?.totalPrice + 25}</span>
         </div>
       </div>
 
       {/* Download Button */}
       <div className="mt-6 text-right">
-        <Button style={{ height: 42 }} type="primary" icon={<FaDownload size={20} />}>
+        <Button
+          href={`${import.meta.env.VITE_BASE_URL}api/v1/pdf/generate-pdf/${consultationData?._id}`}
+          style={{ height: 42 }}
+          type="primary"
+          icon={<FaDownload size={20} />}
+        >
           Download
         </Button>
       </div>
@@ -140,6 +189,7 @@ const DigitalPrescriptionDetails = () => {
       {topSection}
       {detailsSection}
       {patientAndConsultantSection}
+      {medicineDetailsSection}
       {consultationDetailsSection}
     </div>
   );

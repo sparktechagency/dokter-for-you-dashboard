@@ -50,6 +50,23 @@ const medicineApi = api.injectEndpoints({
         body: data,
       }),
     }),
+
+    // medication trade
+
+    getMedicationTradeData: builder.query({
+      query: () => ({
+        url: '/order/',
+        method: 'GET',
+      }),
+    }),
+
+    uploadExcel: builder.mutation({
+      query: (data) => ({
+        url: 'order/import',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -61,4 +78,8 @@ export const {
   useDeleteMedicineMutation,
   useGetMedicineBySubCategoryQuery,
   useMakePrescriptionMutation,
+
+  //get medication trade
+  useGetMedicationTradeDataQuery,
+  useUploadExcelMutation,
 } = medicineApi;

@@ -16,6 +16,7 @@ const PatientDetailsPage = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultationData = getConsultationById?.data;
+  console.log(consultationData);
 
   const topSection = (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">
@@ -44,7 +45,12 @@ const PatientDetailsPage = () => {
         <p className="text-sm text-gray-500">Prescription is Complete</p>
       </div>
       <div>
-        <Button href="download" type="primary" icon={<FaDownload />} size="large">
+        <Button
+          href={`${import.meta.env.VITE_BASE_URL}api/v1/pdf/generate-pdf/${consultationData?._id}`}
+          type="primary"
+          icon={<FaDownload />}
+          size="large"
+        >
           Download
         </Button>
       </div>
@@ -164,7 +170,12 @@ const PatientDetailsPage = () => {
 
       {/* Download Button */}
       <div className="mt-6 text-right">
-        <Button style={{ height: 42 }} type="primary" icon={<FaDownload size={20} />}>
+        <Button
+          href={`${import.meta.env.VITE_BASE_URL}api/v1/pdf/generate-pdf/${consultationData?._id}`}
+          style={{ height: 42 }}
+          type="primary"
+          icon={<FaDownload size={20} />}
+        >
           Download
         </Button>
       </div>

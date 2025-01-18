@@ -43,6 +43,27 @@ const doctorPatientServiceApi = api.injectEndpoints({
       }),
       invalidatesTags: ['consultation'],
     }),
+
+    //doctor earnings
+
+    getDoctorEarningsStates: builder.query({
+      query: () => ({
+        url: `/user/doctors/earnings`,
+        method: 'GET',
+      }),
+    }),
+    withdrawMoney: builder.mutation({
+      query: () => ({
+        url: `consultation/withdraw`,
+        method: 'POST',
+      }),
+    }),
+    doctorEarningHistory: builder.query({
+      query: () => ({
+        url: `/user/doctors/earning-history`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -52,4 +73,9 @@ export const {
   useRejectConsultationMutation,
   useSetScheduleVideoCallMutation,
   useSetUpVideoCallLinkMutation,
+
+  //doctor earnings
+  useGetDoctorEarningsStatesQuery,
+  useWithdrawMoneyMutation,
+  useDoctorEarningHistoryQuery,
 } = doctorPatientServiceApi;
