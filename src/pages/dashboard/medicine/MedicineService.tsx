@@ -106,23 +106,27 @@ const MedicineService = () => {
             />
           </Tooltip>
 
-          <Tooltip title="Edit">
-            <Button
-              href={`/medicine-service/edit-medicine/${record._id}`}
-              type="text"
-              shape="circle"
-              icon={<CiEdit color="#004B56" size={20} />}
-            />
-          </Tooltip>
+          {userProfile?.role === 'ADMIN' && (
+            <>
+              <Tooltip title="Edit">
+                <Button
+                  href={`/medicine-service/edit-medicine/${record._id}`}
+                  type="text"
+                  shape="circle"
+                  icon={<CiEdit color="#004B56" size={20} />}
+                />
+              </Tooltip>
 
-          <Tooltip title="Delete">
-            <Button
-              onClick={() => handleDeleteMedicine(record._id)}
-              type="text"
-              shape="circle"
-              icon={<BsTrash size={20} color="red" />}
-            />
-          </Tooltip>
+              <Tooltip title="Delete">
+                <Button
+                  onClick={() => handleDeleteMedicine(record._id)}
+                  type="text"
+                  shape="circle"
+                  icon={<BsTrash size={20} color="red" />}
+                />
+              </Tooltip>
+            </>
+          )}
         </div>
       ),
     },

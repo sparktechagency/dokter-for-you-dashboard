@@ -108,19 +108,17 @@ const PatientServices = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Badge
-          status={status === 'pending' ? 'processing' : 'default'}
-          text={
-            <span
-              style={{
-                color: status === 'Loading...' ? '#FAAD14' : '#1890FF',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </span>
+        <Button
+          className={
+            status === 'pending'
+              ? 'bg-yellow-500 text-white'
+              : status === 'rejected'
+              ? 'bg-red-500 text-white'
+              : 'bg-green-500 text-white'
           }
-        />
+        >
+          {status}
+        </Button>
       ),
     },
     {
@@ -201,19 +199,17 @@ const PatientServices = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Badge
-          status={status === 'pending' ? 'processing' : 'default'}
-          text={
-            <span
-              style={{
-                color: status === 'Loading...' ? '#FAAD14' : '#1890FF',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </span>
+        <Button
+          className={
+            status === 'pending'
+              ? 'bg-yellow-500 text-white'
+              : status === 'rejected'
+              ? 'bg-red-500 text-white'
+              : 'bg-green-500 text-white'
           }
-        />
+        >
+          {status}
+        </Button>
       ),
     },
     {
@@ -284,19 +280,17 @@ const PatientServices = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Badge
-          status={status === 'pending' ? 'processing' : 'default'}
-          text={
-            <span
-              style={{
-                color: status === 'Loading...' ? '#FAAD14' : '#1890FF',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </span>
+        <Button
+          className={
+            status === 'pending'
+              ? 'bg-yellow-500 text-white'
+              : status === 'rejected'
+              ? 'bg-red-500 text-white'
+              : 'bg-green-500 text-white'
           }
-        />
+        >
+          {status}
+        </Button>
       ),
     },
     {
@@ -376,19 +370,17 @@ const PatientServices = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Badge
-          status={status === 'pending' ? 'processing' : 'default'}
-          text={
-            <span
-              style={{
-                color: status === 'Loading...' ? '#FAAD14' : '#1890FF',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </span>
+        <Button
+          className={
+            status === 'pending'
+              ? 'bg-yellow-500 text-white'
+              : status === 'rejected'
+              ? 'bg-red-500 text-white'
+              : 'bg-green-500 text-white'
           }
-        />
+        >
+          {status}
+        </Button>
       ),
     },
     {

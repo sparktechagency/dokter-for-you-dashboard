@@ -65,6 +65,7 @@ import QuestionsPage from '../pages/dashboard/manageQuestions/QuestionsPage';
 import ManageQuestions from '../pages/dashboard/manageQuestions/ManageQuestions';
 import PrivateRoute from './PrivetRoute';
 import SetUpPaymentMethod from '../components/ui/DoctorDashboard/SetUpPaymentMethod';
+import DigitalPrescriptionWithOrders from '../components/ui/DoctorDashboard/DoctorPatientServices/DigitalPrescriptionWithOrders';
 
 const router = createBrowserRouter([
   {
@@ -145,6 +146,7 @@ const router = createBrowserRouter([
       { path: 'doctor-patient-services-list', element: <DoctorPatientServices /> },
       { path: 'doctor-patient-services/details/:id', element: <DoctorPatientServicesDetails /> },
       { path: 'doctor-digital-prescription/details/:id', element: <DoctorDigitalPrescriptionDetails /> },
+      { path: 'doctor-digital-prescription-with-orders/details/:id', element: <DigitalPrescriptionWithOrders /> },
       { path: 'doctor-video-consultation/details/:id', element: <DoctorVideoConsultationDetails /> },
       {
         path: 'doctor-patient-services/details/:id/reject-prescription',

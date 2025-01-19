@@ -153,19 +153,17 @@ const DoctorPatientServices = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Badge
-          status={status === 'Loading...' ? 'processing' : 'default'}
-          text={
-            <span
-              style={{
-                color: status === 'Loading...' ? '#FAAD14' : '#1890FF',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </span>
+        <Button
+          className={
+            status === 'pending'
+              ? 'bg-yellow-500 text-white'
+              : status === 'rejected'
+              ? 'bg-red-500 text-white'
+              : 'bg-green-500 text-white'
           }
-        />
+        >
+          {status}
+        </Button>
       ),
     },
     {
@@ -232,19 +230,17 @@ const DoctorPatientServices = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Badge
-          status={status === 'Reported' ? 'success' : 'default'}
-          text={
-            <span
-              style={{
-                color: status === 'Reported' ? '#52C41A' : '#1890FF',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </span>
+        <Button
+          className={
+            status === 'pending'
+              ? 'bg-yellow-500 text-white'
+              : status === 'rejected'
+              ? 'bg-red-500 text-white'
+              : 'bg-green-500 text-white'
           }
-        />
+        >
+          {status}
+        </Button>
       ),
     },
     {
@@ -311,22 +307,19 @@ const DoctorPatientServices = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Badge
-          status={status === 'Reported' ? 'success' : 'default'}
-          text={
-            <span
-              style={{
-                color: status === 'Reported' ? '#52C41A' : '#1890FF',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </span>
+        <Button
+          className={
+            status === 'pending'
+              ? 'bg-yellow-500 text-white'
+              : status === 'rejected'
+              ? 'bg-red-500 text-white'
+              : 'bg-green-500 text-white'
           }
-        />
+        >
+          {status}
+        </Button>
       ),
     },
-
     {
       title: 'Action',
       key: 'action',
@@ -391,19 +384,17 @@ const DoctorPatientServices = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Badge
-          status={status === 'Loading...' ? 'processing' : status === 'Reported' ? 'success' : 'default'}
-          text={
-            <span
-              style={{
-                color: status === 'Loading...' ? '#FAAD14' : status === 'Reported' ? '#52C41A' : '#1890FF',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </span>
+        <Button
+          className={
+            status === 'pending'
+              ? 'bg-yellow-500 text-white'
+              : status === 'rejected'
+              ? 'bg-red-500 text-white'
+              : 'bg-green-500 text-white'
           }
-        />
+        >
+          {status}
+        </Button>
       ),
     },
     {
@@ -412,7 +403,12 @@ const DoctorPatientServices = () => {
       render: (record: any) => (
         <div className="flex items-center space-x-2">
           <Tooltip title="Details">
-            <Button href={`/medication/details/${record._id}`} type="text" shape="circle" icon={<BsEye size={20} />} />
+            <Button
+              href={`/doctor-digital-prescription-with-orders/details/${record._id}`}
+              type="text"
+              shape="circle"
+              icon={<BsEye size={20} />}
+            />
           </Tooltip>
         </div>
       ),

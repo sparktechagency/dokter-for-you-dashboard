@@ -1,4 +1,4 @@
-import { Button, Input, Select, Modal } from 'antd';
+import { Button, Input, Modal } from 'antd';
 import { BsArrowLeft, BsSearch } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
@@ -34,6 +34,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
   const [selectedMedicines, setSelectedMedicines] = useState<
     { medicineId: Medicine; dosage: string; unit: string; quantity: number }[]
   >([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const { id } = useParams();
 
@@ -198,6 +199,10 @@ const DoctorPatientServicesConfirmPrescription = () => {
     </div>
   );
 
+  const filteredMedicines = medicines?.filter((medicine: any) =>
+    medicine.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   const givePrescription = (
     <div className="">
       <h1 className="text-2xl font-bold">Give Prescription</h1>
@@ -208,54 +213,12 @@ const DoctorPatientServicesConfirmPrescription = () => {
           prefix={<BsSearch className="mx-2" size={20} />}
           placeholder="Search medicines by name"
           style={{ width: 600 }}
-        />
-        <Select
-          placeholder="Select Dosage"
-          style={{ width: 200 }}
-          options={[
-            { value: '1', label: '1 time daily' },
-            { value: '2', label: '2 times daily' },
-            { value: '3', label: '3 times daily' },
-            { value: '4', label: '4 times daily' },
-            { value: 'before_meal', label: 'Before meal' },
-            { value: 'after_meal', label: 'After meal' },
-            { value: 'before_sleep', label: 'Before sleep' },
-            { value: 'when_needed', label: 'When needed' },
-          ]}
-        />
-        <Select
-          placeholder="Select Price"
-          style={{ width: 200 }}
-          options={[
-            { value: '5', label: '€5' },
-            { value: '10', label: '€10' },
-            { value: '15', label: '€15' },
-            { value: '20', label: '€20' },
-            { value: '25', label: '€25' },
-            { value: '30', label: '€30' },
-            { value: '35', label: '€35' },
-            { value: '40', label: '€40' },
-            { value: '45', label: '€45' },
-            { value: '50', label: '€50' },
-          ]}
-        />
-        <Select
-          placeholder="Select Country"
-          style={{ width: 200 }}
-          options={[
-            { value: 'netherlands', label: 'Netherlands' },
-            { value: 'germany', label: 'Germany' },
-            { value: 'france', label: 'France' },
-            { value: 'belgium', label: 'Belgium' },
-            { value: 'spain', label: 'Spain' },
-            { value: 'italy', label: 'Italy' },
-            { value: 'portugal', label: 'Portugal' },
-            { value: 'switzerland', label: 'Switzerland' },
-          ]}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} // Update state on change
         />
       </div>
       <div className="grid grid-cols-4 gap-4">
-        {medicines?.map((medicine: any) => (
+        {filteredMedicines?.map((medicine: any) => (
           <div
             key={medicine?._id}
             className="flex bg-slate-100 shadow-md hover:shadow-lg p-3 rounded-xl flex-col items-center cursor-pointer"
@@ -317,7 +280,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
 
     setIsModalOpen(false);
 
-    console.log('adbhaerhbar', data);
+    // console.log('adbhaerhbar', data);
     setSelectedMedicines((prevState) => [...prevState, data]);
   };
   console.log(selectedMedicines);
