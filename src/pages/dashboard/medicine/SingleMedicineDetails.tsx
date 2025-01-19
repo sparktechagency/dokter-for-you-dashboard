@@ -133,16 +133,7 @@ const SingleMedicineDetails = () => {
       {/* Buttons */}
       <div className="flex justify-end gap-4 mt-6">
         <Button
-          style={{
-            height: 42,
-          }}
-          type="primary"
-          icon={<FaDownload size={20} />}
-        >
-          Download
-        </Button>
-        <Button
-          href="/medicine-service/edit-medicine/2222"
+          href={`/medicine-service/edit-medicine/${medicineData?._id}`}
           style={{
             height: 42,
             borderColor: '#004B56',

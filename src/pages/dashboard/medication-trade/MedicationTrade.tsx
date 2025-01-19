@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Input, Table, Button, Tooltip, Modal, Form, Upload } from 'antd';
-import { BsSearch, BsEye } from 'react-icons/bs';
-import { FaEdit } from 'react-icons/fa';
+import { Input, Table, Button, Modal, Form, Upload } from 'antd';
+import { BsSearch } from 'react-icons/bs';
+
 import { UploadOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
@@ -12,7 +12,7 @@ import { useUpdateConsultationMutation } from '../../../redux/apiSlices/patientS
 import { useGetMedicationTradeDataQuery, useUploadExcelMutation } from '../../../redux/apiSlices/medicineSlice';
 import { Link } from 'react-router-dom';
 
-const columns = (onEdit: (record: any) => void) => [
+const columns = [
   {
     title: 'S.No',
     dataIndex: 'sNo',
@@ -57,25 +57,25 @@ const columns = (onEdit: (record: any) => void) => [
       </div>
     ),
   },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_: any, record: any) => (
-      <div className="flex items-center space-x-2">
-        <Tooltip title="Details">
-          <Button
-            href={`/medication-trade/details/${record?._id}`}
-            type="text"
-            shape="circle"
-            icon={<BsEye size={20} />}
-          />
-        </Tooltip>
-        <Tooltip title="Edit">
-          <Button type="text" shape="circle" icon={<FaEdit size={20} />} onClick={() => onEdit(record)} />
-        </Tooltip>
-      </div>
-    ),
-  },
+  // {
+  //   title: 'Action',
+  //   key: 'action',
+  //   render: (_: any, record: any) => (
+  //     <div className="flex items-center space-x-2">
+  //       <Tooltip title="Details">
+  //         <Button
+  //           href={`/medication-trade/details/${record?._id}`}
+  //           type="text"
+  //           shape="circle"
+  //           icon={<BsEye size={20} />}
+  //         />
+  //       </Tooltip>
+  //       <Tooltip title="Edit">
+  //         <Button type="text" shape="circle" icon={<FaEdit size={20} />} onClick={() => onEdit(record)} />
+  //       </Tooltip>
+  //     </div>
+  //   ),
+  // },
 ];
 
 const MedicationTrade = () => {
@@ -89,11 +89,11 @@ const MedicationTrade = () => {
   // New state for search and date filtering
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleEdit = (record: any) => {
-    setSelectedRecord(record);
-    form.setFieldsValue({ trackingNo: record.trackingNo });
-    setIsModalVisible(true);
-  };
+  // const handleEdit = (record: any) => {
+  //   setSelectedRecord(record);
+  //   form.setFieldsValue({ trackingNo: record.trackingNo });
+  //   setIsModalVisible(true);
+  // };
 
   const handleFileUpload = async (file: File) => {
     const formData = new FormData();
@@ -174,7 +174,7 @@ const MedicationTrade = () => {
           </Link>
         </div>
       </div>
-      <Table columns={columns(handleEdit)} rowKey="_id" dataSource={filteredData} />
+      <Table columns={columns} rowKey="_id" dataSource={filteredData} />
       <Modal
         title="Edit Tracking Number"
         open={isModalVisible}

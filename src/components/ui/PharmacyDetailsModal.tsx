@@ -1,5 +1,5 @@
-import { Button, Modal } from 'antd';
-import { FaDownload } from 'react-icons/fa';
+import { Modal } from 'antd';
+
 import { pharmacy } from '../../pages/dashboard/user/types/types';
 
 const PharmacyDetailsModal = ({
@@ -36,14 +36,6 @@ const PharmacyDetailsModal = ({
               <div className="col-span-2">: {value}</div>
             </div>
           ))}
-        </div>
-
-        <div>
-          <div className="flex justify-end">
-            <Button type="primary" icon={<FaDownload />} size="large">
-              Download
-            </Button>
-          </div>
         </div>
       </div>
     </Modal>

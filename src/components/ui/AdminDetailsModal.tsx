@@ -57,14 +57,6 @@ const AdminDetailsModal = ({
             </div>
           ))}
         </div>
-
-        <div>
-          <div className="flex justify-end">
-            <Button type="primary" icon={<FaDownload />} size="large">
-              Download
-            </Button>
-          </div>
-        </div>
       </div>
     </Modal>
   );
