@@ -42,12 +42,20 @@ const AddMedication = () => {
   };
 
   const onFinish = async (values: any) => {
+    if (units.length === 0) {
+      toast.error('Please add at least one unit per box');
+      return;
+    }
+    if (dosages.length === 0) {
+      toast.error('Please add at least one dosage');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('company', values.company);
     formData.append('country', values.country);
-    formData.append('image', values.image.fileList[0].originFileObj);
-    formData.append('medicineType', values.medicineType);
+    formData.append('image', values.image?.fileList[0]?.originFileObj || '');
     formData.append('form', values.from);
     formData.append('description', values.description);
     formData.append('purchaseCost', values.purchaseCost);
@@ -56,25 +64,11 @@ const AddMedication = () => {
     formData.append('sellingPrice', values.sellingPrice);
     formData.append('subCategory', values.subCategory);
 
-    // const finalUnits = Array.isArray(units) ? units : [units];
-    // const finalDosages = Array.isArray(dosages) ? dosages : [dosages];
-
-    // Append units and dosages directly as arrays
-    units.forEach((unit) => {
-      formData.append('unitPerBox', unit);
-    });
+    units.forEach((unit) => formData.append('unitPerBox', unit));
     dosages.forEach((dosage) => formData.append('dosage', dosage));
-
-    // if (finalUnits.length === 0) {
-    //   formData.append('unitPerBox', ''); // Append an empty string if no units are added
-    // }
-    // if (finalDosages.length === 0) {
-    //   formData.append('dosage', ''); // Append an empty string if no dosages are added
-    // }
 
     try {
       const response = await createMedicine(formData).unwrap();
-      console.log('dasgargrg', response);
       if (response?.success) {
         toast.success('Medicine added successfully!');
         navigate('/medicine-service');
@@ -127,7 +121,7 @@ const AddMedication = () => {
               <Input placeholder="Netherlands" className="w-full" />
             </Form.Item>
 
-            <Form.Item label="Image" name="image">
+            <Form.Item label="Image" name="image" rules={[{ required: true, message: 'Please upload image' }]}>
               <Upload listType="picture-card">
                 <div className="text-center">
                   <UploadOutlined className="text-2xl" />
@@ -147,10 +141,13 @@ const AddMedication = () => {
               <div className="flex flex-col w-full items-center gap-2">
                 <div className="flex-grow w-full flex items-center gap-2">
                   <Input
-                    placeholder="50pcs/Box"
+                    placeholder="50"
                     className="flex-grow"
                     value={unitInput}
-                    onChange={(e) => setUnitInput(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      return setUnitInput(value);
+                    }}
                   />
                   <Button type="primary" className="bg-blue-800 h-[39px]" onClick={() => handleAddUnit()}>
                     Add
@@ -199,21 +196,32 @@ const AddMedication = () => {
               </div>
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               label="Medicine Type"
               name="medicineType"
               rules={[{ required: true, message: 'Please select medicine type' }]}
             >
               <Input placeholder="Vitamin C" className="w-full" />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item label="From" name="from" rules={[{ required: true, message: 'Please select form' }]}>
               <Select
                 placeholder="Select form"
                 options={[
                   { value: 'tablet', label: 'Tablet' },
-                  { value: 'capsule', label: 'Capsule' },
-                  { value: 'syrup', label: 'Syrup' },
+                  { value: 'retard-tablet', label: 'retard-tablet' },
+                  { value: 'capsule', label: 'capsule' },
+                  { value: 'liquid', label: 'liquid' },
+                  { value: 'sublingual-tablet', label: 'Sublingual Tablet' },
+                  { value: 'ovule', label: 'Ovule' },
+                  { value: 'inhaler', label: 'Inhaler' },
+                  { value: 'ointment', label: 'Ointment' },
+                  { value: 'injection', label: 'Injection' },
+                  { value: 'drops', label: 'Drops' },
+                  { value: 'spray', label: 'Spray' },
+                  { value: 'shampoo', label: 'Shampoo' },
+                  { value: 'gel', label: 'Gel' },
+                  { value: 'foam', label: 'Foam' },
                 ]}
               />
             </Form.Item>
@@ -251,7 +259,7 @@ const AddMedication = () => {
               <InputNumber placeholder="€" className="w-full" min={0} prefix="€" />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               name="profitMargin"
               label="Profit Margin"
               rules={[{ required: true, message: 'Enter profit margin' }]}
@@ -265,7 +273,7 @@ const AddMedication = () => {
               rules={[{ required: true, message: 'Enter profit percentage' }]}
             >
               <InputNumber type="number" placeholder="%" className="w-full" min={0} max={100} />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               name={'sellingPrice'}
               label="Selling Price"

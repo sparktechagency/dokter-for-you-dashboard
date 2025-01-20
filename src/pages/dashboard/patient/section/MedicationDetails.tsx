@@ -174,12 +174,12 @@ const MedicationDetails = () => {
         </div>
         <div className="flex justify-end gap-20">
           <span>Shipping Cost -</span>
-          <span>{consultationData?.medicins?._id?.shippingCost || '€10.00'}</span>
+          <span>{'€20.00'}</span>
         </div>
         <hr className="h-0.5 bg-gray" />
         <div className="flex justify-end gap-20 text-lg font-semibold text-gray-900 mt-2">
           <span>Total -</span>
-          <span className="text-[#0A2369]">€ {consultationData?.totalPrice + 25 + 10}</span>
+          <span className="text-[#0A2369]">€ {consultationData?.totalPrice + 25 + 20}</span>
         </div>
       </div>
 

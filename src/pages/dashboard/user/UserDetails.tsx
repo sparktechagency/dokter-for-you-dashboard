@@ -7,19 +7,22 @@ import randomProfile from '../../../assets/randomProfile2.jpg';
 import { UserDataType } from './types/types';
 import { useGetUserQuery, useSendMessageMutation } from '../../../redux/apiSlices/userSlice';
 import toast from 'react-hot-toast';
+import { useLockUnlockUserMutation } from '../../../redux/apiSlices/authSlice';
 
 const UserDetails: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openMessageModal, setOpenMessageModal] = useState(false);
   const [modalData, setModalData] = useState<UserDataType | null>(null);
 
-  const { data: users, isFetching } = useGetUserQuery(undefined);
+  const { data: users, isFetching, refetch } = useGetUserQuery(undefined);
+  const [lockUnlockUser] = useLockUnlockUserMutation();
   const [sendMessage] = useSendMessageMutation();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [message, setMessage] = useState<string>('');
 
   if (isFetching) return <div>Loading...</div>;
   const userData = users?.data;
+  console.log(userData);
 
   // Filtered user data based on search query
   const filteredUserData = userData.filter(
@@ -29,6 +32,19 @@ const UserDetails: React.FC = () => {
       user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.contact.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  const handleLockUnlock = async (id: string) => {
+    try {
+      const response = await lockUnlockUser(id).unwrap();
+      if (response?.success) {
+        toast.success('User status updated successfully!');
+        refetch();
+      }
+    } catch (error) {
+      console.error('Failed to update user status:', error);
+      toast.error('Failed to update user status!');
+    }
+  };
 
   const columns = [
     { title: 'Serial No', dataIndex: 'sno', key: 'sno', render: (_: any, __: any, index: number) => index + 1 },
@@ -43,7 +59,7 @@ const UserDetails: React.FC = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (_: any, record: UserDataType) => (
+      render: (_: any, record: any) => (
         <Space size="middle">
           <Tooltip title="View Details">
             <Button
@@ -56,7 +72,11 @@ const UserDetails: React.FC = () => {
             />
           </Tooltip>
           <Tooltip title="Lock">
-            <Button onClick={() => console.log('Locking user:', record.key)} type="text" icon={<CiLock size={20} />} />
+            <Button
+              onClick={() => handleLockUnlock(record?._id)}
+              type="text"
+              icon={<CiLock className={`${record?.status === 'lock' ? 'text-red-500' : 'text-green-500'}`} size={20} />}
+            />
           </Tooltip>
         </Space>
       ),

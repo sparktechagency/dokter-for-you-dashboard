@@ -150,6 +150,35 @@ const PatientInfoAndQandASection = ({ id }: { id: string }) => {
     </div>
   );
 
+  const dynamicQuestionAndAnswerSection = (
+    <div>
+      <h1 className="text-blue-800 font-bold text-2xl">Apotheek Zaandam Oost Question</h1>
+      <div>
+        {consultation?.DinamicQNA?.map((qa: QA, index: number) => (
+          <div key={index} className="border-slate-300 border-b py-4">
+            <h1 className="text-lg font-semibold text-gray-800">
+              {index + 1}. {qa.question}
+            </h1>
+            <p className="text-gray-600 my-5">
+              <span>Answer:</span>{' '}
+              <span
+                className={`${
+                  qa.answer.slice(0, 3).toLowerCase() === 'yes'
+                    ? 'text-red-500 font-bold'
+                    : qa.answer.slice(0, 3).toLowerCase() === 'no'
+                    ? 'text-green-500 font-bold'
+                    : ''
+                }`}
+              >
+                {qa.answer}
+              </span>
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   //   const questionAndAnswer2Section = (
   //     <div>
   //       <h1 className="text-blue-800 font-bold text-xl">
@@ -178,6 +207,7 @@ const PatientInfoAndQandASection = ({ id }: { id: string }) => {
         {patientAndConsultantSection}
       </div>
       <div className="bg-white p-3 mt-3">{questionAndAnswerSection}</div>
+      <div className="bg-white p-3 mt-3">{dynamicQuestionAndAnswerSection}</div>
       {/* <div className="bg-white p-3 mt-3">{questionAndAnswer2Section}</div> */}
     </>
   );

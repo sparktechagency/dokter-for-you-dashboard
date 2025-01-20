@@ -1,12 +1,10 @@
-import { Form, Input, Button, Select, Row, Col, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { Form, Input, Button, Select, Row, Col } from 'antd';
+
 import { useDoctorPaymentSetUpMutation } from '../../../redux/apiSlices/userSlice';
 import toast from 'react-hot-toast';
 
 const SetUpPaymentMethod = () => {
   const [form] = Form.useForm();
-  const [kycImages, setKycImages] = useState<File[]>([]);
 
   const [setUpPaymentMethod] = useDoctorPaymentSetUpMutation();
 
@@ -25,25 +23,20 @@ const SetUpPaymentMethod = () => {
         account_holder_type: values.account_holder_type,
         account_number: values.account_number,
         currency: values.currency,
-        routing_number: values.routing_number,
-        country: values.country,
+        bic: values.bic,
+        country: 'NL',
       },
       address: {
         line1: values.address.line1,
         city: values.address.city,
         state: values.address.state,
         postal_code: values.address.postal_code,
-        country: values.country,
+        country: 'NL',
       },
     };
 
     // Append data object to formData
     formData.append('data', JSON.stringify(data));
-
-    // Append KYC images separately
-    kycImages.forEach((file) => {
-      formData.append('KYC', file);
-    });
 
     try {
       const response = await setUpPaymentMethod(formData).unwrap();
@@ -150,11 +143,7 @@ const SetUpPaymentMethod = () => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              name="routing_number"
-              label="Routing Number"
-              rules={[{ required: true, message: 'Please enter your routing number.' }]}
-            >
+            <Form.Item name="bic" label="BIC" rules={[{ required: true, message: 'Please enter your BIC.' }]}>
               <Input />
             </Form.Item>
           </Col>
@@ -168,12 +157,8 @@ const SetUpPaymentMethod = () => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              name="country"
-              label="Country"
-              rules={[{ required: true, message: 'Please enter your country.' }]}
-            >
-              <Input />
+            <Form.Item name="country" label="Country">
+              <Input disabled defaultValue="NL" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -204,28 +189,7 @@ const SetUpPaymentMethod = () => {
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label="KYC Images">
-          <Upload
-            name="kycImages"
-            multiple
-            beforeUpload={(file) => {
-              setKycImages((prev) => [...prev, file]);
-              return false; // Prevent automatic upload
-            }}
-            onChange={(info) => {
-              if (info.file.status !== 'uploading') {
-                console.log(info.file, info.fileList);
-              }
-              if (info.file.status === 'done') {
-                console.log('Upload success:', info.file.response);
-              } else if (info.file.status === 'error') {
-                console.error('Upload failed:', info.file.response);
-              }
-            }}
-          >
-            <Button icon={<UploadOutlined />}>Upload KYC Images</Button>
-          </Upload>
-        </Form.Item>
+
         <Form.Item>
           <Button type="primary" htmlType="submit">
             Set Up Payment Method

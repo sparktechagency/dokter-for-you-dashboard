@@ -77,11 +77,11 @@ const MedicineService = () => {
       dataIndex: 'form',
       key: 'form',
     },
-    {
-      title: 'Medicine Type',
-      dataIndex: 'medicineType',
-      key: 'medicineType',
-    },
+    // {
+    //   title: 'Medicine Type',
+    //   dataIndex: 'medicineType',
+    //   key: 'medicineType',
+    // },
     {
       title: 'Dosage',
       dataIndex: 'dosage',

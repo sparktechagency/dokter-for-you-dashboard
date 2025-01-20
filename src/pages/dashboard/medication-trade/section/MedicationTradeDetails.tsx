@@ -183,12 +183,12 @@ const MedicationTradeDetails = () => {
       </div>
       <div className="flex items-center justify-end gap-40">
         <p>Shipping cost</p>
-        <p>€10.00</p>
+        <p>€20.00</p>
       </div>
       <hr className="my-4" />
       <div className="flex items-center justify-end gap-40 text-[#0A2369]">
         <p>Total</p>
-        <p>€ {subTotal + 10}</p>
+        <p>€ {subTotal + 20}</p>
       </div>
       <div className="mt-6 text-right">
         <Button

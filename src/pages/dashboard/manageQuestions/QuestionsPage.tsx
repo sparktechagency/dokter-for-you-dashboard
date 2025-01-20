@@ -25,7 +25,7 @@ const QuestionsPage = () => {
 
   if (isFetching) return <div>Loading...</div>;
   const subCategory = getQuestionBySubCategory?.data;
-  // console.log(subCategory);
+  console.log(subCategory);
 
   const showModal = (question = { question: '', _id: null }) => {
     setCurrentQuestion(question);
@@ -90,9 +90,9 @@ const QuestionsPage = () => {
             <p className="text-xl font-bold">8. Do you smoke or have smoked?</p>
             <p className="text-xl font-bold">9. Do you drink alcohol?</p>
             <p className="text-xl font-bold">10. Do you have close family with a hereditary condition?</p>
-            <p className="text-xl font-bold">10. Do you use drugs?</p>
-            <p className="text-xl font-bold">10. Is your blood pressure lower than 90/60hg or higher than 140/90hg?</p>
-            <p className="text-xl font-bold">10. Would you like to add more information?</p>
+            <p className="text-xl font-bold">11. Do you use drugs?</p>
+            <p className="text-xl font-bold">12. Is your blood pressure lower than 90/60hg or higher than 140/90hg?</p>
+            <p className="text-xl font-bold">13. Would you like to add more information?</p>
           </div>
         </div>
         <div className="bg-white p-8 rounded-2xl mt-5">

@@ -127,6 +127,16 @@ const authApi = api.injectEndpoints({
       }),
       providesTags: ['user'],
     }),
+
+    lockUnlockUser: builder.mutation({
+      query: (id) => {
+        console.log('slice', id);
+        return {
+          url: `user/lock/${id}`,
+          method: 'PATCH',
+        };
+      },
+    }),
   }),
 });
 
@@ -147,4 +157,5 @@ export const {
   useGetCurrentAdminQuery,
   useUpdateUserProfileMutation,
   useGetCurrentUserProfileQuery,
+  useLockUnlockUserMutation,
 } = authApi;

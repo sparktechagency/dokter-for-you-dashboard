@@ -16,7 +16,7 @@ const HeaderDashboard = () => {
   const user = currentUser?.data;
   const notifications = notification;
 
-  console.log(notifications);
+  // console.log(notifications);
 
   const handleReadNotification = async () => {
     try {

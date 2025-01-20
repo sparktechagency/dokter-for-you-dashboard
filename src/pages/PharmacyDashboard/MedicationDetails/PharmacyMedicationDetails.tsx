@@ -171,7 +171,7 @@ const PharmacyMedicationDetails = () => {
       </div>
       <div className="flex items-center justify-end gap-40">
         <p>Shipping cost</p>
-        <p>$10.00</p>
+        <p>$20.00</p>
       </div>
       <hr className="my-4" />
       <div className="flex items-center justify-end gap-40 text-[#0A2369]">
