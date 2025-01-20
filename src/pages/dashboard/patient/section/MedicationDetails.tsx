@@ -110,6 +110,10 @@ const MedicationDetails = () => {
     </div>
   );
 
+  const singleMedicinePrice = consultationData?.suggestedMedicine?.map((medicine: any) => {
+    return Number(medicine?._id?.sellingPrice) * Number(medicine?._id?.unitPerBox);
+  });
+
   const medicineDetailsSection = (
     <div>
       {consultationData?.suggestedMedicine?.map((medicine: any, index: number) => {
@@ -145,7 +149,7 @@ const MedicationDetails = () => {
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-600">Price</p>
-              <p className="font-semibold text-gray-800">€ {medicine?._id?.sellingPrice}</p>
+              <p className="font-semibold text-gray-800">€ {singleMedicinePrice || 0}</p>
             </div>
           </div>
         );
@@ -163,7 +167,7 @@ const MedicationDetails = () => {
           </h3>
           <p className="text-sm text-gray-500">Medical questionnaire, doctor's advice and prescription.</p>
         </div>
-        <div className="text-[#0A2369] font-semibold text-lg">$25.00</div>
+        <div className="text-[#0A2369] font-semibold text-lg">€25.00</div>
       </div>
 
       {/* Discount and Total */}
@@ -179,7 +183,7 @@ const MedicationDetails = () => {
         <hr className="h-0.5 bg-gray" />
         <div className="flex justify-end gap-20 text-lg font-semibold text-gray-900 mt-2">
           <span>Total -</span>
-          <span className="text-[#0A2369]">€ {consultationData?.totalPrice + 25 + 20}</span>
+          <span className="text-[#0A2369]">€ {singleMedicinePrice + 25 + 20}</span>
         </div>
       </div>
 

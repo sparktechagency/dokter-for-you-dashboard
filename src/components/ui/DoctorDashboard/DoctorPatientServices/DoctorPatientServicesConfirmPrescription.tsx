@@ -54,7 +54,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
   // console.log(consultation, medicines);
 
   const showMedicineDetails = (medicine: Medicine) => {
-    console.log('adrshsaethaesrhaerh', medicine);
+    // console.log('adrshsaethaesrhaerh', medicine);
 
     setSelectedMedicineDetails(medicine);
     setIsModalOpen(true);
@@ -234,8 +234,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
               alt={medicine?.name}
             />
             <h1 className="text-xl mt-3 font-bold">{medicine?.name}</h1>
-            <p className="text-lg">{medicine?.medicineType}</p>
-            <p className="text-sm text-gray-600 mt-2">€ {medicine?.sellingPrice}</p>
+            {/* <p className="text-lg">{medicine?.medicineType}</p> */}
           </div>
         ))}
       </div>
@@ -300,7 +299,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
       />
       <div>
         <h1 className="text-xl font-bold">{medicine.medicineId.name}</h1>
-        <h1 className="text-sm text-gray">{medicine.medicineId.medicineType}</h1>
+        {/* <h1 className="text-sm text-gray">{medicine.medicineId.medicineType}</h1> */}
       </div>
       <div>
         <h1 className="text-xl font-bold">Dosage</h1>
@@ -362,7 +361,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
               <div>
                 <p className="text-blue-600 font-medium mb-2">{selectedMedicineDetails?.company}</p>
                 <h2 className="text-3xl font-bold mb-1">{selectedMedicineDetails?.name}</h2>
-                <p className="text-xl text-gray-600">{selectedMedicineDetails?.medicineType}</p>
+                {/* <p className="text-xl text-gray-600">{selectedMedicineDetails?.medicineType}</p> */}
               </div>
               <div>
                 <p className="text-blue-500 mb-4">{selectedMedicineDetails?.form}</p>

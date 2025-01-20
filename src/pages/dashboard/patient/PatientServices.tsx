@@ -135,14 +135,6 @@ const PatientServices = () => {
               icon={<BsEye size={20} />}
             />
           </Tooltip>
-          <Popconfirm
-            title="Are you sure to poke your therapist?"
-            onConfirm={() => console.log('Poked')}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="text" shape="circle" icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />} />
-          </Popconfirm>
         </div>
       ),
     },
@@ -225,14 +217,6 @@ const PatientServices = () => {
               icon={<BsEye size={20} />}
             />
           </Tooltip>
-          <Popconfirm
-            title="Are you sure to poke your therapist?"
-            onConfirm={() => console.log('Poked')}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="text" shape="circle" icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />} />
-          </Popconfirm>
         </div>
       ),
     },
@@ -306,14 +290,6 @@ const PatientServices = () => {
               icon={<BsEye size={20} />}
             />
           </Tooltip>
-          <Popconfirm
-            title="Are you sure to poke your therapist?"
-            onConfirm={() => console.log('Poked')}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="text" shape="circle" icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />} />
-          </Popconfirm>
         </div>
       ),
     },
@@ -391,14 +367,6 @@ const PatientServices = () => {
           <Tooltip title="Details">
             <Button href={`/medication/details/${record._id}`} type="text" shape="circle" icon={<BsEye size={20} />} />
           </Tooltip>
-          <Popconfirm
-            title="Are you sure to poke your therapist?"
-            onConfirm={() => console.log('Poked')}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="text" shape="circle" icon={<LiaHandPointRightSolid color="#00B3CC" size={20} />} />
-          </Popconfirm>
         </div>
       ),
     },

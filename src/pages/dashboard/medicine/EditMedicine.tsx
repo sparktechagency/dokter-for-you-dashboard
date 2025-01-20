@@ -86,7 +86,7 @@ const EditMedication = () => {
     formData.append('company', values.company);
     formData.append('subCategory', values.subCategory);
     formData.append('country', values.country);
-    formData.append('medicineType', values.medicineType);
+    // formData.append('medicineType', values.medicineType);
     formData.append('form', values.form);
     formData.append('description', values.description || '');
     units.forEach((unit) => formData.append('unitPerBox[]', unit));
@@ -194,19 +194,27 @@ const EditMedication = () => {
             <Form.Item
               label="Units per Box"
               name="unitPerBox"
-              rules={[{ required: units.length === 0, message: 'Please enter units per box' }]}
+              rules={[{ required: true, message: 'Please enter units per box' }]}
             >
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <Input placeholder="Units per Box" value={unitInput} onChange={(e) => setUnitInput(e.target.value)} />
-                  <Button type="primary" onClick={handleAddUnit}>
+              <div className="flex flex-col w-full items-center gap-2">
+                <div className="flex-grow w-full flex items-center gap-2">
+                  <Input
+                    placeholder="50"
+                    className="flex-grow"
+                    value={unitInput}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      return setUnitInput(value);
+                    }}
+                  />
+                  <Button type="primary" className="bg-blue-800 h-[39px]" onClick={() => handleAddUnit()}>
                     Add
                   </Button>
                 </div>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex justify-start flex-wrap gap-2">
                   {units.map((unit, index) => (
-                    <Button key={index} className="bg-gray-200 border px-2">
-                      {unit}
+                    <Button key={index} className="bg-gray-200 border border-gray-400 rounded-md px-2 py-1">
+                      {unit}{' '}
                       <span onClick={() => handleRemoveUnit(index)} className="ml-2 cursor-pointer">
                         &times;
                       </span>
@@ -228,7 +236,7 @@ const EditMedication = () => {
                     value={dosageInput}
                     onChange={(e) => setDosageInput(e.target.value)}
                   />
-                  <Button type="primary" onClick={handleAddDosage}>
+                  <Button type="primary" className="bg-blue-800 h-[39px]" onClick={handleAddDosage}>
                     Add
                   </Button>
                 </div>
@@ -245,20 +253,32 @@ const EditMedication = () => {
               </div>
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               label="Medicine Type"
               name="medicineType"
               rules={[{ required: true, message: 'Please select medicine type' }]}
             >
               <Input placeholder="Medicine Type" />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item label="Form" name="form" rules={[{ required: true, message: 'Please select form' }]}>
               <Select
+                placeholder="Select form"
                 options={[
                   { value: 'tablet', label: 'Tablet' },
-                  { value: 'capsule', label: 'Capsule' },
-                  { value: 'syrup', label: 'Syrup' },
+                  { value: 'retard-tablet', label: 'retard-tablet' },
+                  { value: 'capsule', label: 'capsule' },
+                  { value: 'liquid', label: 'liquid' },
+                  { value: 'sublingual-tablet', label: 'Sublingual Tablet' },
+                  { value: 'ovule', label: 'Ovule' },
+                  { value: 'inhaler', label: 'Inhaler' },
+                  { value: 'ointment', label: 'Ointment' },
+                  { value: 'injection', label: 'Injection' },
+                  { value: 'drops', label: 'Drops' },
+                  { value: 'spray', label: 'Spray' },
+                  { value: 'shampoo', label: 'Shampoo' },
+                  { value: 'gel', label: 'Gel' },
+                  { value: 'foam', label: 'Foam' },
                 ]}
               />
             </Form.Item>

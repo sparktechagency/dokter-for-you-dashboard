@@ -49,6 +49,10 @@ const PharmacyPatientServicesDetails = () => {
     setIsConfirmModalVisible(false);
   };
 
+  const singleMedicinePrice = consultation?.suggestedMedicine?.map((medicine: any) => {
+    return Number(medicine?._id?.sellingPrice) * Number(medicine?._id?.unitPerBox);
+  });
+
   const suggestedMedication = (
     <div>
       <h1 className="text-2xl my-4 px-5 font-bold text-primary">Doctors Suggested Medication</h1>
@@ -78,7 +82,7 @@ const PharmacyPatientServicesDetails = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold">Price</h1>
-              <h1 className="text-sm text-gray">€ {item?._id?.sellingPrice}</h1>
+              <h1 className="text-sm text-gray">€ {singleMedicinePrice * item?.count}</h1>
             </div>
           </div>
         );
