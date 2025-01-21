@@ -1,5 +1,5 @@
-import { Button, Modal } from 'antd';
-import { FaDownload } from 'react-icons/fa';
+import { Modal } from 'antd';
+
 import { doctorDetails } from '../../pages/dashboard/user/types/types';
 
 const AdminDetailsModal = ({

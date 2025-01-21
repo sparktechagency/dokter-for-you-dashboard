@@ -1,6 +1,6 @@
-import { Table, Badge, Button, Tooltip, Popconfirm, Select, Input, Tabs } from 'antd';
+import { Table, Button, Tooltip, Select, Input, Tabs } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
-import { LiaHandPointRightSolid } from 'react-icons/lia';
+
 import { useState } from 'react';
 import { useGetConsultationsQuery } from '../../../redux/apiSlices/patientServiceSlice';
 

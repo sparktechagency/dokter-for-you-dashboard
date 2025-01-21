@@ -1,5 +1,4 @@
 import { Button } from 'antd';
-import { FaDownload } from 'react-icons/fa';
 import { CiEdit } from 'react-icons/ci';
 import BackButton from '../../../components/ui/BackButton';
 import { useParams } from 'react-router-dom';

@@ -4,7 +4,7 @@ import { BsEye, BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
 import { CiEdit } from 'react-icons/ci';
 import Modal from '../../../components/shared/Modal';
 import { BiEuro } from 'react-icons/bi';
-import { FaDownload } from 'react-icons/fa';
+
 import {
   useCreateShippingDetailsMutation,
   useDeleteShippingDetailsMutation,
