@@ -29,9 +29,10 @@ const PatientServices = () => {
   const { data: getConsultations, isFetching } = useGetConsultationsQuery(undefined);
 
   if (isFetching) return <div>Loading...</div>;
-  const consultationData = getConsultations?.data;
+  const consultationData = getConsultations?.data || [];
+  console.log(consultationData);
 
-  const subCategories = [...new Set(consultationData?.map((item: any) => item.subCategory.name))];
+  const subCategories = [...new Set(consultationData?.map((item: any) => item?.subCategory?.name))];
 
   const regularConsultationData = consultationData?.filter(
     (item: ConsultationItem) => item?.consultationType === 'regular',
@@ -48,11 +49,11 @@ const PatientServices = () => {
 
   const filteredConsultationData = (data: any[]) => {
     return data.filter((item: ConsultationItem) => {
-      const subCategoryMatch = item.subCategory.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const doctorNameMatch = `${item.doctorId?.firstName || ''} ${item.doctorId?.lastName || ''}`
+      const subCategoryMatch = item?.subCategory?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+      const doctorNameMatch = `${item?.doctorId?.firstName || ''} ${item?.doctorId?.lastName || ''}`
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
-      const selectedSubCategoryMatch = selectedSubCategory ? item.subCategory.name === selectedSubCategory : true;
+      const selectedSubCategoryMatch = selectedSubCategory ? item?.subCategory?.name === selectedSubCategory : true;
       return (subCategoryMatch || doctorNameMatch) && selectedSubCategoryMatch;
     });
   };
@@ -434,7 +435,7 @@ const PatientServices = () => {
           <Select
             placeholder="Consult Subcategory"
             style={{ width: 200 }}
-            options={subCategories.map((subCategory) => ({ value: subCategory, label: subCategory }))}
+            options={subCategories?.map((subCategory) => ({ value: subCategory, label: subCategory }))}
             onChange={(value) => setSelectedSubCategory(value)}
           />
         </div>

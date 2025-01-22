@@ -8,6 +8,7 @@ import {
   useCreateConsultationSubcategoryMutation,
   useDeleteConsultationSubcategoryMutation,
   useEditConsultationSubcategoryMutation,
+  useGetConsultationCategoryQuery,
   useGetConsultationSubcategoryQuery,
 } from '../../../redux/apiSlices/consultationSlice';
 import toast from 'react-hot-toast';
@@ -29,15 +30,16 @@ const ConsultationSubCategory: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState<Subcategory | null>(null);
 
-  console.log('asrgvb', editCategoryData);
-
   const { data: consultationSubCategoryData, isFetching, refetch } = useGetConsultationSubcategoryQuery(undefined);
+  const { data: consultationCategoryData, isFetching: isFetchingConsultationCategory } =
+    useGetConsultationCategoryQuery(undefined);
   const [createConsultationSubcategory] = useCreateConsultationSubcategoryMutation();
   const [editConsultationSubcategory] = useEditConsultationSubcategoryMutation();
   const [deleteConsultationSubcategory] = useDeleteConsultationSubcategoryMutation();
 
   const consultationSubCategories = consultationSubCategoryData?.data;
-  console.log(consultationSubCategories);
+  const categories = consultationCategoryData?.data;
+  console.log(categories);
 
   const [categoryImagePreview, setCategoryImagePreview] = useState<string | undefined>(undefined);
 
@@ -60,7 +62,7 @@ const ConsultationSubCategory: React.FC = () => {
     }
   }, [editCategoryData, form]);
 
-  if (isFetching) return <div>Loading...</div>;
+  if (isFetching || isFetchingConsultationCategory) return <div>Loading...</div>;
 
   const onFinish = async (values: { name: string; category: string; image: File; details: string }) => {
     const formData = new FormData();
@@ -125,21 +127,11 @@ const ConsultationSubCategory: React.FC = () => {
         rules={[{ required: true, message: 'Please select a category' }]}
       >
         <Select placeholder="Select Category">
-          {Array.from(new Set(consultationSubCategories.map((category: Subcategory) => category.category._id))).map(
-            (id) => {
-              const category: Subcategory | undefined = consultationSubCategories.find(
-                (cat: Subcategory) => cat.category._id === id,
-              );
-              if (category && category.category) {
-                return (
-                  <Select.Option key={category.category._id} value={category.category._id}>
-                    {category.category.name}
-                  </Select.Option>
-                );
-              }
-              return null;
-            },
-          )}
+          {categories?.map((category: any) => (
+            <Select.Option key={category._id} value={category._id}>
+              {category.name}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
       <Form.Item
