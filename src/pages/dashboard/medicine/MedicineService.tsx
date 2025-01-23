@@ -16,18 +16,20 @@ const MedicineService = () => {
   const [filterDosage, setFilterDosage] = useState('all');
   const [filterCountry, setFilterCountry] = useState('all');
 
+  // console.log(filterDosage);
+
   if (isFetching || isLoading) {
     return <h1>Loading...</h1>;
   }
 
   const getMedicineData = getMedicine?.data;
   const userProfile = currentUser?.data;
-  console.log(userProfile);
+  // console.log(userProfile);
 
   // Filtered data
   const filteredData = getMedicineData?.filter((item: any) => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDosage = filterDosage === 'all' || item.dosage === filterDosage;
+    const matchesDosage = filterDosage === 'all' || item.form === filterDosage;
     const matchesCountry = filterCountry === 'all' || item.country.toLowerCase() === filterCountry.toLowerCase();
     return matchesSearch && matchesDosage && matchesCountry;
   });
@@ -152,10 +154,13 @@ const MedicineService = () => {
             style={{ width: 200 }}
             value={filterDosage}
             onChange={(value) => setFilterDosage(value)}
-            options={[...new Set(filteredData?.map((item: any) => item?.form))].map((item) => ({
-              value: item,
-              label: item,
-            }))}
+            options={[
+              { value: 'all', label: 'All Forms' },
+              ...[...new Set(getMedicineData?.map((item: any) => item?.form))].map((item) => ({
+                value: item,
+                label: item,
+              })),
+            ]}
           />
           <Select
             placeholder="Country"
