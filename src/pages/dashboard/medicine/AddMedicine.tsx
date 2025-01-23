@@ -53,8 +53,8 @@ const AddMedication = () => {
 
     const formData = new FormData();
     formData.append('name', values.name);
-    formData.append('company', values.company);
-    formData.append('country', values.country);
+    formData.append('company', 'Apotheek Zaandam Oost');
+    formData.append('country', 'Netherlands');
     formData.append('image', values.image?.fileList[0]?.originFileObj || '');
     formData.append('form', values.from);
     formData.append('description', values.description);
@@ -98,9 +98,9 @@ const AddMedication = () => {
             <Form.Item
               label="Company"
               name="company"
-              rules={[{ required: true, message: 'Please enter company name' }]}
+              // rules={[{ required: true, message: 'Please enter company name' }]}
             >
-              <Input placeholder="Square" className="w-full" />
+              <Input placeholder="Apotheek Zaandam Oost" className="w-full" readOnly />
             </Form.Item>
 
             <Form.Item
@@ -117,8 +117,8 @@ const AddMedication = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Country" name="country" rules={[{ required: true, message: 'Please enter country' }]}>
-              <Input placeholder="Netherlands" className="w-full" />
+            <Form.Item label="Country" name="country">
+              <Input placeholder="Netherlands" readOnly className="w-full" />
             </Form.Item>
 
             <Form.Item label="Image" name="image" rules={[{ required: true, message: 'Please upload image' }]}>

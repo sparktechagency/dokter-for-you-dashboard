@@ -5,11 +5,7 @@ import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetMedicineByIdQuery, useUpdateMedicineMutation } from '../../../redux/apiSlices/medicineSlice';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
-
-interface SubCategory {
-  _id: string;
-  name: string;
-}
+import { useGetConsultationSubcategoryQuery } from '../../../redux/apiSlices/consultationSlice';
 
 const EditMedication = () => {
   const { id } = useParams();
@@ -18,27 +14,31 @@ const EditMedication = () => {
   const [dosageInput, setDosageInput] = useState('');
   const [units, setUnits] = useState<string[]>([]);
   const [dosages, setDosages] = useState<string[]>([]);
-  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
+
   const [imgURL, setImgURL] = useState<string | null>(null);
   const [file, setFile] = useState<string | null>(null);
   const navigate = useNavigate();
-  console.log(file);
+  // console.log(subCategories);
 
   console.log(id);
   const { data: getMedicineById, isFetching } = useGetMedicineByIdQuery(id);
+  const { data: getAllSubCategories, isFetching: isFetchingSubCategories } =
+    useGetConsultationSubcategoryQuery(undefined);
   const [updateMedicine] = useUpdateMedicineMutation();
 
   const medicineData = getMedicineById?.data;
+  const subCategoriesData = getAllSubCategories?.data;
+  // console.log(subCategoriesData);
+
   useEffect(() => {
     if (medicineData) {
       setUnits(medicineData.unitPerBox || []);
       setDosages(medicineData.dosage || []);
       setImgURL(`${import.meta.env.VITE_BASE_URL}${medicineData?.image}`);
-      setSubCategories(medicineData.subCategories || []);
     }
   }, [medicineData]);
 
-  if (isFetching) {
+  if (isFetching || isFetchingSubCategories) {
     return <div>Loading...</div>;
   }
   console.log(medicineData);
@@ -149,7 +149,7 @@ const EditMedication = () => {
               name="company"
               rules={[{ required: true, message: 'Please enter company name' }]}
             >
-              <Input placeholder="Company Name" />
+              <Input placeholder="Company Name" readOnly />
             </Form.Item>
 
             <Form.Item
@@ -158,7 +158,7 @@ const EditMedication = () => {
               rules={[{ required: true, message: 'Please select sub category' }]}
             >
               <Select placeholder="Select Sub Category">
-                {subCategories?.map((subCategory) => (
+                {subCategoriesData?.map((subCategory: any) => (
                   <Select.Option key={subCategory._id} value={subCategory._id}>
                     {subCategory.name}
                   </Select.Option>
@@ -167,7 +167,7 @@ const EditMedication = () => {
             </Form.Item>
 
             <Form.Item label="Country" name="country" rules={[{ required: true, message: 'Please enter country' }]}>
-              <Input placeholder="Country" />
+              <Input placeholder="Country" readOnly />
             </Form.Item>
             <Form.Item label="Image">
               <div className="flex flex-col items-center mb-4">

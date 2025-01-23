@@ -15,6 +15,9 @@ const SingleMedicineDetails = () => {
   const medicineData = getMedicineById?.data;
   console.log(medicineData);
 
+  const profitPercentage =
+    ((medicineData?.sellingPrice - medicineData?.purchaseCost) / medicineData?.purchaseCost) * 100;
+
   return (
     <div className="bg-white p-6 ">
       <BackButton />
@@ -59,11 +62,11 @@ const SingleMedicineDetails = () => {
 
                 <td>: {medicineData?.form}</td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td className="font-medium text-gray-700 align-top">Medicine Type</td>
 
                 <td>: {medicineData?.medicineType}</td>
-              </tr>
+              </tr> */}
               <tr>
                 <td className="font-medium text-gray-700 align-top">Dosage</td>
 
@@ -105,10 +108,10 @@ const SingleMedicineDetails = () => {
                 <td>
                   :{' '}
                   {medicineData?.sellingPrice
-                    ? `${
-                        ((medicineData?.sellingPrice - medicineData?.purchaseCost) / medicineData?.purchaseCost) * 100
-                      }%`
-                    : '0%'}{' '}
+                    ? medicineData?.sellingPrice == 0
+                      ? 0
+                      : profitPercentage.toFixed(2) + '%'
+                    : 0}
                 </td>
               </tr>
               <tr>

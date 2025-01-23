@@ -148,17 +148,14 @@ const MedicineService = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Select
-            placeholder="Dosage"
+            placeholder="Form"
             style={{ width: 200 }}
             value={filterDosage}
             onChange={(value) => setFilterDosage(value)}
-            options={[
-              { value: 'all', label: 'All Dosages' },
-              { value: 'mg', label: 'mg' },
-              { value: 'ml', label: 'ml' },
-              { value: 'tablet', label: 'Tablet' },
-              { value: 'capsule', label: 'Capsule' },
-            ]}
+            options={[...new Set(filteredData?.map((item: any) => item?.form))].map((item) => ({
+              value: item,
+              label: item,
+            }))}
           />
           <Select
             placeholder="Country"
@@ -168,8 +165,8 @@ const MedicineService = () => {
             options={[
               { value: 'all', label: 'All Countries' },
               { value: 'netherlands', label: 'Netherlands' },
-              { value: 'egypt', label: 'Egypt' },
-              { value: 'france', label: 'France' },
+              // { value: 'egypt', label: 'Egypt' },
+              // { value: 'france', label: 'France' },
             ]}
           />
           {userProfile?.role === 'ADMIN' && (
