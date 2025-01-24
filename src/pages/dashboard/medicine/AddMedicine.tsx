@@ -219,6 +219,7 @@ const AddMedication = () => {
                   { value: 'injection', label: 'Injection' },
                   { value: 'drops', label: 'Drops' },
                   { value: 'spray', label: 'Spray' },
+                  { value: 'creams', label: 'Creams' },
                   { value: 'shampoo', label: 'Shampoo' },
                   { value: 'gel', label: 'Gel' },
                   { value: 'foam', label: 'Foam' },
