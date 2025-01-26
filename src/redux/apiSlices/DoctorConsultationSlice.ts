@@ -27,6 +27,15 @@ const doctorPatientServiceApi = api.injectEndpoints({
       }),
     }),
 
+    updateConsultationStatus: builder.mutation({
+      query: ({ data, id }: { data: any; id: any }) => ({
+        url: `/consultation/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['consultation'],
+    }),
+
     setScheduleVideoCall: builder.mutation({
       query: ({ data, id }: { data: any; id: any }) => ({
         url: `consultation/schedule/${id}`,
@@ -77,5 +86,6 @@ export const {
   //doctor earnings
   useGetDoctorEarningsStatesQuery,
   useWithdrawMoneyMutation,
+  useUpdateConsultationStatusMutation,
   useDoctorEarningHistoryQuery,
 } = doctorPatientServiceApi;

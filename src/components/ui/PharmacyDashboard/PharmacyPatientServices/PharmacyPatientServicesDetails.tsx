@@ -5,6 +5,8 @@ import signature from '../../../../assets/randomSignature.png';
 import { useState } from 'react';
 import PatientInfoAndQandASection from '../../../shared/PatientInfoAndQandASection';
 import { useGetConsultationByIdQuery } from '../../../../redux/apiSlices/patientServiceSlice';
+import { useUpdateConsultationStatusMutation } from '../../../../redux/apiSlices/DoctorConsultationSlice';
+import toast from 'react-hot-toast';
 
 const PharmacyPatientServicesDetails = () => {
   const [isRejectModalVisible, setIsRejectModalVisible] = useState(false);
@@ -17,6 +19,7 @@ const PharmacyPatientServicesDetails = () => {
   const { id } = useParams();
 
   const { data: getConsultationById, isFetching } = useGetConsultationByIdQuery(id);
+  const [updateConsultationStatus] = useUpdateConsultationStatusMutation();
 
   if (isFetching) return <div>Loading...</div>;
 
@@ -40,7 +43,21 @@ const PharmacyPatientServicesDetails = () => {
     setIsConfirmModalVisible(true);
   };
 
-  const handleConfirmOk = () => {
+  const handleConfirmOk = async () => {
+    const formData = new FormData();
+    formData.append('status', 'accepted');
+    try {
+      const response = await updateConsultationStatus({
+        id: consultation?._id,
+        data: formData,
+      }).unwrap();
+      if (response?.success) {
+        toast.success('Consultation approved successfully!');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to approve consultation.');
+    }
     setIsConfirmModalVisible(false);
     // Add your confirm logic here
   };
