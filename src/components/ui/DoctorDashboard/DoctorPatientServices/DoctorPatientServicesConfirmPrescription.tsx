@@ -51,7 +51,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
   const medicines = getMedicineById?.data;
 
   if (isFetching) return <div>Loading...</div>;
-  // console.log(consultation, medicines);
+  console.log(consultation);
 
   const showMedicineDetails = (medicine: Medicine) => {
     // console.log('adrshsaethaesrhaerh', medicine);
@@ -199,6 +199,39 @@ const DoctorPatientServicesConfirmPrescription = () => {
     </div>
   );
 
+  const patientChosenMedicines = (
+    <div>
+      <h1 className="text-2xl my-4 px-5 font-bold text-primary">Patient Wanted Medicines</h1>
+      {consultation?.medicins?.map((item: any, index: number) => {
+        return (
+          <div key={index} className="bg-slate-100 mx-5 p-8  flex justify-between items-center">
+            <img
+              className="w-24 h-20 object-cover"
+              src={
+                item?._id?.image.startsWith('http')
+                  ? item?._id?.image
+                  : `${import.meta.env.VITE_BASE_URL}${item?._id?.image}`
+              }
+              alt=""
+            />
+            <div className="text-center">
+              <h1 className="text-xl font-bold">{item?._id?.name}</h1>
+              <h1 className="text-sm text-gray">{item?._id?.medicineType}</h1>
+            </div>
+            <div>
+              <h1 className="text-xl font-bold">Dosage</h1>
+              <h1 className="text-sm text-gray">{item?.dosage}</h1>
+            </div>
+            <div>
+              <h1 className="text-xl font-bold">Contents of the box</h1>
+              <h1 className="text-sm text-gray">{item?.count}</h1>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
   const filteredMedicines = medicines?.filter((medicine: any) =>
     medicine.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
@@ -330,6 +363,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
         {detailsSection}
         {patientAndConsultantSection}
       </div>
+      <div className="bg-white p-3 mt-3">{patientChosenMedicines}</div>
       <div className="bg-white p-3 mt-3">
         {givePrescription}
         {selectedMedicine}
