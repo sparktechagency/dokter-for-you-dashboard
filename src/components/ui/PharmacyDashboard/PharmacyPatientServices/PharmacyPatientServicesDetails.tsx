@@ -130,7 +130,7 @@ const PharmacyPatientServicesDetails = () => {
       </div>
       <div className="space-y-5 mt-5">
         <div>
-          <h1 className="font-bold">Doctor Type</h1>
+          <h1 className="font-bold">Doctor Sub Category</h1>
           <p className="text-gray">{consultation?.subCategory?.name}</p>
         </div>
         <div>

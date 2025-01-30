@@ -220,7 +220,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold">Dosage</h1>
-              <h1 className="text-sm text-gray">{item?.dosage}</h1>
+              <h1 className="text-sm text-gray">{item?.total}</h1>
             </div>
             <div>
               <h1 className="text-xl font-bold">Contents of the box</h1>
