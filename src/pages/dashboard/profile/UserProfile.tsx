@@ -28,6 +28,7 @@ const UserProfile = () => {
         email: user?.email,
         location: user?.location || 'unknown',
         contact: user?.contact || 'unknown',
+        regNo: user?.regNo || 'unknown',
       });
       setProfileImgURL(
         user?.profile.startsWith('http') ? user?.profile : `${import.meta.env.VITE_BASE_URL}${user?.profile}`,
@@ -70,6 +71,7 @@ const UserProfile = () => {
       formData.append('email', values.email);
       formData.append('location', values.location);
       formData.append('contact', values.contact);
+      formData.append('regNo', values.regNo);
 
       if (profileFile) {
         formData.append('profile', profileFile);
@@ -139,22 +141,30 @@ const UserProfile = () => {
           </Form.Item>
 
           {user?.role === 'DOCTOR' && (
-            <div className="flex flex-col items-center my-10">
-              <input onChange={handleSignatureImageChange} type="file" id="signatureImg" className="!hidden" />
-              <label
-                htmlFor="signatureImg"
-                className="relative w-48 h-28 cursor-pointer border border-primary bg-white bg-cover bg-center"
-              >
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${signatureImgURL || logo})` }}
+            <>
+              <Form.Item name="regNo" label="Registration Number">
+                <Input
+                  placeholder="Enter Registration Number"
+                  className="border border-gray-300 h-[45px] bg-white rounded-lg"
                 />
-                {/* <div className="absolute bottom-1 right-1 w-12 h-12 rounded-full border-2 border-primary bg-gray-100 flex items-center justify-center">
+              </Form.Item>
+              <div className="flex flex-col items-center my-10">
+                <input onChange={handleSignatureImageChange} type="file" id="signatureImg" className="!hidden" />
+                <label
+                  htmlFor="signatureImg"
+                  className="relative w-48 h-28 cursor-pointer border border-primary bg-white bg-cover bg-center"
+                >
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${signatureImgURL || logo})` }}
+                  />
+                  {/* <div className="absolute bottom-1 right-1 w-12 h-12 rounded-full border-2 border-primary bg-gray-100 flex items-center justify-center">
                 <MdOutlineAddPhotoAlternate size={22} className="text-primary" />
               </div> */}
-              </label>
-              <p className="text-center mt-5">Signature</p>
-            </div>
+                </label>
+                <p className="text-center mt-5">Signature</p>
+              </div>
+            </>
           )}
 
           <div className="text-center mt-6">

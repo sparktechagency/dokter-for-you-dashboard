@@ -2,6 +2,7 @@ import { Button, Input, Select, Table, Tooltip } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
 import { useState } from 'react';
 import { useGetConsultationsQuery } from '../../redux/apiSlices/patientServiceSlice';
+import moment from 'moment';
 
 const PharmacyPatientServices = () => {
   const { data: getConsultations, isFetching } = useGetConsultationsQuery(undefined);
@@ -13,7 +14,9 @@ const PharmacyPatientServices = () => {
   const consultations = getConsultations?.data;
   console.log(consultations);
 
-  const forwardToPartnerOptions = consultations?.filter((item: any) => item?.suggestedMedicine?.length > 0);
+  const forwardToPartnerOptions = consultations
+    ?.filter((item: any) => item?.suggestedMedicine?.length > 0)
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const uniqueSubCategories = Array.from(
     new Set(forwardToPartnerOptions?.map((item: any) => item.subCategory?.name)),
@@ -59,9 +62,7 @@ const PharmacyPatientServices = () => {
       title: 'Date & Time',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (createdAt: any) => (
-        <span>{new Date(createdAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</span>
-      ),
+      render: (createdAt: any) => <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>,
     },
     {
       title: 'Price',
@@ -77,7 +78,13 @@ const PharmacyPatientServices = () => {
         <div>
           <button
             className={`${
-              status === 'prescribed' ? 'bg-green-600' : status === 'rejected' ? 'bg-red-500' : 'bg-[#1854F9]'
+              status === 'processing'
+                ? 'bg-yellow-500'
+                : status === 'accepted'
+                ? 'bg-blue-600'
+                : status === 'prescribed'
+                ? 'bg-green-500'
+                : 'bg-red-500'
             } text-white text-[14px] py-1.5 px-2 rounded-md`}
           >
             {status}

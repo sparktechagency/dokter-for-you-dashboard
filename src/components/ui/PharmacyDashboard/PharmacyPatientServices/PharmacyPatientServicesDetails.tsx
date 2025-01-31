@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
 import { BsArrowLeft } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
-import signature from '../../../../assets/randomSignature.png';
+// import signature from '../../../../assets/randomSignature.png';
 import { useState } from 'react';
 import PatientInfoAndQandASection from '../../../shared/PatientInfoAndQandASection';
 import { useGetConsultationByIdQuery } from '../../../../redux/apiSlices/patientServiceSlice';
@@ -66,9 +66,9 @@ const PharmacyPatientServicesDetails = () => {
     setIsConfirmModalVisible(false);
   };
 
-  const singleMedicinePrice = consultation?.suggestedMedicine?.map((medicine: any) => {
-    return Number(medicine?._id?.sellingPrice) * Number(medicine?._id?.unitPerBox);
-  });
+  // const singleMedicinePrice = consultation?.suggestedMedicine?.map((medicine: any) => {
+  //   return Number(medicine?._id?.sellingPrice) * Number(medicine?.total);
+  // });
 
   const suggestedMedication = (
     <div>
@@ -94,12 +94,14 @@ const PharmacyPatientServicesDetails = () => {
               <h1 className="text-sm text-gray">{item?.dosage}</h1>
             </div>
             <div>
-              <h1 className="text-xl font-bold">Contents of the box</h1>
+              <h1 className="text-xl font-bold">Quantity</h1>
               <h1 className="text-sm text-gray">{item?.count}</h1>
             </div>
             <div>
               <h1 className="text-xl font-bold">Price</h1>
-              <h1 className="text-sm text-gray">€ {singleMedicinePrice * item?.count}</h1>
+              <h1 className="text-sm text-gray">
+                € {(item?._id?.sellingPrice * item?.total * item?.count).toFixed(2)}
+              </h1>
             </div>
           </div>
         );
@@ -135,11 +137,18 @@ const PharmacyPatientServicesDetails = () => {
         </div>
         <div>
           <h1 className="font-bold">Registration Number</h1>
-          <p className="text-gray">{consultation?.doctorId?._id}</p>
+          <p className="text-gray">{consultation?.doctorId?.regNo}</p>
         </div>
         <div>
           <h1 className="font-bold">Doctor Signature</h1>
-          <img src={signature} alt="" />
+          <img
+            src={
+              consultation?.doctorId?.signature?.startsWith('http')
+                ? consultation?.doctorId?.signature
+                : `${import.meta.env.VITE_BASE_URL}${consultation?.doctorId?.signature}`
+            }
+            alt=""
+          />
         </div>
       </div>
     </div>

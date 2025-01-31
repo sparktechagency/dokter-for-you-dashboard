@@ -3,6 +3,7 @@ import { BsEye, BsSearch } from 'react-icons/bs';
 import { useState } from 'react';
 import { useGetDoctorConsultationsQuery } from '../../../../redux/apiSlices/DoctorConsultationSlice';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
+import moment from 'moment';
 
 // export const data = [
 //   {
@@ -85,12 +86,15 @@ const DoctorPatientServices = () => {
     { value: 'rejected', label: 'Rejected' },
   ];
 
-  const filteredConsultations = consultations?.filter((item: ConsultationItem) => {
-    const matchesSearch = item.subCategory.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSubCategory = selectedSubCategory ? item.subCategory.name === selectedSubCategory : true;
-    const matchesStatus = selectedStatus ? item.status === selectedStatus : true;
-    return matchesSearch && matchesSubCategory && matchesStatus;
-  });
+  const filteredConsultations = consultations
+    ?.slice()
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .filter((item: ConsultationItem) => {
+      const matchesSearch = item.subCategory.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSubCategory = selectedSubCategory ? item.subCategory.name === selectedSubCategory : true;
+      const matchesStatus = selectedStatus ? item.status === selectedStatus : true;
+      return matchesSearch && matchesSubCategory && matchesStatus;
+    });
 
   const regularConsultationData = filteredConsultations?.filter(
     (item: ConsultationItem) => item?.consultationType === 'regular',
@@ -138,8 +142,7 @@ const DoctorPatientServices = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (createdAt: string) => {
-        const date = new Date(createdAt);
-        return date.toLocaleString();
+        return <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>;
       },
     },
     {
@@ -215,8 +218,7 @@ const DoctorPatientServices = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (createdAt: string) => {
-        const date = new Date(createdAt);
-        return date.toLocaleString();
+        return <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>;
       },
     },
     {
@@ -292,8 +294,7 @@ const DoctorPatientServices = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (createdAt: string) => {
-        const date = new Date(createdAt);
-        return date.toLocaleString();
+        return <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>;
       },
     },
     {
@@ -369,8 +370,7 @@ const DoctorPatientServices = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (createdAt: string) => {
-        const date = new Date(createdAt);
-        return date.toLocaleString();
+        return <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>;
       },
     },
     {

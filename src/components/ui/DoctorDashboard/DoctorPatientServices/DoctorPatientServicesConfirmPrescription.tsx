@@ -119,13 +119,17 @@ const DoctorPatientServicesConfirmPrescription = () => {
 
       {/* Reported Button */}
       <Button
-        type="primary"
-        style={{
-          height: 42,
-          backgroundColor: '#1854F9',
-        }}
+        className={`text-white py-5 ${
+          consultation?.status === 'pending'
+            ? 'bg-yellow-500'
+            : consultation?.status === 'completed'
+            ? 'bg-blue-500'
+            : consultation?.status === 'prescribed'
+            ? 'bg-green-500'
+            : ''
+        }`}
       >
-        Loading...
+        {consultation?.status}
       </Button>
     </div>
   );
@@ -220,10 +224,10 @@ const DoctorPatientServicesConfirmPrescription = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold">Dosage</h1>
-              <h1 className="text-sm text-gray">{item?.total}</h1>
+              <h1 className="text-sm text-gray">{item?._id?.dosage[0]}</h1>
             </div>
             <div>
-              <h1 className="text-xl font-bold">Contents of the box</h1>
+              <h1 className="text-xl font-bold">Quantity</h1>
               <h1 className="text-sm text-gray">{item?.count}</h1>
             </div>
           </div>
@@ -339,7 +343,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
         <h1 className="text-sm text-gray">{medicine.dosage}</h1>
       </div>
       <div>
-        <h1 className="text-xl font-bold">Contents of the box</h1>
+        <h1 className="text-xl font-bold">Quantity</h1>
         <h1 className="text-sm text-gray">{medicine.quantity}</h1>
       </div>
       <div>

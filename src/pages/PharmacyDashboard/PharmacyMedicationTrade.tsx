@@ -34,7 +34,7 @@ const columns = [
     title: 'Date & Time',
     dataIndex: 'orderDate',
     key: 'orderDate',
-    render: (orderDate: string) => <span>{moment(orderDate).format('YYYY-MM-DD HH:mm')}</span>,
+    render: (orderDate: string) => <span>{moment(orderDate).format('MMMM Do YYYY, h:mm a')}</span>,
   },
   {
     title: 'Price',
@@ -120,7 +120,7 @@ const PharmacyMedicationTrade = () => {
     form.validateFields().then(async (values) => {
       try {
         const response = await updateMedicationTrade({
-          id: selectedRecord._id,
+          id: selectedRecord?._id,
           data: { trackingNo: values.trackingNo },
         }).unwrap();
         if (response?.success) {
@@ -143,13 +143,16 @@ const PharmacyMedicationTrade = () => {
   console.log(pharmacyMedicationTrade);
 
   // Filter data based on search term and selected date
-  const filteredData = pharmacyMedicationTrade.filter((item: any) => {
-    const matchesSearch =
-      item.trackingNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      `${item.userId.firstName} ${item.userId.lastName}`.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredData = pharmacyMedicationTrade
+    .slice()
+    .sort((a: any, b: any) => (a.orderDate > b.orderDate ? -1 : 1))
+    .filter((item: any) => {
+      const matchesSearch =
+        item?.trackingNo?.includes(searchTerm) ||
+        `${item?.userId?.firstName} ${item?.userId?.lastName}`?.toLowerCase()?.includes(searchTerm?.toLowerCase());
 
-    return matchesSearch;
-  });
+      return matchesSearch;
+    });
 
   return (
     <div>
