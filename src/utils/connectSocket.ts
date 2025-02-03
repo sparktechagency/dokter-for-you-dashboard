@@ -8,7 +8,7 @@ let socket: Socket | null = null;
  * @returns {Socket} - The connected Socket instance
  */
 export const connectSocket = (): Socket => {
-  socket = io('http://10.0.70.127:8000');
+  socket = io('https://api.dokterforyou.com');
 
   socket.on('connect', () => {
     console.log('Connected to the socket server');

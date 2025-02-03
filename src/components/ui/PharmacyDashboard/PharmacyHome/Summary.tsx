@@ -27,9 +27,8 @@ const Summary = () => {
     },
     {
       name: 'Total Earning',
-
-      total: pharmacyGeneralStates?.totalEarning,
-      daily: pharmacyGeneralStates?.dailyEarning || 0,
+      total: pharmacyGeneralStates?.totalEarning?.toFixed(2) || 0,
+      daily: pharmacyGeneralStates?.dailyEarning?.toFixed(2) || 0,
       icon: <GrMoney size={24} />,
       bgColor: 'bg-[#F0F4FF]',
       iconColor: 'text-[#0A2369]',

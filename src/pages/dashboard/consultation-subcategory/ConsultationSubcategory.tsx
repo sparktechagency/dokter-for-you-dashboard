@@ -30,6 +30,8 @@ const ConsultationSubCategory: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState<Subcategory | null>(null);
 
+  console.log(editCategoryData);
+
   const { data: consultationSubCategoryData, isFetching, refetch } = useGetConsultationSubcategoryQuery(undefined);
   const { data: consultationCategoryData, isFetching: isFetchingConsultationCategory } =
     useGetConsultationCategoryQuery(undefined);
@@ -67,10 +69,15 @@ const ConsultationSubCategory: React.FC = () => {
   const onFinish = async (values: { name: string; category: string; image: File; details: string }) => {
     const formData = new FormData();
     formData.append('name', values.name);
-    formData.append('image', values.image);
     formData.append('details', values.details);
     formData.append('category', values.category);
-    console.log(values);
+    console.log('imageeeeee', editCategoryData);
+
+    if (values.image) {
+      formData.append('image', values.image);
+    } else if (editCategoryData?.image) {
+      formData.append('image', editCategoryData.image);
+    }
 
     try {
       let response;
@@ -137,7 +144,7 @@ const ConsultationSubCategory: React.FC = () => {
       <Form.Item
         label="Category Image"
         name="image"
-        rules={[{ required: true, message: 'Please upload the sub category image' }]}
+        rules={editCategoryData ? [] : [{ required: true, message: 'Please upload the sub category image' }]}
         getValueFromEvent={(e) => {
           const file = e?.fileList?.[0]?.originFileObj;
           if (file) {
@@ -224,7 +231,7 @@ const ConsultationSubCategory: React.FC = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {consultationSubCategories?.map((subcategory: Subcategory, _index: number) => {
-          console.log('adthbadhbarhb', `${import.meta.env.VITE_BASE_URL}${subcategory?.image}`);
+          // console.log('adthbadhbarhb', `${import.meta.env.VITE_BASE_URL}${subcategory?.image}`);
           return (
             <Card key={_index} className="">
               <div className="flex items-center gap-4 mb-4 rounded-xl relative">

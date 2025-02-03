@@ -52,12 +52,15 @@ const DoctorsDetails: React.FC = () => {
       key: 'email',
     },
     {
-      title: 'Doctor Type',
-      dataIndex: 'subCategory',
-      key: 'subCategory',
-      render: (_: any, record: any) => <p>{record?.subCategory?.name || 'N/A'}</p>,
+      title: 'Gender',
+      dataIndex: 'gender',
+      key: 'gender',
     },
-
+    {
+      title: 'Contact Number',
+      dataIndex: 'contact',
+      key: 'contact',
+    },
     {
       title: 'Action',
       key: 'action',

@@ -37,7 +37,7 @@ const AddDoctorDetails = ({ open, setOpen }: { open: boolean; setOpen: (open: bo
 
     try {
       const response = await createDoctor(values).unwrap();
-      console.log('dgbdbhdbhdafb', response);
+      // console.log('dgbdbhdbhdafb', response);
       if (response?.success) {
         toast.success('Doctor added successfully!');
         setOpen(false);
@@ -87,7 +87,7 @@ const AddDoctorDetails = ({ open, setOpen }: { open: boolean; setOpen: (open: bo
             <Input placeholder="Enter Location" />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="Doctor Type"
             name="subCategory"
             rules={[{ required: true, message: 'Please enter Doctor Type' }]}
@@ -99,7 +99,7 @@ const AddDoctorDetails = ({ open, setOpen }: { open: boolean; setOpen: (open: bo
                 </Select.Option>
               ))}
             </Select>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item label="Gender" name="gender" rules={[{ required: true, message: 'Please select  gender' }]}>
             <Select
