@@ -20,7 +20,7 @@ const EditMedication = () => {
   const navigate = useNavigate();
   // console.log(subCategories);
 
-  console.log(id);
+  // console.log(id);
   const { data: getMedicineById, isFetching } = useGetMedicineByIdQuery(id);
   const { data: getAllSubCategories, isFetching: isFetchingSubCategories } =
     useGetConsultationSubcategoryQuery(undefined);
@@ -41,7 +41,7 @@ const EditMedication = () => {
   if (isFetching || isFetchingSubCategories) {
     return <div>Loading...</div>;
   }
-  console.log(medicineData);
+  // console.log(medicineData);
 
   const defaultValues = {
     name: medicineData?.name,

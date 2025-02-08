@@ -37,7 +37,7 @@ const PatientInfoAndQandASection = ({ id }: { id: string }) => {
 
   const consultation = getConsultationById?.data;
 
-  console.log(consultation);
+  // console.log(consultation);
 
   const topSection = topSectionData && (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">

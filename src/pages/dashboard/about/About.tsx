@@ -25,7 +25,7 @@ const About: React.FC = () => {
   const [deleteAbout] = useDeleteAboutMutation();
 
   const abouts = aboutData?.data || [];
-  console.log(abouts);
+  // console.log(abouts);
 
   useEffect(() => {
     if (editAboutData) {
@@ -67,7 +67,7 @@ const About: React.FC = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     } finally {
       setOpenModal(false);
     }

@@ -12,7 +12,7 @@ const ManageQuestions = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const subCategories = getSubCategories?.data;
-  console.log(subCategories);
+  // console.log(subCategories);
 
   const columns = [
     {

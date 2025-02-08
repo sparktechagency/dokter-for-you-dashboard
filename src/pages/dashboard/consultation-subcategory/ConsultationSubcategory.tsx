@@ -30,7 +30,7 @@ const ConsultationSubCategory: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState<Subcategory | null>(null);
 
-  console.log(editCategoryData);
+  // console.log(editCategoryData);
 
   const { data: consultationSubCategoryData, isFetching, refetch } = useGetConsultationSubcategoryQuery(undefined);
   const { data: consultationCategoryData, isFetching: isFetchingConsultationCategory } =
@@ -41,7 +41,7 @@ const ConsultationSubCategory: React.FC = () => {
 
   const consultationSubCategories = consultationSubCategoryData?.data;
   const categories = consultationCategoryData?.data;
-  console.log(categories);
+  // console.log(categories);
 
   const [categoryImagePreview, setCategoryImagePreview] = useState<string | undefined>(undefined);
 
@@ -71,7 +71,7 @@ const ConsultationSubCategory: React.FC = () => {
     formData.append('name', values.name);
     formData.append('details', values.details);
     formData.append('category', values.category);
-    console.log('imageeeeee', editCategoryData);
+    // console.log('imageeeeee', editCategoryData);
 
     if (values.image) {
       formData.append('image', values.image);

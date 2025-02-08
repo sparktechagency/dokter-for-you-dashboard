@@ -75,7 +75,7 @@ const RefundServices = () => {
                     </Tooltip>
                     <Popconfirm
                         title="Are you want to refund?"
-                        onConfirm={() => console.log('refund')}
+                        onConfirm={() => // console.log('refund')}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -168,7 +168,7 @@ const RefundServices = () => {
 
                     <Popconfirm
                         title="Are you want to refund?"
-                        onConfirm={() => console.log('refund')}
+                        onConfirm={() => // console.log('refund')}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -252,7 +252,7 @@ const RefundServices = () => {
 
                     <Popconfirm
                         title="Are you want to refund?"
-                        onConfirm={() => console.log('refund')}
+                        onConfirm={() => // console.log('refund')}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -340,7 +340,7 @@ const RefundServices = () => {
 
                     <Popconfirm
                         title="Are you want to refund?"
-                        onConfirm={() => console.log('refund')}
+                        onConfirm={() => // console.log('refund')}
                         okText="Yes"
                         cancelText="No"
                     >

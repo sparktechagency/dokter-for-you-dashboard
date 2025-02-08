@@ -12,7 +12,7 @@ const PharmacyPatientServices = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultations = getConsultations?.data;
-  console.log(consultations);
+  // console.log(consultations);
 
   const forwardToPartnerOptions = consultations
     ?.filter((item: any) => item?.suggestedMedicine?.length > 0)

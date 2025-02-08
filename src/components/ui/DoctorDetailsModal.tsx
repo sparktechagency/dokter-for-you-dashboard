@@ -20,7 +20,7 @@ const DoctorDetailsModal = ({
     type: viewShippingProfile?.subCategory?.name,
   };
 
-  console.log('in profile modal', viewShippingProfile);
+  // console.log('in profile modal', viewShippingProfile);
   return (
     <Modal
       maskClosable={false}

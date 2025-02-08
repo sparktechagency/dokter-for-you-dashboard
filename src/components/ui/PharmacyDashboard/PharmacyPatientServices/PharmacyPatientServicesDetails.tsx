@@ -24,7 +24,7 @@ const PharmacyPatientServicesDetails = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultation = getConsultationById?.data;
-  console.log(consultation);
+  // console.log(consultation);
 
   const showRejectModal = () => {
     setIsRejectModalVisible(true);
@@ -55,7 +55,7 @@ const PharmacyPatientServicesDetails = () => {
         toast.success('Consultation approved successfully!');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error('Failed to approve consultation.');
     }
     setIsConfirmModalVisible(false);

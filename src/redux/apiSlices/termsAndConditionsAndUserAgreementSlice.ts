@@ -46,7 +46,7 @@ const termsAndConditionsAndUserAgreementApi = api.injectEndpoints({
 
     createFaq: builder.mutation({
       query: ({ data }) => {
-        console.log('slice', data);
+        // console.log('slice', data);
         return {
           url: '/faq/create',
           method: 'POST',

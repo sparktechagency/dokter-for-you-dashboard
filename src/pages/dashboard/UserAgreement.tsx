@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 const UserAgreement = () => {
   const [content, setContent] = useState('');
 
-  console.log('asdaer', content);
+  // console.log('asdaer', content);
 
   const { data: getUserAgreement, isFetching } = useGetUserAgreementQuery(undefined);
   const [createUserAgreement] = useCreateUserAgreementMutation();
@@ -18,7 +18,7 @@ const UserAgreement = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const userAgreement = getUserAgreement?.data[0];
-  console.log(userAgreement);
+  // console.log(userAgreement);
 
   const handleUpdateTermsAndCondition = async () => {
     try {
@@ -27,7 +27,7 @@ const UserAgreement = () => {
         toast.success('User agreement updated successfully!');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error('Failed to update User agreement!');
     }
   };

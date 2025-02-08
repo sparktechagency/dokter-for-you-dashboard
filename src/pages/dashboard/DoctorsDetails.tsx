@@ -18,7 +18,7 @@ const DoctorsDetails: React.FC = () => {
     return <div>Loading...</div>;
   }
   const DoctorData = DoctorsData?.data || [];
-  console.log(DoctorData);
+  // console.log(DoctorData);
 
   const handleDelete = async (id: string) => {
     try {
@@ -29,7 +29,7 @@ const DoctorsDetails: React.FC = () => {
         toast.error('Failed to delete doctor.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

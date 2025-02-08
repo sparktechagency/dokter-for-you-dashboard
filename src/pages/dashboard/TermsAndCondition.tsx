@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 const TermsAndCondition = () => {
   const [content, setContent] = useState('');
 
-  console.log('asdaer', content);
+  // console.log('asdaer', content);
 
   const { data: getTermsAndCondition, isFetching } = useGetTermsAndConditionsQuery(undefined);
   const [updateTermsAndCondition] = useCreateTermsAndConditionsMutation();
@@ -18,7 +18,7 @@ const TermsAndCondition = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const termsAndCondition = getTermsAndCondition?.data[0];
-  console.log(termsAndCondition);
+  // console.log(termsAndCondition);
 
   const handleUpdateTermsAndCondition = async () => {
     try {
@@ -27,7 +27,7 @@ const TermsAndCondition = () => {
         toast.success('Terms and conditions updated successfully!');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error('Failed to update Terms and conditions!');
     }
   };

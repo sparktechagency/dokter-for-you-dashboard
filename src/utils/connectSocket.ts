@@ -11,11 +11,11 @@ export const connectSocket = (): Socket => {
   socket = io('https://api.dokterforyou.com');
 
   socket.on('connect', () => {
-    console.log('Connected to the socket server');
+    // console.log('Connected to the socket server');
   });
 
   socket.on('disconnect', () => {
-    console.log('Disconnected from the socket server');
+    // console.log('Disconnected from the socket server');
   });
 
   return socket;

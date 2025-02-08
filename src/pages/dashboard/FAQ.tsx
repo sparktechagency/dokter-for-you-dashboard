@@ -38,10 +38,10 @@ const FAQ = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const faq = getFaq?.data;
-  console.log(faq);
+  // console.log(faq);
 
   const onFinish = async (values: any) => {
-    console.log(values);
+    // console.log(values);
 
     if (editFaqData) {
       try {
@@ -54,12 +54,12 @@ const FAQ = () => {
           toast.error('Failed to update FAQ.');
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         toast.error('An error occurred while updating FAQ.');
       }
     } else {
       try {
-        console.log('rfsdd', values);
+        // console.log('rfsdd', values);
         const response = await createFaq({ data: values }).unwrap();
         if (response?.success) {
           toast.success('FAQ added successfully!');
@@ -69,7 +69,7 @@ const FAQ = () => {
           toast.error('Failed to add FAQ.');
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         toast.error('An error occurred while adding FAQ.');
       }
     }
@@ -84,7 +84,7 @@ const FAQ = () => {
         toast.error('Failed to delete FAQ.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error('An error occurred while deleting FAQ.');
     }
   };

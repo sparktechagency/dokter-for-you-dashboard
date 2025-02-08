@@ -11,7 +11,7 @@ const questionsApi = api.injectEndpoints({
     }),
     createQuestion: builder.mutation({
       query: ({ data }) => {
-        console.log('slice', data);
+        // console.log('slice', data);
         return {
           url: '/question/create',
           method: 'POST',

@@ -41,7 +41,7 @@ const DiscountPrice = () => {
     return <div>Loading...</div>;
   }
   const discountDataList = discountDetails?.data || [];
-  console.log(discountDataList);
+  // console.log(discountDataList);
 
   const handleModalClose = () => {
     setOpenModal(false);
@@ -208,7 +208,7 @@ const DiscountPrice = () => {
         <div className="mb-4 flex items-center justify-end gap-4">
           <Popconfirm
             title="Are you sure to delete the selected items?"
-            onConfirm={() => console.log('Deleted selected')}
+            onConfirm={() => // console.log('Deleted selected')}
             okText="Yes"
             cancelText="No"
           >

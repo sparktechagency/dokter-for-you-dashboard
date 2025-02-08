@@ -46,7 +46,7 @@ const DoctorMyTransaction = () => {
 
   const doctorEarnings = getDoctorEarnings?.data;
   const earningHistory = getEarningHistory?.data;
-  console.log(earningHistory);
+  // console.log(earningHistory);
 
   // Regular Consultation columns
   const regularColumns = [
@@ -131,7 +131,7 @@ const DoctorMyTransaction = () => {
   const handleWithdrawMoney = async () => {
     try {
       const response = await withdrawMoney(undefined).unwrap();
-      console.log(response);
+      // console.log(response);
       if (response.success) {
         toast.success('Money withdrawn successfully!');
       }

@@ -48,7 +48,7 @@ const ShippingSetting = () => {
   }
   const shippingData = shippingDetails?.data || [];
   const pharmacyList = pharmacy?.data || [];
-  console.log(shippingData);
+  // console.log(shippingData);
 
   const filteredShippingData = shippingData.filter((item: any) => {
     const matchesSearch = item?.selectedArea.toLowerCase().includes(searchQuery.toLowerCase());
@@ -66,7 +66,7 @@ const ShippingSetting = () => {
         toast.error('Failed to delete shipping details!');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -162,7 +162,7 @@ const ShippingSetting = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -218,7 +218,7 @@ const ShippingSetting = () => {
     </Form>
   );
 
-  console.log(viewShippingProfile);
+  // console.log(viewShippingProfile);
   const viewShippingProfileModal = (
     <div>
       <div className="text-lg text-gray space-y-8">

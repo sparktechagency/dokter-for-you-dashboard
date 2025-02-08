@@ -13,7 +13,7 @@ const SingleMedicineDetails = () => {
   }
 
   const medicineData = getMedicineById?.data;
-  console.log(medicineData);
+  // console.log(medicineData);
 
   const profitPercentage =
     ((medicineData?.sellingPrice - medicineData?.purchaseCost) / medicineData?.purchaseCost) * 100;

@@ -107,7 +107,7 @@ const ConsultationCategory: React.FC = () => {
           if (file) {
             const imageUrl = URL.createObjectURL(file);
             setCategoryImagePreview(imageUrl); // Update the preview immediately
-            console.log('Image preview set:', imageUrl); // Log the image preview
+            // console.log('Image preview set:', imageUrl); // Log the image preview
           }
           return file || editCategoryData?.image; // Return the file or existing image
         }}
@@ -237,7 +237,7 @@ const ConsultationCategory: React.FC = () => {
             setEditCategoryData(null);
             setCategoryImagePreview(undefined);
           } else {
-            console.log('Opening add modal, resetting image preview.'); // Log when opening add modal
+            // console.log('Opening add modal, resetting image preview.'); // Log when opening add modal
             setCategoryImagePreview(undefined);
           }
         }}

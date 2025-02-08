@@ -11,7 +11,7 @@ const AdminDetailsModal = ({
   setOpen: (open: boolean) => void;
   viewShippingProfile: any;
 }) => {
-  console.log(viewShippingProfile);
+  // console.log(viewShippingProfile);
 
   const userDetails: doctorDetails = {
     name: viewShippingProfile?.firstName + ' ' + viewShippingProfile?.lastName,

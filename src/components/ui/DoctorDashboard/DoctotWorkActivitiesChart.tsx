@@ -17,7 +17,7 @@ const DoctotWorkActivitiesChart = () => {
   }
 
   const userStates = userState?.data;
-  //   console.log('Work Activities', userStates);
+  //   // console.log('Work Activities', userStates);
 
   const stats = [
     {

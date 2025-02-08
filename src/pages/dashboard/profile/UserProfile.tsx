@@ -12,13 +12,13 @@ const UserProfile = () => {
   const [signatureImgURL, setSignatureImgURL] = useState<string | undefined>(undefined);
   const [signatureFile, setSignatureFile] = useState<File | null>(null);
 
-  console.log(signatureFile);
+  // console.log(signatureFile);
 
   const { data: currentUser, isFetching, refetch } = useGetCurrentUserProfileQuery(undefined);
   const [updateAdmin] = useUpdateUserProfileMutation();
 
   const user = currentUser?.data;
-  console.log(user);
+  // console.log(user);
 
   useEffect(() => {
     if (user) {
@@ -80,7 +80,7 @@ const UserProfile = () => {
         formData.append('signature', signatureFile);
       }
 
-      console.log([...formData.entries()]); // Debugging: Check the formData content
+      // console.log([...formData.entries()]); // Debugging: Check the formData content
 
       const response = await updateAdmin({ data: formData }).unwrap();
       if (response?.success) {

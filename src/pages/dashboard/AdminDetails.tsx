@@ -18,7 +18,7 @@ const AdminDetails: React.FC = () => {
     return <div>Loading...</div>;
   }
   const adminDetails = adminData?.data || [];
-  console.log(adminDetails);
+  // console.log(adminDetails);
 
   const handleAdminDelete = async (id: string) => {
     try {
@@ -29,7 +29,7 @@ const AdminDetails: React.FC = () => {
         toast.error('Failed to delete admin.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

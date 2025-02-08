@@ -46,11 +46,11 @@ const SetUpPaymentMethod = () => {
         toast.error('Failed to set up payment method.');
       }
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       toast.error(error?.data?.message || 'An error occurred while setting up payment method.');
     }
 
-    console.log(data);
+    // console.log(data);
   };
 
   return (

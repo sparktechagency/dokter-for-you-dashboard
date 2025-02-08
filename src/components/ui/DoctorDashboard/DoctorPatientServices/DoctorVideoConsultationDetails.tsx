@@ -24,7 +24,7 @@ const DoctorVideoConsultationDetails = () => {
 
   const consultation = getConsultationById?.data;
 
-  console.log('Video Consultation detailsPage', consultation);
+  // console.log('Video Consultation detailsPage', consultation);
 
   const handleBack = () => {
     navigate(-1);

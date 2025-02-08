@@ -21,7 +21,7 @@ const RejectPrescriptionPage = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultationData = getConsultationById?.data;
-  console.log(consultationData);
+  // console.log(consultationData);
 
   const topSection = (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">
@@ -125,7 +125,7 @@ const RejectPrescriptionPage = () => {
 
     try {
       const response = await rejectConsultation({ id, data: { opinion } }).unwrap();
-      console.log(response);
+      // console.log(response);
       if (response?.success) {
         toast.success('Prescription rejected successfully!');
         navigate('/doctor-patient-services-list');
@@ -133,7 +133,7 @@ const RejectPrescriptionPage = () => {
         toast.error(response?.message || 'Failed to reject prescription.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error('Failed to reject prescription.');
     }
   };

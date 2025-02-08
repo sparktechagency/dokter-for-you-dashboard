@@ -19,7 +19,7 @@ const PharmacyDetails: React.FC = () => {
     return <div>Loading...</div>;
   }
   const pharmacyDetails = pharmacyData?.data || [];
-  console.log(pharmacyDetails);
+  // console.log(pharmacyDetails);
   const handleDelete = async (id: string) => {
     try {
       const response = await deletePharmacy(id).unwrap();
@@ -29,7 +29,7 @@ const PharmacyDetails: React.FC = () => {
         toast.error('Failed to delete shipping profile.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -105,7 +105,7 @@ const PharmacyDetails: React.FC = () => {
               </Tooltip>
               <Popconfirm
                 title="Are you sure to delete the selected items?"
-                onConfirm={() => console.log('Deleted selected')}
+                onConfirm={() => // console.log('Deleted selected')}
                 okText="Yes"
                 cancelText="No"
               >

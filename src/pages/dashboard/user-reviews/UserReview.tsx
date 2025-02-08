@@ -15,7 +15,7 @@ const UserReviews = () => {
 
   if (isFetching) return <div>Loading...</div>;
   const reviewData = reviews?.data || [];
-  console.log(reviewData);
+  // console.log(reviewData);
 
   const handlePublish = async (id: any) => {
     const value = {
@@ -28,7 +28,7 @@ const UserReviews = () => {
         toast.success('Review published successfully!');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -43,7 +43,7 @@ const UserReviews = () => {
         toast.success('Review rejected successfully!');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

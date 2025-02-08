@@ -29,7 +29,7 @@ const PharmacyEarningChart = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const earningStates = earningState?.data;
-  console.log(earningStates);
+  // console.log(earningStates);
 
   const handleMouseEnter = (index: number) => {
     setActiveIndex(index);

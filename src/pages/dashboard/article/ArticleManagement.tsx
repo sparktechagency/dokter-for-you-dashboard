@@ -26,7 +26,7 @@ const ArticleManagement: React.FC = () => {
   const [deleteArticle] = useDeleteArticleMutation();
 
   const articles = articleData?.data || [];
-  console.log(articles);
+  // console.log(articles);
 
   useEffect(() => {
     if (editArticleData) {
@@ -70,7 +70,7 @@ const ArticleManagement: React.FC = () => {
       }
       setOpenModal(false);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

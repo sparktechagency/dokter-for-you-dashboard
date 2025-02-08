@@ -22,7 +22,7 @@ const ChangePassword = () => {
         toast.error('Failed to update password.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

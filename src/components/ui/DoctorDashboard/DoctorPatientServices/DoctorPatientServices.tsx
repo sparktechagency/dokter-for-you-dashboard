@@ -63,7 +63,7 @@ const DoctorPatientServices = () => {
   const payload = jwtDecode(token) as CustomJwtPayload;
   const { id } = payload;
 
-  console.log(id);
+  // console.log(id);
 
   const { data: getConsultations, isFetching } = useGetDoctorConsultationsQuery(id);
 
@@ -71,7 +71,7 @@ const DoctorPatientServices = () => {
 
   const consultations = getConsultations?.data;
 
-  console.log(consultations);
+  // console.log(consultations);
 
   const uniqueSubCategories = Array.from(new Set(consultations?.map((item: any) => item.subCategory.name)));
 
@@ -109,7 +109,7 @@ const DoctorPatientServices = () => {
     (item: ConsultationItem) => item?.forwardToPartner === true,
   );
 
-  console.log(consultations);
+  // console.log(consultations);
 
   // Regular Consultation columns
   const regularColumns = [

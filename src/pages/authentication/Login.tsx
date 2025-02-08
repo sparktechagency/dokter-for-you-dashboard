@@ -23,7 +23,7 @@ const Login = () => {
     try {
       const response = (await login(values).unwrap()) as LoginResponse;
       const decodedToken = jwtDecode<CustomJwtPayload>(response.data);
-      console.log('decodedToken', decodedToken?.role);
+      // console.log('decodedToken', decodedToken?.role);
       const { role } = decodedToken;
       if (rememberMe) {
         localStorage.setItem('authToken', response.data);

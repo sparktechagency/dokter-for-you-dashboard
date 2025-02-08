@@ -51,7 +51,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
   const medicines = getMedicineById?.data;
 
   if (isFetching) return <div>Loading...</div>;
-  console.log(consultation);
+  // console.log(consultation);
 
   const showMedicineDetails = (medicine: Medicine) => {
     // console.log('adrshsaethaesrhaerh', medicine);
@@ -75,11 +75,11 @@ const DoctorPatientServicesConfirmPrescription = () => {
       })),
       opinion,
     };
-    console.log(data);
+    // console.log(data);
 
     try {
       const response = await makePrescription({ data: data, id }).unwrap();
-      console.log(response);
+      // console.log(response);
       if (response?.success) {
         toast.success('Prescription uploaded successfully!');
         navigate('/doctor-patient-services-list');
@@ -87,7 +87,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
         toast.error('Failed to upload prescription.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error('Failed to upload prescription.');
     }
   };
@@ -319,7 +319,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
     // console.log('adbhaerhbar', data);
     setSelectedMedicines((prevState) => [...prevState, data]);
   };
-  console.log(selectedMedicines);
+  // console.log(selectedMedicines);
   const selectedMedicine = selectedMedicines.map((medicine) => (
     <div
       className="bg-[#e7fbf2] mt-10 border-t-4 border-[#0a2369] p-8 shadow-md flex justify-between items-center"

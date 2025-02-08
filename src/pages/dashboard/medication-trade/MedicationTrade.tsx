@@ -140,7 +140,7 @@ const MedicationTrade = () => {
 
   const pharmacyMedicationTrade = getPharmacyMedicationTrade?.data;
 
-  console.log(pharmacyMedicationTrade);
+  // console.log(pharmacyMedicationTrade);
 
   // Filter data based on search term and selected date
   const filteredData = pharmacyMedicationTrade.filter((item: any) => {

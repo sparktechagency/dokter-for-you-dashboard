@@ -11,7 +11,7 @@ const PharmacyDetailsModal = ({
   setOpen: (open: boolean) => void;
   viewShippingProfile: any;
 }) => {
-  console.log('hellllloooooo', viewShippingProfile);
+  // console.log('hellllloooooo', viewShippingProfile);
   const userDetails: pharmacy = {
     name: viewShippingProfile?.pharmecyName,
     email: viewShippingProfile?.email,

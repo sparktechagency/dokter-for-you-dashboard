@@ -22,7 +22,7 @@ const HeaderDashboard = () => {
     try {
       const response = await readNotification(undefined).unwrap();
       if (response?.success) {
-        console.log(response.success);
+        // console.log(response.success);
       }
     } catch (error) {
       console.error('Error reading notification:', error);

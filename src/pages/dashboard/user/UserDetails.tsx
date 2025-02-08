@@ -22,7 +22,7 @@ const UserDetails: React.FC = () => {
 
   if (isFetching) return <div>Loading...</div>;
   const userData = users?.data;
-  console.log(userData);
+  // console.log(userData);
 
   // Filtered user data based on search query
   const filteredUserData = userData.filter(

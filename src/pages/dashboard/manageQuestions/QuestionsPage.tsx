@@ -25,7 +25,7 @@ const QuestionsPage = () => {
 
   if (isFetching) return <div>Loading...</div>;
   const subCategory = getQuestionBySubCategory?.data;
-  console.log(subCategory);
+  // console.log(subCategory);
 
   const showModal = (question = { question: '', _id: null }) => {
     setCurrentQuestion(question);
@@ -47,14 +47,14 @@ const QuestionsPage = () => {
         }
       } else {
         const response = await createQuestion({ data: questionData });
-        console.log(response);
+        // console.log(response);
         if (response?.data?.success) {
           toast.success('Question added successfully!');
           setIsModalVisible(false);
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -65,7 +65,7 @@ const QuestionsPage = () => {
         toast.success('Question deleted successfully!');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

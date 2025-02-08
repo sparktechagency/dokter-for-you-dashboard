@@ -9,7 +9,7 @@ const Summary = () => {
   }
 
   const pharmacyGeneralStates = getPharmacyGeneralStates?.data;
-  console.log(pharmacyGeneralStates);
+  // console.log(pharmacyGeneralStates);
 
   const data = [
     {

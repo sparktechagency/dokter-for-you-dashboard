@@ -13,7 +13,7 @@ const PharmacyWorkActivitiesChart = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const pharmacyWorkStates = pharmacyWorkState?.data;
-  console.log('work load', pharmacyWorkStates);
+  // console.log('work load', pharmacyWorkStates);
 
   return (
     <div className="w-full h-[347px]">

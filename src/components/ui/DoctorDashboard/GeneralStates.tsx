@@ -13,7 +13,7 @@ const GeneralStates = () => {
   }
 
   const doctorGeneralStates = getDoctorGeneralStates?.data;
-  console.log(doctorGeneralStates);
+  // console.log(doctorGeneralStates);
 
   // This would come from your database/API
   const values = {

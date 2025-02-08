@@ -28,9 +28,9 @@ const authApi = api.injectEndpoints({
 
     resetPassword: builder.mutation({
       query: ({ data }) => {
-        console.log('authSlice', data);
+        // console.log('authSlice', data);
         const token = getFromLocalStorage('oneTimeCodeToken');
-        console.log(`Using token for reset password: ${token}`);
+        // console.log(`Using token for reset password: ${token}`);
 
         return {
           url: '/auth/reset-password',
@@ -130,7 +130,7 @@ const authApi = api.injectEndpoints({
 
     lockUnlockUser: builder.mutation({
       query: (id) => {
-        console.log('slice', id);
+        // console.log('slice', id);
         return {
           url: `user/lock/${id}`,
           method: 'PATCH',

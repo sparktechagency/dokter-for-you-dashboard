@@ -21,7 +21,7 @@ const AddMedication = () => {
   }
 
   const subCategories = getAllSubCategories?.data || [];
-  console.log(subCategories);
+  // console.log(subCategories);
 
   const handleAddUnit = () => {
     setUnits([...units, unitInput]);

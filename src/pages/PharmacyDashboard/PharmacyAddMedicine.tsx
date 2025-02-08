@@ -97,7 +97,7 @@ const PharmacyAddMedicine = () => {
                 <div className="mb-4 flex items-center justify-end gap-4">
                     <Popconfirm
                         title="Are you sure to delete this medication?"
-                        onConfirm={() => console.log('Deleted')}
+                        onConfirm={() => // console.log('Deleted')}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -158,7 +158,7 @@ const PharmacyAddMedicine = () => {
                     rowSelection={{
                         type: 'checkbox',
                         onChange: (selectedRowKeys: any, selectedRows: any) => {
-                            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+                            // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
                         },
                     }}
                     columns={medicationColumns}

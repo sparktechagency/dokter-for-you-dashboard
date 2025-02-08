@@ -18,7 +18,7 @@ const AddAdminDetails = ({ open, setOpen }: { open: boolean; setOpen: (open: boo
         toast.error('Failed to add admin.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

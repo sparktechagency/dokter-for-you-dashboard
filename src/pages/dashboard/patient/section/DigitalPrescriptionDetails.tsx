@@ -16,7 +16,7 @@ const DigitalPrescriptionDetails = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultationData = getConsultationById?.data;
-  console.log('dddd', consultationData);
+  // console.log('dddd', consultationData);
 
   const topSection = (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">

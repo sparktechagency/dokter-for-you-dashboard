@@ -20,7 +20,7 @@ const DoctorEarningActivities = () => {
   }
 
   const userStates = userState?.data;
-  //   console.log('earning activities', userStates);
+  //   // console.log('earning activities', userStates);
 
   const stats = [
     {

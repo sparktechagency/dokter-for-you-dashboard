@@ -18,7 +18,7 @@ const AddPharmacyDetails = ({ open, setOpen }: { open: boolean; setOpen: (open: 
         toast.error('Failed to add pharmacy.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
 
     // console.log('Form Values:', values);

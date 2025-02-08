@@ -30,7 +30,7 @@ const PatientServices = () => {
 
   if (isFetching) return <div>Loading...</div>;
   const consultationData = getConsultations?.data || [];
-  console.log(consultationData);
+  // console.log(consultationData);
 
   const subCategories = [...new Set(consultationData?.map((item: any) => item?.subCategory?.name))];
 

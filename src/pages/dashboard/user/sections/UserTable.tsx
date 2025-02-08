@@ -47,7 +47,7 @@
 //                         <Tooltip title="Unlock">
 //                             <Popconfirm
 //                                 title="Are you sure to unlock this account?"
-//                                 onConfirm={() => console.log('Unlock')}
+//                                 onConfirm={() => // console.log('Unlock')}
 //                                 okText="Yes"
 //                                 cancelText="No"
 //                             >
@@ -58,7 +58,7 @@
 //                         <Tooltip title="Lock">
 //                             <Popconfirm
 //                                 title="Are you sure to lock this account?"
-//                                 onConfirm={() => console.log('Lock')}
+//                                 onConfirm={() => // console.log('Lock')}
 //                                 okText="Yes"
 //                                 cancelText="No"
 //                             >
@@ -78,7 +78,7 @@
 //             rowSelection={{
 //                 type: 'checkbox',
 //                 onChange: (selectedRowKeys: any, selectedRows: any) => {
-//                     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+//                     // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
 //                 },
 //             }}
 //             pagination={{
