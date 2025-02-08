@@ -3,7 +3,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import BackButton from '../../../components/ui/BackButton';
 
 const AddPharmacyMedicine = () => {
-  const handleFinish = (values: any) => {
+  const handleFinish = () => {
     // console.log('Form Values:', values);
   };
 

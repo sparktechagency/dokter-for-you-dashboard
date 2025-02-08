@@ -30,7 +30,7 @@ const AddDoctorDetails = ({ open, setOpen }: { open: boolean; setOpen: (open: bo
   }
 
   const consultationSubCategories = consultationSubCategoryData?.data;
-  // console.log(consultationSubCategories);
+  console.log(consultationSubCategories);
 
   const onFinish = async (values: any) => {
     // console.log('Form Values:', values);

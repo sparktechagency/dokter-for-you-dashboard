@@ -36,7 +36,8 @@ const EditSinglePharmacyMedicine = () => {
     profitPercentage,
     sellingPrice,
   } = data;
-  const handleFinish = (values: any) => {
+
+  const handleFinish = () => {
     // console.log('Form Values:', values);
   };
 

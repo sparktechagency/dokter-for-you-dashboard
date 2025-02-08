@@ -105,7 +105,7 @@ const PharmacyDetails: React.FC = () => {
               </Tooltip>
               <Popconfirm
                 title="Are you sure to delete the selected items?"
-                onConfirm={() => // console.log('Deleted selected')}
+                onConfirm={() => console.log('Deleted selected')}
                 okText="Yes"
                 cancelText="No"
               >
