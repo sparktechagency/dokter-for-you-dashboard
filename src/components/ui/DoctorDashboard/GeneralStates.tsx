@@ -19,18 +19,17 @@ const GeneralStates = () => {
   const values = {
     daily: doctorGeneralStates?.dailyEarning,
     totalEarn: doctorGeneralStates?.totalEarning,
-    raisedAmount: doctorGeneralStates?.raisedAmount || 25,
-    balanceAvailable: doctorGeneralStates?.balance || 25,
+    balanceAvailable: doctorGeneralStates?.balanceAvailable || 25,
   };
 
   const data = [
     { name: 'Daily', value: values.daily },
     { name: 'Total Earn', value: values.totalEarn },
-    { name: 'Raised Amount', value: values.raisedAmount },
+
     { name: 'Balance Available', value: values.balanceAvailable },
   ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FF0000', '#FFBB28'];
+  const COLORS = ['#0088FE', '#FFBB28', '#00C49F'];
 
   const statsData = [
     {
@@ -132,18 +131,11 @@ const GeneralStates = () => {
                   </span>
                 </p>
               </div>
-              <div className="mb-4">
-                <p className="text-lg">
-                  <span className="text-gray-500">Raised Amount: </span>
-                  <span className="text-xl font-medium" style={{ color: COLORS[2] }}>
-                    €{values.raisedAmount}
-                  </span>
-                </p>
-              </div>
+
               <div className="mb-4">
                 <p className="text-lg">
                   <span className="text-gray-500">Balance Available: </span>
-                  <span className="text-xl font-medium" style={{ color: COLORS[3] }}>
+                  <span className="text-xl font-medium" style={{ color: COLORS[2] }}>
                     €{values.balanceAvailable}
                   </span>
                 </p>
