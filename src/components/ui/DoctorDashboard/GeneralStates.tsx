@@ -19,7 +19,7 @@ const GeneralStates = () => {
   const values = {
     daily: doctorGeneralStates?.dailyEarning,
     totalEarn: doctorGeneralStates?.totalEarning,
-    balanceAvailable: doctorGeneralStates?.balanceAvailable || 25,
+    balanceAvailable: doctorGeneralStates?.balanceAvailable,
   };
 
   const data = [
