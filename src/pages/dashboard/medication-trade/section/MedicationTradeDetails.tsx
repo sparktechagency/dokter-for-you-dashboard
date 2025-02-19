@@ -16,7 +16,7 @@ const MedicationTradeDetails = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultationData = getConsultationById?.data;
-  // console.log(consultationData);
+  console.log(consultationData);
 
   const topSection = (
     <div className="flex items-center justify-between px-4 py-2 bg-white my-2">
@@ -167,7 +167,7 @@ const MedicationTradeDetails = () => {
   );
 
   const subTotal = consultationData?.suggestedMedicine?.reduce((acc: number, medicine: any) => {
-    return acc + medicine?._id?.sellingPrice;
+    return acc + medicine?._id?.sellingPrice * medicine?.total;
   }, 0);
 
   const consultationDetailsSection = (
@@ -175,7 +175,7 @@ const MedicationTradeDetails = () => {
       <hr className="my-4" />
       <div className="flex items-center justify-end gap-40">
         <p>Subtotal</p>
-        <p>{subTotal}</p>
+        <p>€{subTotal.toFixed(2)}</p>
       </div>
       <div className="flex items-center justify-end gap-40">
         <p>Discount</p>
@@ -188,7 +188,7 @@ const MedicationTradeDetails = () => {
       <hr className="my-4" />
       <div className="flex items-center justify-end gap-40 text-[#0A2369]">
         <p>Total</p>
-        <p>€ {subTotal + 20}</p>
+        <p>€ {(subTotal + 20).toFixed(2)}</p>
       </div>
       <div className="mt-6 text-right">
         <Button
