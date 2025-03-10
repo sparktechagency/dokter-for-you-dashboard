@@ -73,9 +73,9 @@ const DoctorPatientServices = () => {
 
   // console.log(consultations);
 
-  const uniqueSubCategories = Array.from(new Set(consultations?.map((item: any) => item.subCategory.name)));
+  const uniqueSubCategories = Array.from(new Set(consultations?.map((item: any) => item?.subCategory?.name)));
 
-  const subCategoryOptions = uniqueSubCategories.map((subCategory) => ({
+  const subCategoryOptions = uniqueSubCategories?.map((subCategory) => ({
     value: subCategory,
     label: subCategory,
   }));
@@ -90,9 +90,9 @@ const DoctorPatientServices = () => {
     ?.slice()
     .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .filter((item: ConsultationItem) => {
-      const matchesSearch = item.subCategory.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesSubCategory = selectedSubCategory ? item.subCategory.name === selectedSubCategory : true;
-      const matchesStatus = selectedStatus ? item.status === selectedStatus : true;
+      const matchesSearch = item?.subCategory?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase());
+      const matchesSubCategory = selectedSubCategory ? item?.subCategory?.name === selectedSubCategory : true;
+      const matchesStatus = selectedStatus ? item?.status === selectedStatus : true;
       return matchesSearch && matchesSubCategory && matchesStatus;
     });
 
