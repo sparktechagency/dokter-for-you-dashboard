@@ -1,33 +1,9 @@
-import { Table, Button, Tooltip, Select, Input, Tabs } from 'antd';
+import { Table, Button, Tooltip, Select, Input, Tabs, TabsProps } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
 import { useState } from 'react';
 import { useGetDoctorConsultationsQuery } from '../../../../redux/apiSlices/DoctorConsultationSlice';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import moment from 'moment';
-
-// export const data = [
-//   {
-//     key: '1',
-//     sno: '#1239',
-//     regNo: '190653',
-//     consultFor: 'Man problem/Erectile dysfunction',
-//     consultant: 'Dr. Arco Verhoog',
-//     dateTime: '14/11/2022, 10:09',
-//     price: 25.0,
-//     status: 'Loading...',
-//   },
-//   {
-//     key: '2',
-//     sno: '#1238',
-//     regNo: '190653',
-//     consultFor: 'Man problem/Erectile dysfunction',
-//     consultant: 'Dr. Arco Verhoog',
-//     dateTime: '01/11/2022, 14:35',
-//     price: 25.0,
-//     status: 'Reported',
-//   },
-//   // Add more rows here
-// ];
 
 interface ConsultationItem {
   _id: string;
@@ -53,6 +29,7 @@ const DoctorPatientServices = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | undefined>(undefined);
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined);
+  const [countryTab, setCountryTab] = useState<'netherland' | 'europe'>('netherland');
 
   const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
   if (token === null) {
@@ -69,11 +46,16 @@ const DoctorPatientServices = () => {
 
   if (isFetching) return <div>Loading...</div>;
 
-  const consultations = getConsultations?.data;
+  const netherlandConsultations = getConsultations?.data?.consultations?.filter(
+    (item: any) =>
+      item?.userId?.country?.toLowerCase() === 'netherlands' || item?.userId?.country?.toLowerCase() === 'nederland',
+  );
+  const europeConsultations = getConsultations?.data?.consultations?.filter(
+    (item: any) =>
+      item?.userId?.country?.toLowerCase() !== 'netherlands' && item?.userId?.country?.toLowerCase() !== 'nederland',
+  );
 
-  // console.log(consultations);
-
-  const uniqueSubCategories = Array.from(new Set(consultations?.map((item: any) => item?.subCategory?.name)));
+  const uniqueSubCategories = Array.from(new Set(netherlandConsultations?.map((item: any) => item?.subCategory?.name)));
 
   const subCategoryOptions = uniqueSubCategories?.map((subCategory) => ({
     value: subCategory,
@@ -86,15 +68,20 @@ const DoctorPatientServices = () => {
     { value: 'rejected', label: 'Rejected' },
   ];
 
-  const filteredConsultations = consultations
+  const consultationData = countryTab === 'netherland' ? netherlandConsultations : europeConsultations;
+  console.log(consultationData);
+
+  const filteredConsultations = consultationData
     ?.slice()
-    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .filter((item: ConsultationItem) => {
+    ?.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    ?.filter((item: ConsultationItem) => {
       const matchesSearch = item?.subCategory?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase());
       const matchesSubCategory = selectedSubCategory ? item?.subCategory?.name === selectedSubCategory : true;
       const matchesStatus = selectedStatus ? item?.status === selectedStatus : true;
       return matchesSearch && matchesSubCategory && matchesStatus;
     });
+
+  console.log('filteredConsultations', filteredConsultations);
 
   const regularConsultationData = filteredConsultations?.filter(
     (item: ConsultationItem) => item?.consultationType === 'regular',
@@ -109,7 +96,22 @@ const DoctorPatientServices = () => {
     (item: ConsultationItem) => item?.forwardToPartner === true,
   );
 
-  // console.log(consultations);
+  const countryColumn = {
+    title: 'Country',
+    dataIndex: ['userId', 'country'],
+    key: 'country',
+    render: (country: string) => <span>{country || 'N/A'}</span>,
+  };
+
+  const insertCountryColumn = (columns: any[]) => {
+    if (countryTab === 'europe') {
+      const index = columns.findIndex((col) => col.key === '_id');
+      const newColumns = [...columns];
+      newColumns.splice(index + 1, 0, countryColumn);
+      return newColumns;
+    }
+    return columns;
+  };
 
   // Regular Consultation columns
   const regularColumns = [
@@ -420,7 +422,7 @@ const DoctorPatientServices = () => {
       case '1':
         return (
           <Table
-            columns={regularColumns}
+            columns={insertCountryColumn(regularColumns)}
             rowKey="_id"
             dataSource={regularConsultationData}
             pagination={{ pageSize: 10 }}
@@ -428,12 +430,17 @@ const DoctorPatientServices = () => {
         );
       case '2':
         return (
-          <Table columns={videoColumns} rowKey="_id" dataSource={videoConsultationData} pagination={{ pageSize: 10 }} />
+          <Table
+            columns={insertCountryColumn(videoColumns)}
+            rowKey="_id"
+            dataSource={videoConsultationData}
+            pagination={{ pageSize: 10 }}
+          />
         );
       case '3':
         return (
           <Table
-            columns={prescriptionColumns}
+            columns={insertCountryColumn(prescriptionColumns)}
             rowKey="_id"
             dataSource={digitalPrescriptionData}
             pagination={{ pageSize: 10 }}
@@ -442,7 +449,7 @@ const DoctorPatientServices = () => {
       case '4':
         return (
           <Table
-            columns={medicationColumns}
+            columns={insertCountryColumn(medicationColumns)}
             rowKey="_id"
             dataSource={digitalPrescriptionWithOrderData}
             pagination={{ pageSize: 10 }}
@@ -460,6 +467,20 @@ const DoctorPatientServices = () => {
   const handleSubCategoryChange = (value: string) => {
     setSelectedSubCategory(value);
   };
+
+  // Top-level country tabs using Ant Design Tabs
+  const countryTabItems: TabsProps['items'] = [
+    {
+      key: 'netherland',
+      label: 'Service for Netherland',
+      children: null, // Content is below
+    },
+    {
+      key: 'europe',
+      label: 'Service for Europe',
+      children: null,
+    },
+  ];
 
   return (
     <div>
@@ -489,6 +510,14 @@ const DoctorPatientServices = () => {
           />
         </div>
       </div>
+
+      <Tabs
+        activeKey={countryTab}
+        items={countryTabItems}
+        onChange={(key) => setCountryTab(key as 'netherland' | 'europe')}
+        style={{ marginBottom: 16 }}
+      />
+
       <div className="flex justify-start">
         <Tabs
           removeIcon

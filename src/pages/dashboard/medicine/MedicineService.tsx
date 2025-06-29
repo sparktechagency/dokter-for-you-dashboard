@@ -88,11 +88,28 @@ const MedicineService = () => {
       title: 'Dosage',
       dataIndex: 'dosage',
       key: 'dosage',
+      render: (_text: string, record: any) => (
+        <Tooltip title={record?.variations?.map((item: any) => item?.dosage).join(', ')}>
+          <span className="font-mono cursor-pointer">{record?.variations?.length}</span>
+        </Tooltip>
+      ),
     },
     {
-      title: 'Selling Price',
-      dataIndex: 'sellingPrice',
-      key: 'sellingPrice',
+      title: 'Unit Per Boxes',
+      dataIndex: 'unitPerBox',
+      key: 'unitPerBox',
+      render: (_text: string, record: any) => {
+        const unitPerBoxValues = record?.variations
+          ?.map((item: any) => item?.units?.map((unit: any) => unit?.unitPerBox).join(', '))
+          .join(', ');
+        return (
+          <Tooltip title={unitPerBoxValues}>
+            <span className="font-mono cursor-pointer">
+              {record?.variations?.map((item: any) => item?.units?.map((unit: any) => unit?.unitPerBox).join(', '))}
+            </span>
+          </Tooltip>
+        );
+      },
     },
     {
       title: 'Action',

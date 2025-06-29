@@ -1,6 +1,7 @@
 import { Button } from 'antd';
 import { useGetConsultationByIdQuery } from '../../redux/apiSlices/patientServiceSlice';
 import moment from 'moment';
+import { FaDownload } from 'react-icons/fa6';
 
 const topSectionData = {
   title: 'User Services Details',
@@ -45,14 +46,27 @@ const PatientInfoAndQandASection = ({ id }: { id: string }) => {
         <h1 className="text-lg font-medium text-gray-800">{topSectionData.title}</h1>
       </div>
 
-      {topSectionData.loading && (
-        <Button
-          className={`py-5 px-6 text-lg ${consultation?.status === 'pending' ? 'bg-yellow-500' : 'bg-blue-500'}`}
-          type="primary"
-        >
-          {consultation.status}
-        </Button>
-      )}
+      <div className="space-x-2 flex items-center">
+        {topSectionData.loading && (
+          <Button
+            className={`py-5 px-6 text-lg ${consultation?.status === 'pending' ? 'bg-yellow-500' : 'bg-blue-500'}`}
+            type="primary"
+          >
+            {consultation.status}
+          </Button>
+        )}
+
+        {consultation?.status === 'accepted' && (
+          <Button
+            href={`${import.meta.env.VITE_BASE_URL}api/v1/pdf/generate-pdf/${consultation?._id}`}
+            style={{ height: 42 }}
+            type="primary"
+            icon={<FaDownload size={20} />}
+          >
+            Download
+          </Button>
+        )}
+      </div>
     </div>
   );
 

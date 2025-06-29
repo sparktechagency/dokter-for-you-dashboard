@@ -11,6 +11,7 @@ import { MdOutlineCategory, MdOutlineLocalShipping, MdOutlineArticle, MdOutlineD
 import { FiUsers, FiArrowRightCircle, FiArrowLeftCircle } from 'react-icons/fi';
 import { LuLayoutDashboard, LuLogOut } from 'react-icons/lu';
 import { PiSealQuestionBold } from 'react-icons/pi';
+import { FaUserDoctor } from 'react-icons/fa6';
 
 const adminSidebarItems: TSidebarItem[] = [
   {
@@ -136,6 +137,12 @@ const adminSidebarItems: TSidebarItem[] = [
         label: 'FAQ',
         path: 'faq',
         icon: <AiOutlineSearch size={24} />,
+      },
+      {
+        key: 'affiliate-doctor',
+        label: 'Affiliate Doctor',
+        path: 'affiliate-doctor',
+        icon: <FaUserDoctor size={24} />,
       },
     ],
   },

@@ -1,4 +1,4 @@
-import { Table, Button, Tooltip, Popconfirm, Input, Form, DatePicker } from 'antd';
+import { Table, Button, Tooltip, Popconfirm, Input, Form, DatePicker, Select } from 'antd';
 import { useState, useEffect } from 'react';
 import { BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
 import { CiEdit } from 'react-icons/ci';
@@ -13,6 +13,25 @@ import {
 import toast from 'react-hot-toast';
 
 const { RangePicker } = DatePicker;
+// const { Option } = Select;
+
+const countries = [
+  { label: 'Belgium', value: 'Belgium' }, // Belgie/Belgique
+  { label: 'Denmark', value: 'Denmark' }, // Danmark
+  { label: 'Germany', value: 'Germany' }, // Deutschland
+  { label: 'France', value: 'France' },
+  { label: 'Luxembourg', value: 'Luxembourg' }, // Luxemburg/Luxembourg
+  { label: 'Netherlands', value: 'Netherlands' }, // nederland
+  { label: 'Austria', value: 'Austria' }, // Osterreich
+  { label: 'Poland', value: 'Poland' }, // Polska
+  { label: 'Portugal', value: 'Portugal' },
+  { label: 'Romania', value: 'Romania' },
+  { label: 'Switzerland', value: 'Switzerland' }, // Schweiz/Suisse
+  { label: 'Finland', value: 'Finland' }, // Suomi
+  { label: 'Sweden', value: 'Sweden' }, // Sverige
+  { label: 'Lithuania', value: 'Lithuania' }, // Lietuva
+  { label: 'Spain', value: 'Spain' },
+];
 
 const DiscountPrice = () => {
   const [form] = Form.useForm();
@@ -31,6 +50,7 @@ const DiscountPrice = () => {
         country: discountData.country,
         dateRange: [dayjs(discountData.startDate), dayjs(discountData.endDate)],
         amount: discountData.amount,
+        code: discountData.code,
       });
     } else {
       form.resetFields();
@@ -41,7 +61,6 @@ const DiscountPrice = () => {
     return <div>Loading...</div>;
   }
   const discountDataList = discountDetails?.data || [];
-  // console.log(discountDataList);
 
   const handleModalClose = () => {
     setOpenModal(false);
@@ -57,6 +76,12 @@ const DiscountPrice = () => {
       render: (_: any, __: any, index: number) => index + 1,
     },
     {
+      title: 'Discount Code',
+      dataIndex: 'code',
+      key: 'code',
+      render: (code: string) => <span className="font-mono">{code || '35345'}</span>,
+    },
+    {
       title: 'Discount Name',
       dataIndex: 'name',
       key: 'name',
@@ -65,7 +90,7 @@ const DiscountPrice = () => {
       title: 'Discount Country',
       dataIndex: 'country',
       key: 'country',
-      render: (code: string) => <span className="font-mono">{code}</span>,
+      render: (country: string | string[]) => (Array.isArray(country) ? country.join(', ') : country),
     },
     {
       title: 'Start Date',
@@ -81,8 +106,8 @@ const DiscountPrice = () => {
     },
     {
       title: 'Amount (%)',
-      dataIndex: 'amount',
-      key: 'amount',
+      dataIndex: 'parcentage',
+      key: 'parcentage',
       render: (amount: number) => `${amount}%`,
     },
     {
@@ -115,6 +140,7 @@ const DiscountPrice = () => {
       ),
     },
   ];
+
   const handleDelete = async (id: string) => {
     try {
       const response = await deleteDiscount(id).unwrap();
@@ -129,14 +155,17 @@ const DiscountPrice = () => {
   };
 
   const onFinish = async (values: any) => {
-    const { dateRange, amount, ...rest } = values;
+    const { dateRange, amount, country, ...rest } = values;
 
     const formattedValues = {
       ...rest,
       startDate: dateRange[0].format('YYYY-MM-DD'),
       endDate: dateRange[1].format('YYYY-MM-DD'),
-      amount: Number(amount),
+      parcentage: Number(amount),
+      country: Array.isArray(country) ? country : [country],
     };
+
+    console.log(formattedValues);
 
     try {
       if (discountData) {
@@ -172,6 +201,20 @@ const DiscountPrice = () => {
       <Form.Item
         label="Discount Country"
         name="country"
+        rules={[{ required: true, message: 'Please select at least one country' }]}
+      >
+        <Select
+          mode="multiple"
+          allowClear
+          style={{ width: '100%' }}
+          placeholder="Select countries"
+          options={countries}
+        />
+      </Form.Item>
+
+      <Form.Item
+        label="Discount Code"
+        name="discountCode"
         rules={[{ required: true, message: 'Please enter discount code' }]}
       >
         <Input placeholder="Enter Discount Code" className="font-mono" />

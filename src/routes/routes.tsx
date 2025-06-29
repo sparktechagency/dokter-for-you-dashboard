@@ -66,6 +66,7 @@ import ManageQuestions from '../pages/dashboard/manageQuestions/ManageQuestions'
 import PrivateRoute from './PrivetRoute';
 import SetUpPaymentMethod from '../components/ui/DoctorDashboard/SetUpPaymentMethod';
 import DigitalPrescriptionWithOrders from '../components/ui/DoctorDashboard/DoctorPatientServices/DigitalPrescriptionWithOrders';
+import AffiliateDoctors from '../pages/dashboard/affiliateDoctor/AffiliateDoctors';
 
 const router = createBrowserRouter([
   {
@@ -120,6 +121,7 @@ const router = createBrowserRouter([
       { path: 'terms-conditions', element: <TermsAndCondition /> },
       { path: 'user-agreement', element: <UserAgreement /> },
       { path: 'faq', element: <FAQ /> },
+      { path: 'affiliate-doctor', element: <AffiliateDoctors /> },
 
       { path: 'doctors-details', element: <DoctorsDetails /> },
       { path: 'pharmacy-details', element: <PharmacyDetails /> },

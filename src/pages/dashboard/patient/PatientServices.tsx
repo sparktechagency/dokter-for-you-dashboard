@@ -1,8 +1,9 @@
-import { Table, Button, Tooltip, Select, Input, Tabs } from 'antd';
+import { Table, Button, Tooltip, Select, Input, Tabs, TabsProps } from 'antd';
 import { BsEye, BsSearch } from 'react-icons/bs';
 
 import { useState } from 'react';
 import { useGetConsultationsQuery } from '../../../redux/apiSlices/patientServiceSlice';
+import dayjs from 'dayjs';
 
 // Define the interface for consultation items
 interface ConsultationItem {
@@ -17,35 +18,57 @@ interface ConsultationItem {
     firstName: string;
     lastName: string;
   };
+  createdAt: string;
 }
 
 const PatientServices = () => {
+  const [countryTab, setCountryTab] = useState<'netherland' | 'europe'>('netherland');
   const [activeTab, setActiveTab] = useState('1');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | undefined>(undefined);
 
-  // console.log(selectedData);
-
   const { data: getConsultations, isFetching } = useGetConsultationsQuery(undefined);
 
   if (isFetching) return <div>Loading...</div>;
-  const consultationData = getConsultations?.data || [];
-  // console.log(consultationData);
+
+  // console.log(getConsultations);
+
+  const netherlandConsultations = getConsultations?.data?.consultations?.filter(
+    (item: any) =>
+      item?.userId?.country?.toLowerCase() === 'netherlands' || item?.userId?.country?.toLowerCase() === 'nederland',
+  );
+  const europeConsultations = getConsultations?.data?.consultations?.filter(
+    (item: any) =>
+      item?.userId?.country?.toLowerCase() !== 'netherlands' && item?.userId?.country?.toLowerCase() !== 'nederland',
+  );
+
+  const consultationData = countryTab === 'netherland' ? netherlandConsultations || [] : europeConsultations || [];
 
   const subCategories = [...new Set(consultationData?.map((item: any) => item?.subCategory?.name))];
 
-  const regularConsultationData = consultationData?.filter(
-    (item: ConsultationItem) => item?.consultationType === 'regular',
-  );
-  const videoConsultationData = consultationData?.filter(
-    (item: ConsultationItem) => item?.consultationType === 'video',
-  );
-  const digitalPrescriptionData = consultationData?.filter(
-    (item: ConsultationItem) => item?.forwardToPartner === false,
-  );
-  const digitalPrescriptionWithOrderData = consultationData?.filter(
-    (item: ConsultationItem) => item?.forwardToPartner === true,
-  );
+  const regularConsultationData = consultationData
+    ?.filter((item: ConsultationItem) => item?.consultationType === 'regular')
+    .sort(
+      (a: ConsultationItem, b: ConsultationItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+  const videoConsultationData = consultationData
+    ?.filter((item: ConsultationItem) => item?.consultationType === 'video')
+    .sort(
+      (a: ConsultationItem, b: ConsultationItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+  const digitalPrescriptionData = consultationData
+    ?.filter((item: ConsultationItem) => item?.forwardToPartner === false)
+    .sort(
+      (a: ConsultationItem, b: ConsultationItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+  const digitalPrescriptionWithOrderData = consultationData
+    ?.filter((item: ConsultationItem) => item?.forwardToPartner === true)
+    .sort(
+      (a: ConsultationItem, b: ConsultationItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
 
   const filteredConsultationData = (data: any[]) => {
     return data.filter((item: ConsultationItem) => {
@@ -56,6 +79,23 @@ const PatientServices = () => {
       const selectedSubCategoryMatch = selectedSubCategory ? item?.subCategory?.name === selectedSubCategory : true;
       return (subCategoryMatch || doctorNameMatch) && selectedSubCategoryMatch;
     });
+  };
+
+  const countryColumn = {
+    title: 'Country',
+    dataIndex: ['userId', 'country'],
+    key: 'country',
+    render: (country: string) => <span>{country || 'N/A'}</span>,
+  };
+
+  const insertCountryColumn = (columns: any[]) => {
+    if (countryTab === 'europe') {
+      const index = columns.findIndex((col) => col.key === 'regNo');
+      const newColumns = [...columns];
+      newColumns.splice(index + 1, 0, countryColumn);
+      return newColumns;
+    }
+    return columns;
   };
 
   // Regular Consultation columns
@@ -94,9 +134,9 @@ const PatientServices = () => {
     },
     {
       title: 'Date & Time',
-      dataIndex: 'updatedAt',
-      key: 'dateAndTime',
-      render: (updatedAt: string) => new Date(updatedAt).toLocaleString(),
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (createdAt: string) => dayjs(createdAt).format('DD/MM/YYYY, h:mm A'),
     },
     {
       title: 'price',
@@ -378,7 +418,7 @@ const PatientServices = () => {
       case '1':
         return (
           <Table
-            columns={regularColumns}
+            columns={insertCountryColumn(regularColumns)}
             rowKey="_id"
             dataSource={filteredConsultationData(regularConsultationData)}
             pagination={{ pageSize: 10 }}
@@ -387,7 +427,7 @@ const PatientServices = () => {
       case '2':
         return (
           <Table
-            columns={videoColumns}
+            columns={insertCountryColumn(videoColumns)}
             dataSource={filteredConsultationData(videoConsultationData)}
             rowKey="_id"
             pagination={{ pageSize: 10 }}
@@ -396,7 +436,7 @@ const PatientServices = () => {
       case '3':
         return (
           <Table
-            columns={prescriptionColumns}
+            columns={insertCountryColumn(prescriptionColumns)}
             dataSource={filteredConsultationData(digitalPrescriptionData)}
             rowKey="_id"
             pagination={{ pageSize: 10 }}
@@ -405,7 +445,7 @@ const PatientServices = () => {
       case '4':
         return (
           <Table
-            columns={medicationColumns}
+            columns={insertCountryColumn(medicationColumns)}
             dataSource={filteredConsultationData(digitalPrescriptionWithOrderData)}
             rowKey="_id"
             pagination={{ pageSize: 10 }}
@@ -416,12 +456,28 @@ const PatientServices = () => {
     }
   };
 
+  // Top-level country tabs using Ant Design Tabs
+  const countryTabItems: TabsProps['items'] = [
+    {
+      key: 'netherland',
+      label: 'Service for Netherland',
+      children: null, // Content is below
+    },
+    {
+      key: 'europe',
+      label: 'Service for Europe',
+      children: null,
+    },
+  ];
+
   return (
     <div>
+      <div>
+        <h1 className="text-2xl font-semibold text-title">Patient Services</h1>
+      </div>
+
       <div className="flex justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-title">Patient Services</h1>
-        </div>
+        <div></div>
         <div className="mb-4 flex items-center justify-end gap-4">
           <Input
             type="text"
@@ -431,7 +487,6 @@ const PatientServices = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-
           <Select
             placeholder="Consult Subcategory"
             style={{ width: 200 }}
@@ -440,14 +495,20 @@ const PatientServices = () => {
           />
         </div>
       </div>
+
+      <Tabs
+        activeKey={countryTab}
+        items={countryTabItems}
+        onChange={(key) => setCountryTab(key as 'netherland' | 'europe')}
+        style={{ marginBottom: 16 }}
+      />
       <div className="flex justify-start">
+        {/* Existing Tabs for consultation types remain unchanged */}
         <Tabs
           removeIcon
           activeKey={activeTab}
           centered
-          indicator={{
-            size: 0,
-          }}
+          indicator={{ size: 0 }}
           onChange={(key: string) => setActiveTab(key)}
           animated
           items={[
@@ -494,7 +555,6 @@ const PatientServices = () => {
           ]}
         />
       </div>
-
       {getTableContent()}
     </div>
   );

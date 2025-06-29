@@ -23,7 +23,6 @@ const ShippingSetting = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPharmacy, setSelectedPharmacy] = useState<string | undefined>(undefined);
-
   const { data: shippingDetails, isFetching } = useGetShippingDetailsQuery(undefined);
   const { data: pharmacy } = useGetPharmacyQuery(undefined);
   const [createShippingDetails] = useCreateShippingDetailsMutation();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Form, Input, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import Modal from '../../../components/shared/Modal';
@@ -12,12 +12,13 @@ import {
 } from '../../../redux/apiSlices/aboutAndArticleSlice';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import JoditEditor from 'jodit-react';
 
 const ArticleManagement: React.FC = () => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [editArticleData, setEditArticleData] = useState<any>(null);
-
+  const editor = useRef(null);
   const [articleImagePreview, setArticleImagePreview] = useState<string | undefined>(undefined);
 
   const { data: articleData, isFetching } = useGetArticleQuery(undefined);
@@ -91,8 +92,17 @@ const ArticleManagement: React.FC = () => {
         <Input placeholder="Enter Title" />
       </Form.Item>
       <Form.Item label="Description" name="description">
-        <Input.TextArea placeholder="Enter Description" />
+        <JoditEditor
+          config={{
+            readonly: false,
+            height: 400,
+          }}
+          ref={editor}
+          value={form.getFieldValue('description')}
+          onChange={(value) => form.setFieldValue('description', value)}
+        />
       </Form.Item>
+
       <Form.Item
         label="Image"
         name="image"
@@ -135,7 +145,7 @@ const ArticleManagement: React.FC = () => {
   );
 
   return (
-    <div className="">
+    <div className="bg-white h-screen p-6 rounded-md">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Article Management</h1>
         <div className="flex items-center gap-3">
@@ -166,9 +176,10 @@ const ArticleManagement: React.FC = () => {
                     Date: {new Date(article.createdAt).toDateString()}
                   </h3>
                 </div>
-                <p className="text-gray-600 text-justify p-3 rounded-xl shadow-lg h-[300px] overflow-y-scroll bg-white ">
-                  {article.description}
-                </p>
+                <p
+                  className="text-gray-600 text-justify p-3 rounded-xl shadow-lg h-[300px] overflow-y-scroll bg-white "
+                  dangerouslySetInnerHTML={{ __html: article.description }}
+                ></p>
               </div>
               <div className="flex w-[5%] flex-col justify-center items-center shadow-lg rounded-xl gap-3">
                 <div className="">

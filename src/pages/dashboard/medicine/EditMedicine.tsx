@@ -1,26 +1,52 @@
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, Select, Button, Card, Space, InputNumber } from 'antd';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import whiteBg from '../../../assets/whiteBg.png';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetMedicineByIdQuery, useUpdateMedicineMutation } from '../../../redux/apiSlices/medicineSlice';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { useGetConsultationSubcategoryQuery } from '../../../redux/apiSlices/consultationSlice';
+import JoditEditor from 'jodit-react';
+
+interface Unit {
+  unitPerBox: string;
+  sellingPrice: number;
+}
+
+interface Variation {
+  dosage: string;
+  units: Unit[];
+}
+
+const countries = [
+  { label: 'Belgium', value: 'Belgium' },
+  { label: 'Denmark', value: 'Denmark' },
+  { label: 'Germany', value: 'Germany' },
+  { label: 'France', value: 'France' },
+  { label: 'Luxembourg', value: 'Luxembourg' },
+  { label: 'Netherlands', value: 'Netherlands' },
+  { label: 'Austria', value: 'Austria' },
+  { label: 'Poland', value: 'Poland' },
+  { label: 'Portugal', value: 'Portugal' },
+  { label: 'Romania', value: 'Romania' },
+  { label: 'Switzerland', value: 'Switzerland' },
+  { label: 'Finland', value: 'Finland' },
+  { label: 'Sweden', value: 'Sweden' },
+  { label: 'Lithuania', value: 'Lithuania' },
+  { label: 'Spain', value: 'Spain' },
+];
 
 const EditMedication = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
-  const [unitInput, setUnitInput] = useState('');
-  const [dosageInput, setDosageInput] = useState('');
-  const [units, setUnits] = useState<string[]>([]);
-  const [dosages, setDosages] = useState<string[]>([]);
-
+  const [variations, setVariations] = useState<Variation[]>([
+    { dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] },
+  ]);
   const [imgURL, setImgURL] = useState<string | null>(null);
   const [file, setFile] = useState<string | null>(null);
   const navigate = useNavigate();
-  // console.log(subCategories);
 
-  // console.log(id);
   const { data: getMedicineById, isFetching } = useGetMedicineByIdQuery(id);
   const { data: getAllSubCategories, isFetching: isFetchingSubCategories } =
     useGetConsultationSubcategoryQuery(undefined);
@@ -28,12 +54,39 @@ const EditMedication = () => {
 
   const medicineData = getMedicineById?.data;
   const subCategoriesData = getAllSubCategories?.data;
-  // console.log(subCategoriesData);
+
+  const editor = useRef(null);
 
   useEffect(() => {
     if (medicineData) {
-      setUnits(medicineData.unitPerBox || []);
-      setDosages(medicineData.dosage || []);
+      // Convert old structure to new variations structure if needed
+      if (medicineData.variations && Array.isArray(medicineData.variations)) {
+        setVariations(medicineData.variations);
+      } else {
+        // Convert legacy format to new format
+        const legacyVariations: Variation[] = [];
+
+        if (medicineData.dosage && medicineData.unitPerBox) {
+          medicineData.dosage.forEach((dosage: string, index: number) => {
+            const units: Unit[] = [];
+            if (medicineData.unitPerBox[index]) {
+              units.push({
+                unitPerBox: medicineData.unitPerBox[index],
+                sellingPrice: medicineData.sellingPrice || 0,
+              });
+            }
+            legacyVariations.push({
+              dosage,
+              units,
+            });
+          });
+        }
+
+        if (legacyVariations.length > 0) {
+          setVariations(legacyVariations);
+        }
+      }
+
       setImgURL(`${import.meta.env.VITE_BASE_URL}${medicineData?.image}`);
     }
   }, [medicineData]);
@@ -41,60 +94,90 @@ const EditMedication = () => {
   if (isFetching || isFetchingSubCategories) {
     return <div>Loading...</div>;
   }
-  // console.log(medicineData);
 
   const defaultValues = {
     name: medicineData?.name,
     company: medicineData?.company,
     subCategory: medicineData?.subCategory?._id,
     country: medicineData?.country,
-    medicineType: medicineData?.medicineType,
     form: medicineData?.form,
     description: medicineData?.description,
-    purchaseCost: medicineData?.purchaseCost?.toString() || '',
-    tax: medicineData?.tax?.toString() || '',
-    externalExpenses: medicineData?.externalExpenses?.toString() || '',
-    profitMargin: medicineData?.profitMargin?.toString() || '',
-    profitPercentage: medicineData?.profitPercentage?.toString() || '',
-    sellingPrice: medicineData?.sellingPrice?.toString() || '',
-    unitPerBox: medicineData?.unitPerBox || [],
-    dosage: medicineData?.dosage || [],
     image: imgURL,
   };
 
-  const handleAddUnit = () => {
-    setUnits([...units, unitInput]);
-    setUnitInput('');
+  const addVariation = () => {
+    setVariations([...variations, { dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }]);
   };
 
-  const handleRemoveUnit = (index: number) => {
-    setUnits(units.filter((_unit, i) => i !== index));
+  const removeVariation = (variationIndex: number) => {
+    if (variations.length > 1) {
+      setVariations(variations.filter((_, index) => index !== variationIndex));
+    }
   };
 
-  const handleAddDosage = () => {
-    setDosages([...dosages, dosageInput]);
-    setDosageInput('');
+  const updateVariationDosage = (variationIndex: number, dosage: string) => {
+    const newVariations = [...variations];
+    newVariations[variationIndex].dosage = dosage;
+    setVariations(newVariations);
   };
 
-  const handleRemoveDosage = (index: number) => {
-    setDosages(dosages.filter((_dosage, i) => i !== index));
+  const addUnit = (variationIndex: number) => {
+    const newVariations = [...variations];
+    newVariations[variationIndex].units.push({ unitPerBox: '', sellingPrice: 0 });
+    setVariations(newVariations);
+  };
+
+  const removeUnit = (variationIndex: number, unitIndex: number) => {
+    const newVariations = [...variations];
+    if (newVariations[variationIndex].units.length > 1) {
+      newVariations[variationIndex].units = newVariations[variationIndex].units.filter(
+        (_, index) => index !== unitIndex,
+      );
+      setVariations(newVariations);
+    }
+  };
+
+  const updateUnit = (variationIndex: number, unitIndex: number, field: keyof Unit, value: string | number) => {
+    const newVariations = [...variations];
+    newVariations[variationIndex].units[unitIndex][field] = value as never;
+    setVariations(newVariations);
+  };
+
+  const validateVariations = () => {
+    for (let i = 0; i < variations.length; i++) {
+      const variation = variations[i];
+      if (!variation.dosage.trim()) {
+        toast.error(`Please enter dosage for variation ${i + 1}`);
+        return false;
+      }
+      for (let j = 0; j < variation.units.length; j++) {
+        const unit = variation.units[j];
+        if (!unit.unitPerBox.trim()) {
+          toast.error(`Please enter unit per box for variation ${i + 1}, unit ${j + 1}`);
+          return false;
+        }
+        if (unit.sellingPrice <= 0) {
+          toast.error(`Please enter a valid selling price for variation ${i + 1}, unit ${j + 1}`);
+          return false;
+        }
+      }
+    }
+    return true;
   };
 
   const onFinish = async (values: any) => {
+    if (!validateVariations()) {
+      return;
+    }
+
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('company', values.company);
     formData.append('subCategory', values.subCategory);
     formData.append('country', values.country);
-    // formData.append('medicineType', values.medicineType);
     formData.append('form', values.form);
     formData.append('description', values.description || '');
-    units.forEach((unit) => formData.append('unitPerBox[]', unit));
-    dosages.forEach((dosage) => formData.append('dosage[]', dosage));
-    formData.append('purchaseCost', values.purchaseCost);
-    formData.append('tax', values.tax);
-    formData.append('externalExpenses', values.externalExpenses);
-    formData.append('sellingPrice', values.sellingPrice);
+    formData.append('variations', JSON.stringify(variations));
 
     if (file) {
       formData.append('image', file);
@@ -114,11 +197,6 @@ const EditMedication = () => {
     }
   };
 
-  //   const handleImageClick = (imageUrl) => {
-  //     setSelectedImage(imageUrl);
-  //     setIsAddModalVisible(true);
-  //   };
-
   const onChangeImage = (e: any) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith('image/')) {
@@ -135,6 +213,7 @@ const EditMedication = () => {
       <h2 className="text-2xl font-semibold mb-6">Edit Medication</h2>
       <Form form={form} layout="vertical" onFinish={onFinish} initialValues={defaultValues} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left Column */}
           <div className="space-y-4">
             <Form.Item
               label="Medicine Name"
@@ -166,9 +245,16 @@ const EditMedication = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Country" name="country" rules={[{ required: true, message: 'Please enter country' }]}>
-              <Input placeholder="Country" readOnly />
+            <Form.Item label="Country" name="country">
+              <Select placeholder="Select a country" className="w-full">
+                {countries.map((country) => (
+                  <Select.Option key={country.value} value={country.value}>
+                    {country.label}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
+
             <Form.Item label="Image">
               <div className="flex flex-col items-center mb-4">
                 <input onChange={onChangeImage} type="file" id="img" style={{ display: 'none' }} />
@@ -190,77 +276,8 @@ const EditMedication = () => {
             </Form.Item>
           </div>
 
+          {/* Right Column */}
           <div className="space-y-4">
-            <Form.Item
-              label="Units per Box"
-              name="unitPerBox"
-              rules={[{ required: true, message: 'Please enter units per box' }]}
-            >
-              <div className="flex flex-col w-full items-center gap-2">
-                <div className="flex-grow w-full flex items-center gap-2">
-                  <Input
-                    placeholder="50"
-                    className="flex-grow"
-                    value={unitInput}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, '');
-                      return setUnitInput(value);
-                    }}
-                  />
-                  <Button type="primary" className="bg-blue-800 h-[39px]" onClick={() => handleAddUnit()}>
-                    Add
-                  </Button>
-                </div>
-                <div className="flex justify-start flex-wrap gap-2">
-                  {units.map((unit, index) => (
-                    <Button key={index} className="bg-gray-200 border border-gray-400 rounded-md px-2 py-1">
-                      {unit}{' '}
-                      <span onClick={() => handleRemoveUnit(index)} className="ml-2 cursor-pointer">
-                        &times;
-                      </span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            </Form.Item>
-
-            <Form.Item
-              label="Dosages"
-              name="dosage"
-              rules={[{ required: dosages.length === 0, message: 'Please enter dosage amount' }]}
-            >
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <Input
-                    placeholder="Dosage Amount"
-                    value={dosageInput}
-                    onChange={(e) => setDosageInput(e.target.value)}
-                  />
-                  <Button type="primary" className="bg-blue-800 h-[39px]" onClick={handleAddDosage}>
-                    Add
-                  </Button>
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                  {dosages.map((dosage, index) => (
-                    <Button key={index} className="bg-gray-200 border px-2">
-                      {dosage}
-                      <span onClick={() => handleRemoveDosage(index)} className="ml-2 cursor-pointer">
-                        &times;
-                      </span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            </Form.Item>
-
-            {/* <Form.Item
-              label="Medicine Type"
-              name="medicineType"
-              rules={[{ required: true, message: 'Please select medicine type' }]}
-            >
-              <Input placeholder="Medicine Type" />
-            </Form.Item> */}
-
             <Form.Item label="Form" name="form" rules={[{ required: true, message: 'Please select form' }]}>
               <Select
                 placeholder="Select form"
@@ -276,6 +293,7 @@ const EditMedication = () => {
                   { value: 'injection', label: 'Injection' },
                   { value: 'drops', label: 'Drops' },
                   { value: 'spray', label: 'Spray' },
+                  { value: 'creams', label: 'Creams' },
                   { value: 'shampoo', label: 'Shampoo' },
                   { value: 'gel', label: 'Gel' },
                   { value: 'foam', label: 'Foam' },
@@ -284,31 +302,138 @@ const EditMedication = () => {
             </Form.Item>
 
             <Form.Item label="Description" name="description">
-              <Input.TextArea rows={4} placeholder="Description" />
+              <JoditEditor
+                config={{
+                  readonly: false,
+                  height: 400,
+                }}
+                ref={editor}
+                value={form.getFieldValue('description')}
+                onChange={(value) => form.setFieldValue('description', value)}
+              />
             </Form.Item>
           </div>
         </div>
 
-        <div className="grid grid-cols-6 gap-4">
-          <Form.Item name="purchaseCost" label="Purchase Cost">
-            <Input className="w-full" />
-          </Form.Item>
-          <Form.Item name="tax" label="Tax">
-            <Input className="w-full" />
-          </Form.Item>
-          <Form.Item name="externalExpenses" label="External Expenses">
-            <Input className="w-full" />
-          </Form.Item>
+        {/* Variations Section */}
+        <div className="col-span-2 mt-8">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium">Medicine Variations</h3>
+            <Button
+              type="dashed"
+              onClick={addVariation}
+              icon={<PlusOutlined />}
+              className="bg-blue-50 border-blue-300 text-blue-600"
+            >
+              Add Dosage Variation
+            </Button>
+          </div>
 
-          <Form.Item name="sellingPrice" label="Selling Price">
-            <Input className="w-full" />
-          </Form.Item>
+          <div className="space-y-6">
+            {variations.map((variation, variationIndex) => (
+              <Card
+                key={variationIndex}
+                className="border-2 border-gray-200"
+                title={
+                  <div className="flex justify-between items-center">
+                    <span>Dosage Variation {variationIndex + 1}</span>
+                    {variations.length > 1 && (
+                      <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => removeVariation(variationIndex)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        Remove Dosage
+                      </Button>
+                    )}
+                  </div>
+                }
+              >
+                <div className="space-y-4">
+                  {/* Dosage Input */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Dosage <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      placeholder="e.g., 500mg, 250mg, 1g"
+                      value={variation.dosage}
+                      onChange={(e) => updateVariationDosage(variationIndex, e.target.value)}
+                      className="w-full max-w-md"
+                    />
+                  </div>
+
+                  {/* Units Section */}
+                  <div>
+                    <div className="flex justify-between items-center mb-3">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Units & Prices <span className="text-red-500">*</span>
+                      </label>
+                      <Button
+                        type="dashed"
+                        size="small"
+                        onClick={() => addUnit(variationIndex)}
+                        icon={<PlusOutlined />}
+                        className="text-blue-600 border-blue-300"
+                      >
+                        Add Unit
+                      </Button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {variation.units.map((unit, unitIndex) => (
+                        <div key={unitIndex} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                          <div className="flex-1">
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Unit per Box</label>
+                            <Input
+                              placeholder="e.g., 10 tablets, 20 capsules"
+                              value={unit.unitPerBox}
+                              onChange={(e) => updateUnit(variationIndex, unitIndex, 'unitPerBox', e.target.value)}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Selling Price (€)</label>
+                            <InputNumber
+                              placeholder="0.00"
+                              min={0}
+                              step={0.01}
+                              value={unit.sellingPrice}
+                              onChange={(value) => updateUnit(variationIndex, unitIndex, 'sellingPrice', value || 0)}
+                              className="w-full"
+                              formatter={(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                              parser={(value) => parseFloat(value!.replace(/€\s?|(,*)/g, '')) || 0}
+                            />
+                          </div>
+                          {variation.units.length > 1 && (
+                            <Button
+                              type="text"
+                              danger
+                              icon={<DeleteOutlined />}
+                              onClick={() => removeUnit(variationIndex, unitIndex)}
+                              className="text-red-500 hover:text-red-700 flex-shrink-0"
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
 
-        <Form.Item className="flex justify-end">
-          <Button type="primary" htmlType="submit">
-            Update Medication
-          </Button>
+        <Form.Item className="flex justify-end mt-8">
+          <Space>
+            <Button onClick={() => navigate('/medicine-service')} className="h-10 px-6">
+              Cancel
+            </Button>
+            <Button type="primary" htmlType="submit" className="h-10 px-6 bg-blue-600 hover:bg-blue-700">
+              Update Medication
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
     </div>

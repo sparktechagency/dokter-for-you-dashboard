@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Card, Form, Input, Popconfirm, Select, Upload } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { TbTrash } from 'react-icons/tb';
@@ -12,6 +12,7 @@ import {
   useGetConsultationSubcategoryQuery,
 } from '../../../redux/apiSlices/consultationSlice';
 import toast from 'react-hot-toast';
+import JoditEditor from 'jodit-react';
 
 interface Subcategory {
   _id: string;
@@ -23,12 +24,15 @@ interface Subcategory {
   subCategoryName: string;
   image: string;
   details: string;
+  subDetails: string;
 }
 
 const ConsultationSubCategory: React.FC = () => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState<Subcategory | null>(null);
+
+  const editor = useRef(null);
 
   // console.log(editCategoryData);
 
@@ -50,8 +54,8 @@ const ConsultationSubCategory: React.FC = () => {
       form.setFieldsValue({
         name: editCategoryData.name,
         subCategoryName: editCategoryData.subCategoryName,
-
         details: editCategoryData.details,
+        subDetails: editCategoryData.subDetails,
       });
       setCategoryImagePreview(
         editCategoryData?.image.startsWith('http')
@@ -66,11 +70,18 @@ const ConsultationSubCategory: React.FC = () => {
 
   if (isFetching || isFetchingConsultationCategory) return <div>Loading...</div>;
 
-  const onFinish = async (values: { name: string; category: string; image: File; details: string }) => {
+  const onFinish = async (values: {
+    name: string;
+    category: string;
+    image: File;
+    details: string;
+    subDetails: string;
+  }) => {
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('details', values.details);
     formData.append('category', values.category);
+    formData.append('subDetails', values.subDetails);
     // console.log('imageeeeee', editCategoryData);
 
     if (values.image) {
@@ -177,8 +188,21 @@ const ConsultationSubCategory: React.FC = () => {
           )}
         </Upload.Dragger>
       </Form.Item>
+
       <Form.Item label="Details" name="details" rules={[{ required: true, message: 'Please enter the details' }]}>
-        <Input.TextArea rows={12} placeholder="Enter Details" />
+        <Input.TextArea rows={7} placeholder="Enter Details" />
+      </Form.Item>
+
+      <Form.Item label="Sub Details" name="subDetails">
+        <JoditEditor
+          config={{
+            readonly: false,
+            height: 400,
+          }}
+          ref={editor}
+          value={form.getFieldValue('subDetails')}
+          onChange={(value) => form.setFieldValue('subDetails', value)}
+        />
       </Form.Item>
 
       <div className="flex justify-end">
@@ -231,7 +255,7 @@ const ConsultationSubCategory: React.FC = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {consultationSubCategories?.map((subcategory: Subcategory, _index: number) => {
-          // console.log('adthbadhbarhb', `${import.meta.env.VITE_BASE_URL}${subcategory?.image}`);
+          console.log('adthbadhbarhb', `${import.meta.env.VITE_BASE_URL}${subcategory?.image}`);
           return (
             <Card key={_index} className="">
               <div className="flex items-center gap-4 mb-4 rounded-xl relative">

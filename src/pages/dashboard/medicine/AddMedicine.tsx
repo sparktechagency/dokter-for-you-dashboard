@@ -1,71 +1,131 @@
-import { Form, Input, Select, Button, Upload, InputNumber } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { Form, Input, Select, Button, Upload, InputNumber, Card, Space } from 'antd';
+import { UploadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useRef, useState } from 'react';
 import { useGetConsultationSubcategoryQuery } from '../../../redux/apiSlices/consultationSlice';
 import { useCreateMedicineMutation } from '../../../redux/apiSlices/medicineSlice';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import JoditEditor from 'jodit-react';
+
+const countries = [
+  { label: 'Belgium', value: 'Belgium' },
+  { label: 'Denmark', value: 'Denmark' },
+  { label: 'Germany', value: 'Germany' },
+  { label: 'France', value: 'France' },
+  { label: 'Luxembourg', value: 'Luxembourg' },
+  { label: 'Netherlands', value: 'Netherlands' },
+  { label: 'Austria', value: 'Austria' },
+  { label: 'Poland', value: 'Poland' },
+  { label: 'Portugal', value: 'Portugal' },
+  { label: 'Romania', value: 'Romania' },
+  { label: 'Switzerland', value: 'Switzerland' },
+  { label: 'Finland', value: 'Finland' },
+  { label: 'Sweden', value: 'Sweden' },
+  { label: 'Lithuania', value: 'Lithuania' },
+  { label: 'Spain', value: 'Spain' },
+];
+
+interface Unit {
+  unitPerBox: string;
+  sellingPrice: number;
+}
+
+interface Variation {
+  dosage: string;
+  units: Unit[];
+}
 
 const AddMedication = () => {
   const [form] = Form.useForm();
-  const [units, setUnits] = useState<string[]>([]);
-  const [unitInput, setUnitInput] = useState('');
-  const [dosages, setDosages] = useState<string[]>([]);
-  const [dosageInput, setDosageInput] = useState('');
+  const [variations, setVariations] = useState<Variation[]>([
+    { dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] },
+  ]);
   const navigate = useNavigate();
   const { data: getAllSubCategories, isFetching } = useGetConsultationSubcategoryQuery(undefined);
   const [createMedicine] = useCreateMedicineMutation();
+
+  const editor = useRef(null);
 
   if (isFetching) {
     return <div>Loading...</div>;
   }
 
   const subCategories = getAllSubCategories?.data || [];
-  // console.log(subCategories);
 
-  const handleAddUnit = () => {
-    setUnits([...units, unitInput]);
-    setUnitInput('');
+  const addVariation = () => {
+    setVariations([...variations, { dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }]);
   };
 
-  const handleRemoveUnit = (index: number) => {
-    setUnits(units.filter((_unit, i) => i !== index));
+  const removeVariation = (variationIndex: number) => {
+    if (variations.length > 1) {
+      setVariations(variations.filter((_, index) => index !== variationIndex));
+    }
   };
 
-  const handleAddDosage = () => {
-    setDosages([...dosages, dosageInput]);
-    setDosageInput('');
+  const updateVariationDosage = (variationIndex: number, dosage: string) => {
+    const newVariations = [...variations];
+    newVariations[variationIndex].dosage = dosage;
+    setVariations(newVariations);
   };
 
-  const handleRemoveDosage = (index: number) => {
-    setDosages(dosages.filter((_dosage, i) => i !== index));
+  const addUnit = (variationIndex: number) => {
+    const newVariations = [...variations];
+    newVariations[variationIndex].units.push({ unitPerBox: '', sellingPrice: 0 });
+    setVariations(newVariations);
+  };
+
+  const removeUnit = (variationIndex: number, unitIndex: number) => {
+    const newVariations = [...variations];
+    if (newVariations[variationIndex].units.length > 1) {
+      newVariations[variationIndex].units = newVariations[variationIndex].units.filter(
+        (_, index) => index !== unitIndex,
+      );
+      setVariations(newVariations);
+    }
+  };
+
+  const updateUnit = (variationIndex: number, unitIndex: number, field: keyof Unit, value: string | number) => {
+    const newVariations = [...variations];
+    newVariations[variationIndex].units[unitIndex][field] = value as never;
+    setVariations(newVariations);
+  };
+
+  const validateVariations = () => {
+    for (let i = 0; i < variations.length; i++) {
+      const variation = variations[i];
+      if (!variation.dosage.trim()) {
+        toast.error(`Please enter dosage for variation ${i + 1}`);
+        return false;
+      }
+      for (let j = 0; j < variation.units.length; j++) {
+        const unit = variation.units[j];
+        if (!unit.unitPerBox.trim()) {
+          toast.error(`Please enter unit per box for variation ${i + 1}, unit ${j + 1}`);
+          return false;
+        }
+        if (unit.sellingPrice <= 0) {
+          toast.error(`Please enter a valid selling price for variation ${i + 1}, unit ${j + 1}`);
+          return false;
+        }
+      }
+    }
+    return true;
   };
 
   const onFinish = async (values: any) => {
-    if (units.length === 0) {
-      toast.error('Please add at least one unit per box');
-      return;
-    }
-    if (dosages.length === 0) {
-      toast.error('Please add at least one dosage');
+    if (!validateVariations()) {
       return;
     }
 
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('company', 'Apotheek Zaandam Oost');
-    formData.append('country', 'Netherlands');
+    formData.append('country', values.country);
     formData.append('image', values.image?.fileList[0]?.originFileObj || '');
     formData.append('form', values.from);
     formData.append('description', values.description);
-    formData.append('purchaseCost', values.purchaseCost);
-    formData.append('tax', values.tax);
-    formData.append('externalExpenses', values.externalExpenses);
-    formData.append('sellingPrice', values.sellingPrice);
     formData.append('subCategory', values.subCategory);
-
-    units.forEach((unit) => formData.append('unitPerBox', unit));
-    dosages.forEach((dosage) => formData.append('dosage', dosage));
+    formData.append('variations', JSON.stringify(variations));
 
     try {
       const response = await createMedicine(formData).unwrap();
@@ -82,9 +142,9 @@ const AddMedication = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <h2 className="text-2xl font-semibold mb-6">Edit Medication</h2>
+      <h2 className="text-2xl font-semibold mb-6">Add Medication</h2>
       <Form form={form} layout="vertical" onFinish={onFinish} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-lg">
           {/* Left Column */}
           <div className="space-y-4">
             <Form.Item
@@ -95,12 +155,8 @@ const AddMedication = () => {
               <Input placeholder="Ceevit" className="w-full" />
             </Form.Item>
 
-            <Form.Item
-              label="Company"
-              name="company"
-              // rules={[{ required: true, message: 'Please enter company name' }]}
-            >
-              <Input placeholder="Apotheek Zaandam Oost" className="w-full" readOnly />
+            <Form.Item label="Company" name="company">
+              <Input placeholder="Apotheek Zaandam Oost" className="w-full" />
             </Form.Item>
 
             <Form.Item
@@ -118,7 +174,13 @@ const AddMedication = () => {
             </Form.Item>
 
             <Form.Item label="Country" name="country">
-              <Input placeholder="Netherlands" readOnly className="w-full" />
+              <Select placeholder="Select a country" className="w-full">
+                {countries.map((country) => (
+                  <Select.Option key={country.value} value={country.value}>
+                    {country.label}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Form.Item label="Image" name="image" rules={[{ required: true, message: 'Please upload image' }]}>
@@ -133,77 +195,6 @@ const AddMedication = () => {
 
           {/* Right Column */}
           <div className="space-y-4">
-            <Form.Item
-              label="Units per Box"
-              name="unitPerBox"
-              rules={[{ required: true, message: 'Please enter units per box' }]}
-            >
-              <div className="flex flex-col w-full items-center gap-2">
-                <div className="flex-grow w-full flex items-center gap-2">
-                  <Input
-                    placeholder="50"
-                    className="flex-grow"
-                    value={unitInput}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, '');
-                      return setUnitInput(value);
-                    }}
-                  />
-                  <Button type="primary" className="bg-blue-800 h-[39px]" onClick={() => handleAddUnit()}>
-                    Add
-                  </Button>
-                </div>
-                <div className="flex justify-start flex-wrap gap-2">
-                  {units.map((unit, index) => (
-                    <Button key={index} className="bg-gray-200 border border-gray-400 rounded-md px-2 py-1">
-                      {unit}{' '}
-                      <span onClick={() => handleRemoveUnit(index)} className="ml-2 cursor-pointer">
-                        &times;
-                      </span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            </Form.Item>
-
-            <Form.Item
-              label="Dosages"
-              name="dosage"
-              rules={[{ required: true, message: 'Please enter dosage amount' }]}
-            >
-              <div className="flex flex-col w-full items-center gap-2">
-                <div className="flex-grow w-full flex items-center gap-2">
-                  <Input
-                    placeholder="250 gm"
-                    className="flex-grow"
-                    value={dosageInput}
-                    onChange={(e) => setDosageInput(e.target.value)}
-                  />
-                  <Button type="primary" className="bg-blue-800  h-[39px]" onClick={() => handleAddDosage()}>
-                    Add
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {dosages.map((dosage, index) => (
-                    <Button key={index} className="bg-gray-200 border border-gray-400 rounded-md px-2 py-1">
-                      {dosage}{' '}
-                      <span onClick={() => handleRemoveDosage(index)} className="ml-2 cursor-pointer">
-                        &times;
-                      </span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            </Form.Item>
-
-            {/* <Form.Item
-              label="Medicine Type"
-              name="medicineType"
-              rules={[{ required: true, message: 'Please select medicine type' }]}
-            >
-              <Input placeholder="Vitamin C" className="w-full" />
-            </Form.Item> */}
-
             <Form.Item label="From" name="from" rules={[{ required: true, message: 'Please select form' }]}>
               <Select
                 placeholder="Select form"
@@ -228,74 +219,138 @@ const AddMedication = () => {
             </Form.Item>
 
             <Form.Item label="Medicine Description" name="description">
-              <Input.TextArea
-                rows={4}
-                placeholder="Where your health is concerned, we believe you have the right to decide what to do with your body..."
-                className="w-full"
+              <JoditEditor
+                config={{
+                  readonly: false,
+                  height: 400,
+                }}
+                ref={editor}
+                value={form.getFieldValue('description')}
+                onChange={(value) => form.setFieldValue('description', value)}
               />
             </Form.Item>
           </div>
         </div>
 
-        <div className="col-span-2">
-          <h3 className="text-lg font-medium mb-4">Price</h3>
-          <div className="grid grid-cols-6 gap-4">
-            <Form.Item
-              name="purchaseCost"
-              label="Purchase Cost"
-              rules={[{ required: true, message: 'Enter purchase cost' }]}
+        {/* Variations Section */}
+        <div className="col-span-2 mt-8">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium">Medicine Variations</h3>
+            <Button
+              type="dashed"
+              onClick={addVariation}
+              icon={<PlusOutlined />}
+              className="bg-blue-50 border-blue-300 text-blue-600"
             >
-              <InputNumber placeholder="€" className="w-full" min={0} prefix="€" />
-            </Form.Item>
+              Add Dosage Variation
+            </Button>
+          </div>
 
-            <Form.Item name="tax" label="Tax" rules={[{ required: true, message: 'Enter tax amount' }]}>
-              <InputNumber placeholder="€" className="w-full" min={0} prefix="€" />
-            </Form.Item>
+          <div className="space-y-6">
+            {variations.map((variation, variationIndex) => (
+              <Card
+                key={variationIndex}
+                className="border-2 border-gray-200"
+                title={
+                  <div className="flex justify-between items-center">
+                    <span>Dosage Variation {variationIndex + 1}</span>
+                    {variations.length > 1 && (
+                      <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => removeVariation(variationIndex)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        Remove Dosage
+                      </Button>
+                    )}
+                  </div>
+                }
+              >
+                <div className="space-y-4">
+                  {/* Dosage Input */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Dosage <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      placeholder="e.g., 500mg, 250mg, 1g"
+                      value={variation.dosage}
+                      onChange={(e) => updateVariationDosage(variationIndex, e.target.value)}
+                      className="w-full max-w-md"
+                    />
+                  </div>
 
-            <Form.Item
-              name="externalExpenses"
-              label="External Expenses"
-              rules={[{ required: true, message: 'Enter external expenses' }]}
-            >
-              <InputNumber placeholder="€" className="w-full" min={0} prefix="€" />
-            </Form.Item>
+                  {/* Units Section */}
+                  <div>
+                    <div className="flex justify-between items-center mb-3">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Units & Prices <span className="text-red-500">*</span>
+                      </label>
+                      <Button
+                        type="dashed"
+                        size="small"
+                        onClick={() => addUnit(variationIndex)}
+                        icon={<PlusOutlined />}
+                        className="text-blue-600 border-blue-300"
+                      >
+                        Add Unit
+                      </Button>
+                    </div>
 
-            {/* <Form.Item
-              name="profitMargin"
-              label="Profit Margin"
-              rules={[{ required: true, message: 'Enter profit margin' }]}
-            >
-              <InputNumber placeholder="€" className="w-full" min={0} prefix="€" />
-            </Form.Item>
-
-            <Form.Item
-              name={'profitPercentage'}
-              label="Profit Percentage"
-              rules={[{ required: true, message: 'Enter profit percentage' }]}
-            >
-              <InputNumber type="number" placeholder="%" className="w-full" min={0} max={100} />
-            </Form.Item> */}
-            <Form.Item
-              name={'sellingPrice'}
-              label="Selling Price"
-              rules={[{ required: true, message: 'Enter selling price' }]}
-            >
-              <InputNumber type="number" placeholder="€" className="w-full" min={0} />
-            </Form.Item>
+                    <div className="space-y-3">
+                      {variation.units.map((unit, unitIndex) => (
+                        <div key={unitIndex} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                          <div className="flex-1">
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Unit per Box</label>
+                            <Input
+                              placeholder="e.g., 10 tablets, 20 capsules"
+                              value={unit.unitPerBox}
+                              onChange={(e) => updateUnit(variationIndex, unitIndex, 'unitPerBox', e.target.value)}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Selling Price (€)</label>
+                            <InputNumber
+                              placeholder="0.00"
+                              min={0}
+                              step={0.01}
+                              value={unit.sellingPrice}
+                              onChange={(value) => updateUnit(variationIndex, unitIndex, 'sellingPrice', value || 0)}
+                              className="w-full"
+                              formatter={(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                              parser={(value) => parseFloat(value!.replace(/€\s?|(,*)/g, '')) || 0}
+                            />
+                          </div>
+                          {variation.units.length > 1 && (
+                            <Button
+                              type="text"
+                              danger
+                              icon={<DeleteOutlined />}
+                              onClick={() => removeUnit(variationIndex, unitIndex)}
+                              className="text-red-500 hover:text-red-700 flex-shrink-0"
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
 
-        <Form.Item className="flex justify-start">{/*  */}</Form.Item>
-        <Form.Item className="flex justify-end">
-          <Button
-            style={{
-              height: 42,
-            }}
-            type="primary"
-            htmlType="submit"
-          >
-            Upload Medication
-          </Button>
+        <Form.Item className="flex justify-end mt-8">
+          <Space>
+            <Button onClick={() => navigate('/medicine-service')} className="h-10 px-6">
+              Cancel
+            </Button>
+            <Button type="primary" htmlType="submit" className="h-10 px-6 bg-blue-600 hover:bg-blue-700">
+              Upload Medication
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
     </div>

@@ -134,31 +134,35 @@ const MedicationTradeDetails = () => {
             <div className="flex items-center space-x-4">
               <img
                 src={
-                  medicine?._id?.image.startsWith('http')
-                    ? medicine?._id?.image
-                    : `${import.meta.env.VITE_BASE_URL}${medicine?._id?.image}`
+                  medicine?.image.startsWith('http')
+                    ? medicine?.image
+                    : `${import.meta.env.VITE_BASE_URL}${medicine?.image}`
                 }
-                alt="Ceevit"
+                alt={medicine?.name}
                 className="w-20 h-auto rounded"
               />
 
               <div>
-                <h3 className="font-semibold text-lg text-gray-800">{medicine?._id?.name}</h3>
-                <p className="text-sm text-gray-600">{medicine?._id?.medicineType}</p>
+                <h3 className="font-semibold text-lg text-gray-800">{medicine?.name}</h3>
+                {/* <p className="text-sm text-gray-600">{medicine?._id?.medicineType}</p> */}
               </div>
             </div>
 
             <div className="text-center">
               <p className="text-sm text-gray-600">Dosage</p>
-              <p className="font-semibold text-gray-800">{medicine?._id?.dosage}</p>
+              <p className="font-semibold text-gray-800">{medicine?.dosage?.dosage}</p>
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-600">Unit Per Box</p>
-              <p className="font-semibold text-gray-800">{medicine?._id?.unitPerBox}</p>
+              <p className="font-semibold text-gray-800">{medicine?.total?.unitPerBox}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-gray-600">Quantity</p>
+              <p className="font-semibold text-gray-800">{medicine?.count}</p>
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-600">Price</p>
-              <p className="font-semibold text-gray-800">€ {medicine?._id?.sellingPrice || 25}</p>
+              <p className="font-semibold text-gray-800">€ {medicine?.totalPrice}</p>
             </div>
           </div>
         );
@@ -166,16 +170,16 @@ const MedicationTradeDetails = () => {
     </div>
   );
 
-  const subTotal = consultationData?.suggestedMedicine?.reduce((acc: number, medicine: any) => {
-    return acc + medicine?._id?.sellingPrice * medicine?.total;
-  }, 0);
+  // const subTotal = consultationData?.suggestedMedicine?.reduce((acc: number, medicine: any) => {
+  //   return acc + medicine?._id?.sellingPrice * medicine?.total;
+  // }, 0);
 
   const consultationDetailsSection = (
     <div className=" p-4 text-gray text-lg">
       <hr className="my-4" />
       <div className="flex items-center justify-end gap-40">
         <p>Subtotal</p>
-        <p>€{subTotal.toFixed(2)}</p>
+        <p>€{consultationData?.totalPrice.toFixed(2)}</p>
       </div>
       <div className="flex items-center justify-end gap-40">
         <p>Discount</p>
@@ -188,7 +192,7 @@ const MedicationTradeDetails = () => {
       <hr className="my-4" />
       <div className="flex items-center justify-end gap-40 text-[#0A2369]">
         <p>Total</p>
-        <p>€ {(subTotal + 20).toFixed(2)}</p>
+        <p>€ {(consultationData?.totalPrice + 20).toFixed(2)}</p>
       </div>
       <div className="mt-6 text-right">
         <Button

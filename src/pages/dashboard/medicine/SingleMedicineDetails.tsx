@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Tag } from 'antd';
 import { CiEdit } from 'react-icons/ci';
 import BackButton from '../../../components/ui/BackButton';
 import { useParams } from 'react-router-dom';
@@ -8,15 +8,15 @@ const SingleMedicineDetails = () => {
   const { id } = useParams();
   const { data: getMedicineById, isFetching } = useGetMedicineByIdQuery(id);
 
+  const role = localStorage.getItem('role') || sessionStorage.getItem('role');
+  console.log(role);
+
   if (isFetching) {
     return <h1>Loading...</h1>;
   }
 
   const medicineData = getMedicineById?.data;
   // console.log(medicineData);
-
-  const profitPercentage =
-    ((medicineData?.sellingPrice - medicineData?.purchaseCost) / medicineData?.purchaseCost) * 100;
 
   return (
     <div className="bg-white p-6 ">
@@ -29,7 +29,7 @@ const SingleMedicineDetails = () => {
         <div className="w-full md:w-1/3 flex justify-center">
           <img
             src={
-              medicineData?.image.startsWith('http')
+              medicineData?.image?.startsWith('http')
                 ? medicineData?.image
                 : `${import.meta.env.VITE_BASE_URL}${medicineData?.image}`
             }
@@ -70,62 +70,53 @@ const SingleMedicineDetails = () => {
               <tr>
                 <td className="font-medium text-gray-700 align-top">Dosage</td>
 
-                <td>: {medicineData?.dosage}</td>
+                <td>
+                  :{' '}
+                  {medicineData?.variations?.map((item: any) => (
+                    <Tag color="blue" key={item._id}>
+                      {item.dosage}
+                    </Tag>
+                  ))}
+                </td>
               </tr>
               <tr>
                 <td className="font-medium text-gray-700 align-top">Units per Box</td>
 
-                <td>: {medicineData?.unitPerBox}</td>
-              </tr>
-              <tr>
-                <td className="font-medium text-gray-700 align-top">Country</td>
-
-                <td>: {medicineData?.country}</td>
-              </tr>
-              <tr>
-                <td className="font-medium text-gray-700 align-top">Purchase Cost</td>
-
-                <td>: € {medicineData?.purchaseCost}</td>
-              </tr>
-              <tr>
-                <td className="font-medium text-gray-700 align-top">Tax</td>
-
-                <td>: € {medicineData?.tax}</td>
-              </tr>
-              <tr>
-                <td className="font-medium text-gray-700 align-top">External Expenses</td>
-
-                <td>: € {medicineData?.externalExpenses}</td>
-              </tr>
-              <tr>
-                <td className="font-medium text-gray-700 align-top">Profit Margin</td>
-
-                <td>: € {medicineData?.sellingPrice - medicineData?.purchaseCost}</td>
-              </tr>
-              <tr>
-                <td className="font-medium text-gray-700 align-top">Profit Percentage</td>
-
                 <td>
                   :{' '}
-                  {medicineData?.sellingPrice
-                    ? medicineData?.sellingPrice == 0
-                      ? 0
-                      : profitPercentage.toFixed(2) + '%'
-                    : 0}
+                  {medicineData?.variations?.map((item: any) =>
+                    item?.units?.map((unit: any) => (
+                      <Tag color="blue" key={unit._id}>
+                        {unit.unitPerBox}
+                      </Tag>
+                    )),
+                  )}
                 </td>
               </tr>
               <tr>
+                <td className="font-medium text-gray-700 align-top">Country</td>
+                <td>: {medicineData?.country}</td>
+              </tr>
+
+              <tr>
                 <td className="font-medium text-primary align-top">Selling Price</td>
 
-                <td className="text-primary font-semibold">
-                  : € {medicineData?.sellingPrice ? medicineData?.sellingPrice : 0}
+                <td>
+                  :{' '}
+                  {medicineData?.variations?.map((variation: any) =>
+                    variation?.units?.map((unit: any) => (
+                      <Tag color="blue" key={unit._id}>
+                        {variation.dosage} {unit.unitPerBox} - € {unit.sellingPrice}
+                      </Tag>
+                    )),
+                  )}
                 </td>
               </tr>
             </tbody>
           </table>
           <div className="mt-4 text-gray">
             <h3 className="font-semibold">Description</h3>
-            <p className="mt-1">{medicineData?.description}</p>
+            <div dangerouslySetInnerHTML={{ __html: medicineData?.description }}></div>
           </div>
         </div>
       </div>
@@ -133,19 +124,21 @@ const SingleMedicineDetails = () => {
       {/* Description */}
 
       {/* Buttons */}
-      <div className="flex justify-end gap-4 mt-6">
-        <Button
-          href={`/medicine-service/edit-medicine/${medicineData?._id}`}
-          style={{
-            height: 42,
-            borderColor: '#004B56',
-          }}
-          type="default"
-          icon={<CiEdit size={20} />}
-        >
-          Edit
-        </Button>
-      </div>
+      {role === 'ADMIN' && (
+        <div className="flex justify-end gap-4 mt-6">
+          <Button
+            href={`/medicine-service/edit-medicine/${medicineData?._id}`}
+            style={{
+              height: 42,
+              borderColor: '#004B56',
+            }}
+            type="default"
+            icon={<CiEdit size={20} />}
+          >
+            Edit
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

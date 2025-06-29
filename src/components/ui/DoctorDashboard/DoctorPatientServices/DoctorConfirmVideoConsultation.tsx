@@ -130,7 +130,7 @@ const DoctorConfirmVideoConsultation = () => {
       const response = await setScheduleVideoCall({ data, id }).unwrap();
       if (response.success) {
         toast.success('Meeting scheduled successfully.');
-        navigate(`doctor-video-consultation/details/${id}`);
+        navigate(`/doctor-video-consultation/details/${id}`);
       } else {
         toast.error('Failed to schedule meeting.');
       }

@@ -11,7 +11,7 @@ const PharmacyPatientServices = () => {
 
   if (isFetching) return <div>Loading...</div>;
 
-  const consultations = getConsultations?.data;
+  const consultations = getConsultations?.data?.consultations;
   // console.log(consultations);
 
   const forwardToPartnerOptions = consultations
@@ -57,6 +57,11 @@ const PharmacyPatientServices = () => {
           {doctorId?.firstName} {doctorId?.lastName}
         </span>
       ),
+    },
+    {
+      title: 'Country',
+      dataIndex: ['userId', 'country'],
+      key: 'country',
     },
     {
       title: 'Date & Time',

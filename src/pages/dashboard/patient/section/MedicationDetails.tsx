@@ -111,7 +111,7 @@ const MedicationDetails = () => {
   );
 
   const singleMedicinePrice = consultationData?.suggestedMedicine?.map((medicine: any) => {
-    return Number(medicine?._id?.sellingPrice) * Number(medicine?._id?.unitPerBox);
+    return Number((Number(medicine?._id?.sellingPrice) * Number(medicine?._id?.unitPerBox)).toFixed(2));
   });
 
   const medicineDetailsSection = (
@@ -183,7 +183,7 @@ const MedicationDetails = () => {
         <hr className="h-0.5 bg-gray" />
         <div className="flex justify-end gap-20 text-lg font-semibold text-gray-900 mt-2">
           <span>Total -</span>
-          <span className="text-[#0A2369]">€ {singleMedicinePrice + 25 + 20}</span>
+          <span className="text-[#0A2369]">€ {Number(singleMedicinePrice) + 25 + 20}</span>
         </div>
       </div>
 

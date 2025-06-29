@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Form, Input, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import Modal from '../../../components/shared/Modal';
@@ -12,13 +12,14 @@ import {
 } from '../../../redux/apiSlices/aboutAndArticleSlice';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import JoditEditor from 'jodit-react';
 
 const About: React.FC = () => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [editAboutData, setEditAboutData] = useState<any>(null);
   const [categoryImagePreview, setCategoryImagePreview] = useState<string | undefined>(undefined);
-
+  const editor = useRef(null);
   const { data: aboutData, isFetching } = useGetAboutQuery(undefined);
   const [createAbout] = useCreateAboutMutation();
   const [editAbout] = useUpdateAboutMutation();
@@ -57,6 +58,10 @@ const About: React.FC = () => {
         const response = await editAbout({ data: formData, id: editAboutData._id }).unwrap();
         if (response?.success) {
           toast.success('About updated successfully!');
+          form.resetFields();
+          setCategoryImagePreview(undefined);
+          setEditAboutData(null);
+          setOpenModal(false);
         }
       } else {
         const response = await createAbout(formData).unwrap();
@@ -64,6 +69,8 @@ const About: React.FC = () => {
           toast.success('About added successfully!');
           form.resetFields();
           setCategoryImagePreview(undefined);
+          setEditAboutData(null);
+          setOpenModal(false);
         }
       }
     } catch (error) {
@@ -89,9 +96,19 @@ const About: React.FC = () => {
       <Form.Item label="Title" name="title">
         <Input placeholder="Enter Title" />
       </Form.Item>
+
       <Form.Item label="Description" name="description">
-        <Input.TextArea rows={10} placeholder="Enter Description" />
+        <JoditEditor
+          config={{
+            readonly: false,
+            height: 400,
+          }}
+          ref={editor}
+          value={form.getFieldValue('description')}
+          onChange={(value) => form.setFieldValue('description', value)}
+        />
       </Form.Item>
+
       <Form.Item
         label="Image"
         name="image"
@@ -153,7 +170,7 @@ const About: React.FC = () => {
       </div>
       <div>
         <div>
-          {abouts.map((about: any, index: number) => (
+          {abouts?.map((about: any, index: number) => (
             <div key={index}>
               <div className="flex w-full gap-1 justify-between mb-4 border-b-2 pb-5 border-dashed border-slate-300">
                 <h1 className="w-[5%] bg-white rounded-xl shadow-lg flex justify-center font-bold items-center">
@@ -161,7 +178,10 @@ const About: React.FC = () => {
                 </h1>
                 <div className="w-[90%]">
                   <h3 className="text-lg p-3 rounded-xl mb-1 shadow-lg bg-white font-semibold">{about.title}</h3>
-                  <p className="text-gray-600 text-justify p-3 rounded-xl shadow-lg bg-white ">{about.description}</p>
+                  <p
+                    className="text-gray-600 text-justify p-3 rounded-xl shadow-lg bg-white "
+                    dangerouslySetInnerHTML={{ __html: about.description }}
+                  ></p>
                 </div>
                 <div className="flex w-[5%] flex-col justify-center items-center shadow-lg rounded-xl gap-3">
                   <div className="">

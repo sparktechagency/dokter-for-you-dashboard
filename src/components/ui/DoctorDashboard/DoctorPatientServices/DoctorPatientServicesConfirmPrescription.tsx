@@ -17,8 +17,17 @@ interface Medicine {
   medicineType: string;
   image: string;
   description: string;
-  dosage: string[];
-  unitPerBox: string[];
+  variations: [
+    {
+      dosage: string;
+      units: [
+        {
+          unitPerBox: string;
+          sellingPrice: number;
+        },
+      ];
+    },
+  ];
   sellingPrice: number;
   company: string;
   form: string;
@@ -54,13 +63,13 @@ const DoctorPatientServicesConfirmPrescription = () => {
   // console.log(consultation);
 
   const showMedicineDetails = (medicine: Medicine) => {
-    // console.log('adrshsaethaesrhaerh', medicine);
+    console.log('adrshsaethaesrhaerh', medicine);
 
     setSelectedMedicineDetails(medicine);
     setIsModalOpen(true);
     // Reset selections when opening modal
-    setSelectedDosage(medicine.dosage[0]);
-    setSelectedUnit(medicine.unitPerBox[0]);
+    setSelectedDosage('');
+    setSelectedUnit('');
     setQuantity(0);
   };
 
@@ -96,8 +105,8 @@ const DoctorPatientServicesConfirmPrescription = () => {
     setIsModalOpen(false);
     setSelectedMedicineDetails(null);
     // Reset selections when closing modal
-    setSelectedDosage(selectedMedicineDetails?.dosage[0]);
-    setSelectedUnit(selectedMedicineDetails?.unitPerBox[0]);
+    setSelectedDosage('');
+    setSelectedUnit('');
     setQuantity(0);
   };
 
@@ -206,29 +215,29 @@ const DoctorPatientServicesConfirmPrescription = () => {
   const patientChosenMedicines = (
     <div>
       <h1 className="text-2xl my-4 px-5 font-bold text-primary">Patient Wanted Medicines</h1>
-      {consultation?.medicins?.map((item: any, index: number) => {
+      {consultation?.selectedMedicines?.map((item: any, index: number) => {
         return (
           <div key={index} className="bg-slate-100 mx-5 p-8  flex justify-between items-center">
             <img
               className="w-24 h-20 object-cover"
               src={
-                item?._id?.image.startsWith('http')
-                  ? item?._id?.image
-                  : `${import.meta.env.VITE_BASE_URL}${item?._id?.image}`
+                item?.medicineId?.image.startsWith('http')
+                  ? item?.medicineId?.image
+                  : `${import.meta.env.VITE_BASE_URL}${item?.medicineId?.image}`
               }
               alt=""
             />
             <div className="text-center">
-              <h1 className="text-xl font-bold">{item?._id?.name}</h1>
-              <h1 className="text-sm text-gray">{item?._id?.medicineType}</h1>
+              <h1 className="text-xl font-bold">{item?.medicineId?.name}</h1>
+              {/* <h1 className="text-sm text-gray">{item?.medicineId?.medicineType}</h1> */}
             </div>
             <div>
               <h1 className="text-xl font-bold">Dosage</h1>
-              <h1 className="text-sm text-gray">{item?._id?.dosage[0]}</h1>
+              <h1 className="text-sm text-gray">{item?.medicineId?.variations?.[0]?.dosage}</h1>
             </div>
             <div>
               <h1 className="text-xl font-bold">Quantity</h1>
-              <h1 className="text-sm text-gray">{item?.count}</h1>
+              <h1 className="text-sm text-gray">{item?.medicineId?.variations?.[0]?.units?.[0]?.unitPerBox}</h1>
             </div>
           </div>
         );
@@ -237,7 +246,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
   );
 
   const filteredMedicines = medicines?.filter((medicine: any) =>
-    medicine.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    medicine?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase()),
   );
 
   const givePrescription = (
@@ -294,7 +303,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
     </div>
   );
 
-  // console.log(selectedMedicineDetails);
+  console.log('selectedMedicineDetails', selectedMedicineDetails);
 
   const handleAddToCart = ({
     medicine,
@@ -320,7 +329,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
     setSelectedMedicines((prevState) => [...prevState, data]);
   };
   // console.log(selectedMedicines);
-  const selectedMedicine = selectedMedicines.map((medicine) => (
+  const selectedMedicine = selectedMedicines?.map((medicine) => (
     <div
       className="bg-[#e7fbf2] mt-10 border-t-4 border-[#0a2369] p-8 shadow-md flex justify-between items-center"
       key={medicine.medicineId._id}
@@ -399,71 +408,86 @@ const DoctorPatientServicesConfirmPrescription = () => {
               <div>
                 <p className="text-blue-600 font-medium mb-2">{selectedMedicineDetails?.company}</p>
                 <h2 className="text-3xl font-bold mb-1">{selectedMedicineDetails?.name}</h2>
-                {/* <p className="text-xl text-gray-600">{selectedMedicineDetails?.medicineType}</p> */}
-              </div>
-              <div>
                 <p className="text-blue-500 mb-4">{selectedMedicineDetails?.form}</p>
                 <p className="text-gray-600">{selectedMedicineDetails?.description}</p>
               </div>
+
+              {/* Dosage Selection */}
               <div>
                 <p className="font-medium mb-4">Dosage</p>
-                <div className="flex gap-4 mb-4">
-                  {selectedMedicineDetails?.dosage?.map((dosage: any) => (
+                <div className="flex gap-4 mb-4 flex-wrap">
+                  {selectedMedicineDetails?.variations?.map((variation: any) => (
                     <button
-                      key={dosage}
+                      key={variation?.dosage}
                       className={`px-4 py-2 rounded transition-colors ${
-                        selectedDosage === dosage
+                        selectedDosage === variation?._id
                           ? 'bg-[#0a2369] text-white'
                           : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
                       }`}
-                      onClick={() => setSelectedDosage(dosage)}
+                      onClick={() => {
+                        setSelectedDosage(variation?._id);
+                        // Reset unit selection when dosage changes
+                        setSelectedUnit(undefined);
+                      }}
                     >
-                      {dosage}
+                      {variation?.dosage}
                     </button>
                   ))}
                 </div>
                 {selectedDosage ? null : <p className="text-red-600 text-sm">Please select dosage</p>}
               </div>
-              <div>
-                <p className="font-medium mb-4">Select Units per Box</p>
-                <div className="flex gap-4 mb-6">
-                  {selectedMedicineDetails?.unitPerBox?.map((unit: any) => (
+
+              {/* Unit Selection (only shown after dosage is selected) */}
+              {selectedDosage && (
+                <div>
+                  <p className="font-medium mb-4">Select Units per Box</p>
+                  <div className="flex gap-4 mb-6 flex-wrap">
+                    {selectedMedicineDetails?.variations
+                      ?.find((v: any) => v._id === selectedDosage)
+                      ?.units?.map((unit: any) => (
+                        <button
+                          key={unit?.unitPerBox}
+                          className={`px-4 py-2 rounded transition-colors ${
+                            selectedUnit === unit?._id
+                              ? 'bg-[#0a2369] text-white'
+                              : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
+                          }`}
+                          onClick={() => setSelectedUnit(unit?._id)}
+                        >
+                          {unit?.unitPerBox}
+                        </button>
+                      ))}
+                  </div>
+                  {selectedUnit ? null : <p className="text-red-600 text-sm">Please select unit per box</p>}
+                </div>
+              )}
+
+              {/* Quantity Selection (only shown after unit is selected) */}
+              {selectedUnit && (
+                <div>
+                  <p className="font-medium mb-4">Quantity</p>
+                  <div className="flex gap-2 items-center mb-6">
                     <button
-                      key={unit}
-                      className={`px-4 py-2 rounded transition-colors ${
-                        selectedUnit === unit
-                          ? 'bg-[#0a2369] text-white'
-                          : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
-                      }`}
-                      onClick={() => setSelectedUnit(unit)}
+                      className="bg-slate-100 w-20 font-bold hover:bg-gray-200 text-gray-700 px-4 py-2 rounded"
+                      onClick={() => handleQuantityChange('decrease')}
                     >
-                      {unit}
+                      -
                     </button>
-                  ))}
+                    <input type="text" value={quantity} className="w-16 text-center border rounded py-2" readOnly />
+                    <button
+                      className="bg-slate-100 w-20 font-bold hover:bg-gray-200 text-gray-700 px-4 py-2 rounded"
+                      onClick={() => handleQuantityChange('increase')}
+                    >
+                      +
+                    </button>
+                  </div>
+                  {quantity ? null : <p className="text-red-600 text-sm">Please select quantity</p>}
                 </div>
-                {selectedUnit ? null : <p className="text-red-600 text-sm">Please select unit per box</p>}
-              </div>
-              <div>
-                <p className="font-medium mb-4">Contents of the Box</p>
-                <div className="flex gap-2 items-center mb-6">
-                  <button
-                    className="bg-slate-100 w-20 font-bold hover:bg-gray-200 text-gray-700 px-4 py-2 rounded"
-                    onClick={() => handleQuantityChange('decrease')}
-                  >
-                    -
-                  </button>
-                  <input type="text" value={quantity} className="w-16 text-center border rounded py-2" readOnly />
-                  <button
-                    className="bg-slate-100 w-20 font-bold hover:bg-gray-200 text-gray-700 px-4 py-2 rounded"
-                    onClick={() => handleQuantityChange('increase')}
-                  >
-                    +
-                  </button>
-                </div>
-                {quantity ? null : <p className="text-red-600 text-sm">Please select contents of the box</p>}
-              </div>
+              )}
+
+              {/* Add to Cart Button */}
               <button
-                className="w-full bg-[#00865A] hover:bg-[#007a52] text-white py-4 rounded flex items-center justify-center gap-2"
+                className="w-full bg-[#00865A] hover:bg-[#007a52] text-white py-4 rounded flex items-center justify-center gap-2 disabled:bg-gray-400"
                 disabled={!selectedDosage || !selectedUnit || !quantity}
                 onClick={() =>
                   handleAddToCart({
@@ -474,7 +498,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
                   })
                 }
               >
-                <span className="text-xl">+</span> My preference
+                <span className="text-xl">+</span> Add to Prescription
               </button>
             </div>
           </div>

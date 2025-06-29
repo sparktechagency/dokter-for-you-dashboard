@@ -9,6 +9,7 @@ const questionsApi = api.injectEndpoints({
       }),
       providesTags: ['Question'],
     }),
+
     createQuestion: builder.mutation({
       query: ({ data }) => {
         // console.log('slice', data);
@@ -20,6 +21,43 @@ const questionsApi = api.injectEndpoints({
       },
       invalidatesTags: ['Question'],
     }),
+
+    createBasicQuestion: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: '/medical-question/create',
+          method: 'POST',
+          body: data,
+        };
+      },
+      invalidatesTags: ['Question'],
+    }),
+
+    getBasicQuestionBySubCategory: builder.query({
+      query: (id) => ({
+        url: `/medical-question?subCategory=${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['Question'],
+    }),
+
+    updateBasicQuestion: builder.mutation({
+      query: ({ data, id }: { data: any; id: any }) => ({
+        url: `/medical-question/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['Question'],
+    }),
+
+    deleteBasicQuestion: builder.mutation({
+      query: (id) => ({
+        url: `/medical-question/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Question'],
+    }),
+
     updateQuestion: builder.mutation({
       query: ({ data, id }: { data: any; id: any }) => ({
         url: `/question/${id}`,
@@ -28,6 +66,7 @@ const questionsApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Question'],
     }),
+
     deleteQuestion: builder.mutation({
       query: (id) => ({
         url: `/question/${id}`,
@@ -43,4 +82,8 @@ export const {
   useCreateQuestionMutation,
   useUpdateQuestionMutation,
   useDeleteQuestionMutation,
+  useCreateBasicQuestionMutation,
+  useUpdateBasicQuestionMutation,
+  useDeleteBasicQuestionMutation,
+  useGetBasicQuestionBySubCategoryQuery,
 } = questionsApi;

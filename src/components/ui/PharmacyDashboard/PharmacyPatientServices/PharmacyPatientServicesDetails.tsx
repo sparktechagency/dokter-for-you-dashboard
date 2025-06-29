@@ -24,7 +24,7 @@ const PharmacyPatientServicesDetails = () => {
   if (isFetching) return <div>Loading...</div>;
 
   const consultation = getConsultationById?.data;
-  // console.log(consultation);
+  console.log(consultation);
 
   const showRejectModal = () => {
     setIsRejectModalVisible(true);
@@ -78,30 +78,24 @@ const PharmacyPatientServicesDetails = () => {
           <div key={index} className="bg-[#e7fbf2] mx-5 p-8  flex justify-between items-center">
             <img
               className="w-24 h-20 object-cover"
-              src={
-                item?._id?.image.startsWith('http')
-                  ? item?._id?.image
-                  : `${import.meta.env.VITE_BASE_URL}${item?._id?.image}`
-              }
+              src={item?.image.startsWith('http') ? item?.image : `${import.meta.env.VITE_BASE_URL}${item?.image}`}
               alt=""
             />
             <div className="text-center">
-              <h1 className="text-xl font-bold">{item?._id?.name}</h1>
-              <h1 className="text-sm text-gray">{item?._id?.medicineType}</h1>
+              <h1 className="text-xl font-bold">{item?.name}</h1>
+              {/* <h1 className="text-sm text-gray">{item?.medicineType}</h1> */}
             </div>
             <div>
               <h1 className="text-xl font-bold">Dosage</h1>
-              <h1 className="text-sm text-gray">{item?.dosage}</h1>
+              <h1 className="text-sm text-gray">{item?.dosage?.dosage || 'N/A'}</h1>
             </div>
             <div>
               <h1 className="text-xl font-bold">Quantity</h1>
-              <h1 className="text-sm text-gray">{item?.count}</h1>
+              <h1 className="text-sm text-gray">{item?.count || 'N/A'}</h1>
             </div>
             <div>
               <h1 className="text-xl font-bold">Price</h1>
-              <h1 className="text-sm text-gray">
-                € {(item?._id?.sellingPrice * item?.total * item?.count).toFixed(2)}
-              </h1>
+              <h1 className="text-sm text-gray">€ {item?.totalPrice.toFixed(2) || 'N/A'}</h1>
             </div>
           </div>
         );
