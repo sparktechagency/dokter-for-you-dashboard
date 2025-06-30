@@ -124,6 +124,7 @@ const AddMedication = () => {
     formData.append('image', values.image?.fileList[0]?.originFileObj || '');
     formData.append('form', values.from);
     formData.append('description', values.description);
+    formData.append('subDescription', values.subDescription);
     formData.append('subCategory', values.subCategory);
     formData.append('variations', JSON.stringify(variations));
 
@@ -191,10 +192,7 @@ const AddMedication = () => {
                 </div>
               </Upload>
             </Form.Item>
-          </div>
 
-          {/* Right Column */}
-          <div className="space-y-4">
             <Form.Item label="From" name="from" rules={[{ required: true, message: 'Please select form' }]}>
               <Select
                 placeholder="Select form"
@@ -217,7 +215,10 @@ const AddMedication = () => {
                 ]}
               />
             </Form.Item>
+          </div>
 
+          {/* Right Column */}
+          <div className="space-y-4">
             <Form.Item label="Medicine Description" name="description">
               <JoditEditor
                 config={{
@@ -227,6 +228,17 @@ const AddMedication = () => {
                 ref={editor}
                 value={form.getFieldValue('description')}
                 onChange={(value) => form.setFieldValue('description', value)}
+              />
+            </Form.Item>
+            <Form.Item required={false} label="Sub Description" name="subDescription">
+              <JoditEditor
+                config={{
+                  readonly: false,
+                  height: 400,
+                }}
+                ref={editor}
+                value={form.getFieldValue('subDescription')}
+                onChange={(value) => form.setFieldValue('subDescription', value)}
               />
             </Form.Item>
           </div>

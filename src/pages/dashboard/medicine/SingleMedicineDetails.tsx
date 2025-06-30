@@ -118,6 +118,12 @@ const SingleMedicineDetails = () => {
             <h3 className="font-semibold">Description</h3>
             <div dangerouslySetInnerHTML={{ __html: medicineData?.description }}></div>
           </div>
+          {medicineData?.subDescription && (
+            <div className="mt-4 text-gray">
+              <h3 className="font-semibold">Sub Description</h3>
+              <div dangerouslySetInnerHTML={{ __html: medicineData?.subDescription }}></div>
+            </div>
+          )}
         </div>
       </div>
 

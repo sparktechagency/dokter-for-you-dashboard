@@ -94,7 +94,7 @@ const EditMedication = () => {
   if (isFetching || isFetchingSubCategories) {
     return <div>Loading...</div>;
   }
-
+  // console.log(medicineData);
   const defaultValues = {
     name: medicineData?.name,
     company: medicineData?.company,
@@ -102,6 +102,7 @@ const EditMedication = () => {
     country: medicineData?.country,
     form: medicineData?.form,
     description: medicineData?.description,
+    subDescription: medicineData?.subDescription,
     image: imgURL,
   };
 
@@ -177,6 +178,7 @@ const EditMedication = () => {
     formData.append('country', values.country);
     formData.append('form', values.form);
     formData.append('description', values.description || '');
+    formData.append('subDescription', values.subDescription || '');
     formData.append('variations', JSON.stringify(variations));
 
     if (file) {
@@ -274,10 +276,7 @@ const EditMedication = () => {
                 <p className="mt-2 text-sm text-gray-500">Click to upload image</p>
               </div>
             </Form.Item>
-          </div>
 
-          {/* Right Column */}
-          <div className="space-y-4">
             <Form.Item label="Form" name="form" rules={[{ required: true, message: 'Please select form' }]}>
               <Select
                 placeholder="Select form"
@@ -300,7 +299,10 @@ const EditMedication = () => {
                 ]}
               />
             </Form.Item>
+          </div>
 
+          {/* Right Column */}
+          <div className="space-y-4">
             <Form.Item label="Description" name="description">
               <JoditEditor
                 config={{
@@ -310,6 +312,17 @@ const EditMedication = () => {
                 ref={editor}
                 value={form.getFieldValue('description')}
                 onChange={(value) => form.setFieldValue('description', value)}
+              />
+            </Form.Item>
+            <Form.Item label="Sub Description" name="subDescription">
+              <JoditEditor
+                config={{
+                  readonly: false,
+                  height: 400,
+                }}
+                ref={editor}
+                value={form.getFieldValue('subDescription')}
+                onChange={(value) => form.setFieldValue('subDescription', value)}
               />
             </Form.Item>
           </div>
