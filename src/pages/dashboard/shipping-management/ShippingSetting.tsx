@@ -129,7 +129,7 @@ const ShippingSetting = () => {
       const response = await deleteShippingDetails(id).unwrap();
       if (response?.success) {
         toast.success('Shipping details deleted successfully!');
-        // refetchShippingDetails();
+        refetchShippingDetails();
       } else {
         toast.error(response?.message || 'Failed to delete shipping details!');
       }
