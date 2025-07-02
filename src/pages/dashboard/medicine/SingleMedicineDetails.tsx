@@ -87,7 +87,7 @@ const SingleMedicineDetails = () => {
                   {medicineData?.variations?.map((item: any) =>
                     item?.units?.map((unit: any) => (
                       <Tag color="blue" key={unit._id}>
-                        {unit.unitPerBox}
+                        {item.dosage} - {unit.unitPerBox}
                       </Tag>
                     )),
                   )}

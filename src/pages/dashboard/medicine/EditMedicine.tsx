@@ -44,7 +44,7 @@ const EditMedication = () => {
     { dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] },
   ]);
   const [imgURL, setImgURL] = useState<string | null>(null);
-  const [file, setFile] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
   const { data: getMedicineById, isFetching } = useGetMedicineByIdQuery(id);
@@ -59,52 +59,30 @@ const EditMedication = () => {
 
   useEffect(() => {
     if (medicineData) {
-      // Convert old structure to new variations structure if needed
-      if (medicineData.variations && Array.isArray(medicineData.variations)) {
-        setVariations(medicineData.variations);
-      } else {
-        // Convert legacy format to new format
-        const legacyVariations: Variation[] = [];
+      // Set form values including variations
+      const { image, ...restData } = medicineData;
+      setImgURL(image ? `${import.meta.env.VITE_BASE_URL}${image}` : null);
 
-        if (medicineData.dosage && medicineData.unitPerBox) {
-          medicineData.dosage.forEach((dosage: string, index: number) => {
-            const units: Unit[] = [];
-            if (medicineData.unitPerBox[index]) {
-              units.push({
-                unitPerBox: medicineData.unitPerBox[index],
-                sellingPrice: medicineData.sellingPrice || 0,
-              });
-            }
-            legacyVariations.push({
-              dosage,
-              units,
-            });
-          });
-        }
+      // Convert data to variations format if needed
+      const variationsData = medicineData.variations ||
+        medicineData.dosage?.map((dosage: string, index: number) => ({
+          dosage,
+          units: [
+            {
+              unitPerBox: medicineData.unitPerBox?.[index] || '',
+              sellingPrice: medicineData.sellingPrice?.[index] || 0,
+            },
+          ],
+        })) || [{ dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }];
 
-        if (legacyVariations.length > 0) {
-          setVariations(legacyVariations);
-        }
-      }
+      setVariations(variationsData);
 
-      setImgURL(`${import.meta.env.VITE_BASE_URL}${medicineData?.image}`);
+      form.setFieldsValue({
+        ...restData,
+        subCategory: medicineData.subCategory?._id,
+      });
     }
-  }, [medicineData]);
-
-  if (isFetching || isFetchingSubCategories) {
-    return <div>Loading...</div>;
-  }
-  // console.log(medicineData);
-  const defaultValues = {
-    name: medicineData?.name,
-    company: medicineData?.company,
-    subCategory: medicineData?.subCategory?._id,
-    country: medicineData?.country,
-    form: medicineData?.form,
-    description: medicineData?.description,
-    subDescription: medicineData?.subDescription,
-    image: imgURL,
-  };
+  }, [medicineData, form]);
 
   const addVariation = () => {
     setVariations([...variations, { dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }]);
@@ -140,7 +118,7 @@ const EditMedication = () => {
 
   const updateUnit = (variationIndex: number, unitIndex: number, field: keyof Unit, value: string | number) => {
     const newVariations = [...variations];
-    newVariations[variationIndex].units[unitIndex][field] = value as never;
+    (newVariations[variationIndex].units[unitIndex] as any)[field] = value;
     setVariations(newVariations);
   };
 
@@ -166,6 +144,16 @@ const EditMedication = () => {
     return true;
   };
 
+  const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile?.type.startsWith('image/')) {
+      setImgURL(URL.createObjectURL(selectedFile));
+      setFile(selectedFile);
+    } else {
+      toast.error('Please upload a valid image file.');
+    }
+  };
+
   const onFinish = async (values: any) => {
     if (!validateVariations()) {
       return;
@@ -173,7 +161,7 @@ const EditMedication = () => {
 
     const formData = new FormData();
     formData.append('name', values.name);
-    formData.append('company', values.company);
+    formData.append('company', values.company || 'Apotheek Zaandam Oost');
     formData.append('subCategory', values.subCategory);
     formData.append('country', values.country);
     formData.append('form', values.form);
@@ -199,22 +187,15 @@ const EditMedication = () => {
     }
   };
 
-  const onChangeImage = (e: any) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile && selectedFile.type.startsWith('image/')) {
-      const imgUrl = URL.createObjectURL(selectedFile);
-      setImgURL(imgUrl);
-      setFile(selectedFile);
-    } else {
-      toast.error('Please upload a valid image file.');
-    }
-  };
+  if (isFetching || isFetchingSubCategories) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-6">
       <h2 className="text-2xl font-semibold mb-6">Edit Medication</h2>
-      <Form form={form} layout="vertical" onFinish={onFinish} initialValues={defaultValues} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <Form form={form} layout="vertical" onFinish={onFinish} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-lg">
           {/* Left Column */}
           <div className="space-y-4">
             <Form.Item
@@ -230,7 +211,7 @@ const EditMedication = () => {
               name="company"
               rules={[{ required: true, message: 'Please enter company name' }]}
             >
-              <Input placeholder="Company Name" readOnly />
+              <Input placeholder="Company Name" />
             </Form.Item>
 
             <Form.Item
@@ -264,7 +245,7 @@ const EditMedication = () => {
                   htmlFor="img"
                   className="relative w-full h-80 cursor-pointer border border-gray-300 bg-white bg-cover bg-center shadow-sm hover:shadow-lg transition-shadow duration-300"
                   style={{
-                    backgroundImage: `url(${imgURL ? imgURL : whiteBg})`,
+                    backgroundImage: `url(${imgURL || whiteBg})`,
                   }}
                 >
                   {!imgURL && (
@@ -308,6 +289,9 @@ const EditMedication = () => {
                 config={{
                   readonly: false,
                   height: 400,
+                  style: {
+                    padding: '0 35px',
+                  },
                 }}
                 ref={editor}
                 value={form.getFieldValue('description')}
@@ -319,6 +303,9 @@ const EditMedication = () => {
                 config={{
                   readonly: false,
                   height: 400,
+                  style: {
+                    padding: '0 35px',
+                  },
                 }}
                 ref={editor}
                 value={form.getFieldValue('subDescription')}

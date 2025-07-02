@@ -198,6 +198,9 @@ const ConsultationSubCategory: React.FC = () => {
           config={{
             readonly: false,
             height: 400,
+            style: {
+              padding: '0 35px',
+            },
           }}
           ref={editor}
           value={form.getFieldValue('subDetails')}

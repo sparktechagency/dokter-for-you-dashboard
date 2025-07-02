@@ -4,14 +4,14 @@ const shippingAndDiscountApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getShippingDetails: builder.query({
       query: () => ({
-        url: '/shippingdetails',
+        url: '/shipping',
         method: 'GET',
       }),
       providesTags: ['ShippingDetails'],
     }),
     createShippingDetails: builder.mutation({
       query: (data) => ({
-        url: '/shippingdetails/create',
+        url: '/shipping',
         method: 'POST',
         body: data,
       }),
@@ -19,7 +19,7 @@ const shippingAndDiscountApi = api.injectEndpoints({
     }),
     updateShippingDetails: builder.mutation({
       query: ({ data, id }: { data: any; id: any }) => ({
-        url: `/shippingdetails/${id}`,
+        url: `/shipping/${id}`,
         method: 'PATCH',
         body: data,
       }),
@@ -27,7 +27,7 @@ const shippingAndDiscountApi = api.injectEndpoints({
     }),
     deleteShippingDetails: builder.mutation({
       query: (id) => ({
-        url: `/shippingdetails/${id}`,
+        url: `/shipping/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['ShippingDetails'],

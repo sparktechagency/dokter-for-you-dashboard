@@ -1,71 +1,143 @@
-import { Table, Button, Tooltip, Popconfirm, Select, Input, Form } from 'antd';
+import { Table, Button, Tooltip, Popconfirm, Select, Input, Form, Tag, Spin } from 'antd';
 import { useState, useEffect } from 'react';
 import { BsEye, BsPlusLg, BsSearch, BsTrash } from 'react-icons/bs';
 import { CiEdit } from 'react-icons/ci';
 import Modal from '../../../components/shared/Modal';
 import { BiEuro } from 'react-icons/bi';
-
+import toast from 'react-hot-toast';
 import {
   useCreateShippingDetailsMutation,
   useDeleteShippingDetailsMutation,
   useGetShippingDetailsQuery,
   useUpdateShippingDetailsMutation,
 } from '../../../redux/apiSlices/shippingAndDiscountSlice';
-import toast from 'react-hot-toast';
 import { useGetPharmacyQuery } from '../../../redux/apiSlices/userSlice';
+
+interface Country {
+  label: string;
+  value: string;
+}
+
+interface ShippingDetail {
+  _id: string;
+  country: string[];
+  cost: number;
+}
+
+interface Pharmacy {
+  _id: string;
+  pharmecyName: string;
+}
+
+const countries: Country[] = [
+  { label: 'Belgium', value: 'Belgium' },
+  { label: 'Denmark', value: 'Denmark' },
+  { label: 'Germany', value: 'Germany' },
+  { label: 'France', value: 'France' },
+  { label: 'Luxembourg', value: 'Luxembourg' },
+  { label: 'Netherlands', value: 'Netherlands' },
+  { label: 'Austria', value: 'Austria' },
+  { label: 'Poland', value: 'Poland' },
+  { label: 'Portugal', value: 'Portugal' },
+  { label: 'Romania', value: 'Romania' },
+  { label: 'Switzerland', value: 'Switzerland' },
+  { label: 'Finland', value: 'Finland' },
+  { label: 'Sweden', value: 'Sweden' },
+  { label: 'Lithuania', value: 'Lithuania' },
+  { label: 'Spain', value: 'Spain' },
+];
 
 const ShippingSetting = () => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
-  const [viewShippingProfile, setViewShippingProfile] = useState<any>(null);
-  const [shippingProfile, setShippingProfile] = useState<any>(null);
+  const [viewShippingProfile, setViewShippingProfile] = useState<ShippingDetail | null>(null);
+  const [shippingProfile, setShippingProfile] = useState<ShippingDetail | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPharmacy, setSelectedPharmacy] = useState<string | undefined>(undefined);
-  const { data: shippingDetails, isFetching } = useGetShippingDetailsQuery(undefined);
-  const { data: pharmacy } = useGetPharmacyQuery(undefined);
-  const [createShippingDetails] = useCreateShippingDetailsMutation();
-  const [updateShippingDetails] = useUpdateShippingDetailsMutation();
-  const [deleteShippingDetails] = useDeleteShippingDetailsMutation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const {
+    data: shippingDetails,
+    isFetching: isFetchingShippingDetails,
+    error: shippingError,
+    refetch: refetchShippingDetails,
+  } = useGetShippingDetailsQuery(undefined);
+
+  const { data: pharmacy, error: pharmacyError } = useGetPharmacyQuery(undefined);
+
+  const [createShippingDetails, { error: createError }] = useCreateShippingDetailsMutation();
+  const [updateShippingDetails, { error: updateError }] = useUpdateShippingDetailsMutation();
+  const [deleteShippingDetails, { error: deleteError }] = useDeleteShippingDetailsMutation();
+
+  useEffect(() => {
+    if (shippingError) {
+      toast.error('Failed to load shipping details. Please try again later.');
+      console.error('Shipping details error:', shippingError);
+    }
+    if (pharmacyError) {
+      toast.error('Failed to load pharmacy data. Please try again later.');
+      console.error('Pharmacy error:', pharmacyError);
+    }
+    if (createError) {
+      toast.error('Failed to create shipping details. Please try again.');
+      console.error('Create error:', createError);
+    }
+    if (updateError) {
+      toast.error('Failed to update shipping details. Please try again.');
+      console.error('Update error:', updateError);
+    }
+    if (deleteError) {
+      toast.error('Failed to delete shipping details. Please try again.');
+      console.error('Delete error:', deleteError);
+    }
+  }, [shippingError, pharmacyError, createError, updateError, deleteError]);
 
   useEffect(() => {
     if (shippingProfile) {
       form.setFieldsValue({
-        pharmacyName: shippingProfile.pharmacyName,
-        pharmacyAddress: shippingProfile.pharmacyAddress,
-        selectedArea: shippingProfile.selectedArea,
-        shippingPrice: shippingProfile.shippingPrice,
+        country: shippingProfile.country,
+        cost: shippingProfile.cost,
       });
     } else {
       form.resetFields();
     }
   }, [shippingProfile, form]);
 
-  if (isFetching) {
-    return <div>Loading...</div>;
+  if (isFetchingShippingDetails) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Spin size="large" />
+      </div>
+    );
   }
-  const shippingData = shippingDetails?.data || [];
-  const pharmacyList = pharmacy?.data || [];
-  // console.log(shippingData);
 
-  const filteredShippingData = shippingData.filter((item: any) => {
-    const matchesSearch = item?.selectedArea.toLowerCase().includes(searchQuery.toLowerCase());
+  const shippingData: ShippingDetail[] = shippingDetails?.data || [];
+  const pharmacyList: Pharmacy[] = pharmacy?.data || [];
 
-    const matchesPharmacy = selectedPharmacy ? item.pharmecy?._id === selectedPharmacy : true;
+  const filteredShippingData = shippingData.filter((item: ShippingDetail) => {
+    const matchesSearch = item?.country?.some((country) => country.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesPharmacy = selectedPharmacy ? true : true;
     return matchesSearch && matchesPharmacy;
   });
 
   const handleDelete = async (id: string) => {
+    setIsDeleting(true);
     try {
       const response = await deleteShippingDetails(id).unwrap();
       if (response?.success) {
         toast.success('Shipping details deleted successfully!');
+        // refetchShippingDetails();
       } else {
-        toast.error('Failed to delete shipping details!');
+        toast.error(response?.message || 'Failed to delete shipping details!');
       }
     } catch (error) {
-      // console.log(error);
+      toast.error('An error occurred while deleting shipping details.');
+      console.error('Delete error:', error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -77,32 +149,27 @@ const ShippingSetting = () => {
       render: (_: any, __: any, index: number) => index + 1,
     },
     {
-      title: 'Pharmacy Name',
-      dataIndex: 'pharmecy',
-      key: 'pharmacyName',
-      render: (_: any, record: any) => record?.pharmecy?.pharmecyName,
+      title: 'Selected Countries',
+      dataIndex: 'country',
+      key: 'country',
+      render: (countries: string[]) => (
+        <div className="flex flex-wrap gap-1">
+          {countries?.map((country) => (
+            <Tag key={country}>{country}</Tag>
+          ))}
+        </div>
+      ),
     },
     {
-      title: 'Pharmacy Address',
-      dataIndex: 'pharmacyAddress',
-      key: 'pharmacyAddress',
-      render: (_: any, record: any) => record?.pharmecy?.location,
-    },
-    {
-      title: 'Selected Area',
-      dataIndex: 'selectedArea',
-      key: 'selectedArea',
-    },
-    {
-      title: 'Shipping Price',
-      dataIndex: 'shippingPrice',
-      key: 'shippingPrice',
-      render: (price: number) => `€ ${price.toFixed(2)}`,
+      title: 'Shipping Cost',
+      dataIndex: 'cost',
+      key: 'cost',
+      render: (cost: number) => `€ ${cost.toFixed(2)}`,
     },
     {
       title: 'Action',
       key: 'action',
-      render: (_: any, record: any) => (
+      render: (_: any, record: ShippingDetail) => (
         <div className="flex gap-2">
           <Tooltip title="View">
             <Button
@@ -118,7 +185,7 @@ const ShippingSetting = () => {
             <Button
               onClick={() => {
                 setShippingProfile(record);
-                setIsEditMode(true); // Enable edit mode
+                setIsEditMode(true);
                 setOpenModal(true);
               }}
               type="text"
@@ -132,8 +199,9 @@ const ShippingSetting = () => {
               okText="Yes"
               cancelText="No"
               onConfirm={() => handleDelete(record._id)}
+              okButtonProps={{ loading: isDeleting }}
             >
-              <Button type="text" icon={<BsTrash size={18} className="text-red-500" />} />
+              <Button type="text" icon={<BsTrash size={18} className="text-red-500" />} loading={isDeleting} />
             </Popconfirm>
           </Tooltip>
         </div>
@@ -142,15 +210,22 @@ const ShippingSetting = () => {
   ];
 
   const onFinish = async (values: any) => {
-    values.shippingPrice = Number(values.shippingPrice);
+    values.shippingCost = Number(values.shippingCost);
+    setIsSubmitting(true);
 
     try {
       if (isEditMode && shippingProfile) {
-        const response = await updateShippingDetails({ data: values, id: shippingProfile._id }).unwrap();
+        const response = await updateShippingDetails({
+          data: values,
+          id: shippingProfile._id,
+        }).unwrap();
+
         if (response?.success) {
           toast.success('Shipping details updated successfully!');
           setOpenModal(false);
           setShippingProfile(null);
+        } else {
+          toast.error(response?.message || 'Failed to update shipping details!');
         }
       } else {
         const response = await createShippingDetails(values).unwrap();
@@ -158,80 +233,75 @@ const ShippingSetting = () => {
           toast.success('Shipping details created successfully!');
           setOpenModal(false);
           setShippingProfile(null);
+        } else {
+          toast.error(response?.message || 'Failed to create shipping details!');
         }
       }
-    } catch (error) {
-      // console.log(error);
+    } catch (error: any) {
+      const errorMessage = error.data?.message || 'An unexpected error occurred';
+      toast.error(errorMessage);
+      console.error('Submission error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const pharmacyNameInput = (
-    <Select placeholder="Select Pharmacy Name">
-      {pharmacyList?.map((pharmecy: any) => (
-        <Select.Option key={pharmecy._id} value={pharmecy?._id}>
-          {pharmecy?.pharmecyName}
-        </Select.Option>
-      ))}
-    </Select>
-  );
   const shippingProfileForm = (
     <Form form={form} onFinish={onFinish} layout="vertical" requiredMark={false}>
       <Form.Item
-        label="Pharmacy Name"
-        name="pharmecy"
-        rules={[{ required: true, message: 'Please select or enter pharmacy name' }]}
+        label="Countries"
+        name="country"
+        rules={[{ required: true, message: 'Please select at least one country' }]}
       >
-        {pharmacyNameInput}
-      </Form.Item>
-      <Form.Item
-        label="Pharmacy Address"
-        name="pharmacyAddress"
-        rules={[{ required: true, message: 'Please enter pharmacy address' }]}
-      >
-        <Input placeholder="Enter Pharmacy Address" />
-      </Form.Item>
-
-      <Form.Item
-        label="Selected Area"
-        name="selectedArea"
-        rules={[{ required: true, message: 'Please enter selected area' }]}
-      >
-        <Input placeholder="Enter Selected Area" />
+        <Select
+          mode="multiple"
+          placeholder="Select Countries"
+          options={countries}
+          showSearch
+          filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+        />
       </Form.Item>
 
       <Form.Item
-        label="Shipping Price"
-        name="shippingPrice"
-        rules={[{ required: true, message: 'Please enter shipping price' }]}
+        label="Shipping Cost"
+        name="cost"
+        rules={[
+          { required: true, message: 'Please enter shipping cost' },
+          {
+            validator: (_, value) =>
+              value >= 0 ? Promise.resolve() : Promise.reject('Shipping cost cannot be negative'),
+          },
+        ]}
       >
-        <Input type="number" step="0.01" min="0" prefix="$" placeholder="Enter Shipping Price" />
+        <Input type="number" step="0.01" min="0" prefix={<BiEuro />} placeholder="Enter Shipping Cost" />
       </Form.Item>
 
       <div className="flex justify-end">
         <Form.Item>
-          <Button htmlType="submit" type="primary" size="large">
-            Save Changes
+          <Button htmlType="submit" type="primary" size="large" loading={isSubmitting}>
+            {isSubmitting ? 'Processing...' : 'Save Changes'}
           </Button>
         </Form.Item>
       </div>
     </Form>
   );
 
-  // console.log(viewShippingProfile);
   const viewShippingProfileModal = (
     <div>
       <div className="text-lg text-gray space-y-8">
-        <p>Pharmacy Name: {viewShippingProfile?.pharmecy?.pharmecyName}</p>
-        <p>Pharmacy Address: {viewShippingProfile?.pharmecy?.location}</p>
-        <hr className="my-4" />
-        <p>
-          Selected Area: <span className="text-red-500">{viewShippingProfile?.selectedArea}</span>
-        </p>
+        <div>
+          <p>Selected Countries:</p>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {viewShippingProfile?.country?.map((country: string) => (
+              <Tag key={country}>{country}</Tag>
+            ))}
+          </div>
+        </div>
         <p className="flex gap-4">
           Shipping Price:
           <span className="flex items-center space-x-1">
             <BiEuro size={20} className="text-green-500" />
-            <span className="text-secondary">{viewShippingProfile?.shippingPrice}</span>
+            <span className="text-secondary">{viewShippingProfile?.cost?.toFixed(2)}</span>
           </span>
         </p>
       </div>
@@ -258,7 +328,7 @@ const ShippingSetting = () => {
             style={{ width: 200 }}
             value={selectedPharmacy}
             onChange={(value) => setSelectedPharmacy(value)}
-            options={pharmacyList.map((pharmacy: any) => ({
+            options={pharmacyList.map((pharmacy: Pharmacy) => ({
               value: pharmacy._id,
               label: pharmacy.pharmecyName,
             }))}
@@ -269,8 +339,8 @@ const ShippingSetting = () => {
             style={{ height: 42 }}
             type="primary"
             onClick={() => {
-              setIsEditMode(false); // Disable edit mode
-              setShippingProfile(null); // Reset form fields
+              setIsEditMode(false);
+              setShippingProfile(null);
               setOpenModal(true);
             }}
           >
@@ -280,7 +350,13 @@ const ShippingSetting = () => {
       </div>
 
       <div>
-        <Table rowKey="_id" columns={columns} dataSource={filteredShippingData} pagination={{ pageSize: 5 }} />
+        <Table
+          rowKey="_id"
+          columns={columns}
+          dataSource={filteredShippingData}
+          pagination={{ pageSize: 5 }}
+          loading={isFetchingShippingDetails}
+        />
       </div>
 
       <Modal

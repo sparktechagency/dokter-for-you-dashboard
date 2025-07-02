@@ -193,7 +193,7 @@ const AddMedication = () => {
               </Upload>
             </Form.Item>
 
-            <Form.Item label="From" name="from" rules={[{ required: true, message: 'Please select form' }]}>
+            <Form.Item label="Form" name="from" rules={[{ required: true, message: 'Please select form' }]}>
               <Select
                 placeholder="Select form"
                 options={[

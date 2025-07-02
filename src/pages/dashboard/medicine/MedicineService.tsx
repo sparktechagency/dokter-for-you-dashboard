@@ -94,23 +94,21 @@ const MedicineService = () => {
         </Tooltip>
       ),
     },
-    {
-      title: 'Unit Per Boxes',
-      dataIndex: 'unitPerBox',
-      key: 'unitPerBox',
-      render: (_text: string, record: any) => {
-        const unitPerBoxValues = record?.variations
-          ?.map((item: any) => item?.units?.map((unit: any) => unit?.unitPerBox).join(', '))
-          .join(', ');
-        return (
-          <Tooltip title={unitPerBoxValues}>
-            <span className="font-mono cursor-pointer">
-              {record?.variations?.map((item: any) => item?.units?.map((unit: any) => unit?.unitPerBox).join(', '))}
-            </span>
-          </Tooltip>
-        );
-      },
-    },
+    // {
+    //   title: 'Unit Per Boxes',
+    //   dataIndex: 'unitPerBox',
+    //   key: 'unitPerBox',
+    //   render: (_text: string, record: any) => {
+    //     const unitPerBoxValues = record?.variations?.flatMap((item: any) =>
+    //       item?.units?.map((unit: any) => unit?.unitPerBox),
+    //     );
+    //     return (
+    //       <Tooltip title={unitPerBoxValues.join(', ')}>
+    //         <span className="font-mono cursor-pointer">{unitPerBoxValues.join(', ')}</span>
+    //       </Tooltip>
+    //     );
+    //   },
+    // },
     {
       title: 'Action',
       key: 'action',
