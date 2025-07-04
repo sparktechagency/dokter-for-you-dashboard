@@ -49,12 +49,12 @@ const PharmacyPatientServices = () => {
       key: 'consultFor',
     },
     {
-      title: 'Consultant',
-      dataIndex: 'doctorId',
-      key: 'doctorId',
-      render: (doctorId: any) => (
+      title: 'Patient',
+      dataIndex: 'userId',
+      key: 'patient',
+      render: (userId: any) => (
         <span>
-          {doctorId?.firstName} {doctorId?.lastName}
+          {userId?.firstName} {userId?.lastName}
         </span>
       ),
     },
@@ -71,9 +71,9 @@ const PharmacyPatientServices = () => {
     },
     {
       title: 'Price',
-      dataIndex: 'price',
+      dataIndex: 'totalPrice',
       key: 'price',
-      render: () => `€ 25.00`,
+      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
     },
     {
       title: 'Status',

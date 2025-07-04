@@ -137,7 +137,7 @@ const PatientInfoAndQandASection = ({ id }: { id: string }) => {
 
   const questionAndAnswerSection = (
     <div>
-      <h1 className="text-blue-800 font-bold text-2xl">Primary Matachin Question</h1>
+      <h1 className="text-blue-800 font-bold text-2xl">Basic Questions</h1>
       <div>
         {consultation?.QNA?.map((qa: QA, index: number) => (
           <div key={index} className="border-slate-300 border-b py-4">
@@ -166,7 +166,7 @@ const PatientInfoAndQandASection = ({ id }: { id: string }) => {
 
   const dynamicQuestionAndAnswerSection = (
     <div>
-      <h1 className="text-blue-800 font-bold text-2xl">Apotheek Zaandam Oost Question</h1>
+      <h1 className="text-blue-800 font-bold text-2xl">Questions About Medicine</h1>
       <div>
         {consultation?.DinamicQNA?.map((qa: QA, index: number) => (
           <div key={index} className="border-slate-300 border-b py-4">

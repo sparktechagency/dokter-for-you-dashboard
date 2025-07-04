@@ -40,12 +40,15 @@ const DoctorPatientServicesConfirmPrescription = () => {
   const [selectedDosage, setSelectedDosage] = useState<string | undefined>();
   const [selectedUnit, setSelectedUnit] = useState<string | undefined>();
   const [quantity, setQuantity] = useState(0);
+  const [selectedDosageName, setSelectedDosageName] = useState<string | undefined>();
   const [selectedMedicines, setSelectedMedicines] = useState<
     { medicineId: Medicine; dosage: string; unit: string; quantity: number }[]
   >([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const { id } = useParams();
+
+  console.log('sagvsgvsgv', selectedDosageName);
 
   const handleBack = () => {
     navigate(-1);
@@ -69,6 +72,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
     setIsModalOpen(true);
     // Reset selections when opening modal
     setSelectedDosage('');
+    setSelectedDosageName('');
     setSelectedUnit('');
     setQuantity(0);
   };
@@ -106,6 +110,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
     setSelectedMedicineDetails(null);
     // Reset selections when closing modal
     setSelectedDosage('');
+    setSelectedDosageName('');
     setSelectedUnit('');
     setQuantity(0);
   };
@@ -316,16 +321,22 @@ const DoctorPatientServicesConfirmPrescription = () => {
     unit: string;
     quantity: number;
   }) => {
+    // Find the selected variation to get the actual dosage value
+    const selectedVariation = medicine.variations.find((v: any) => v._id === dosage);
+    const dosageValue = selectedVariation?.dosage || '';
+
+    // Find the selected unit to get the actual unit value
+    const selectedUnitVariation = selectedVariation?.units.find((u: any) => u._id === unit);
+    const unitValue = selectedUnitVariation?.unitPerBox || '';
+
     const data = {
       medicineId: medicine,
-      dosage,
-      unit,
+      dosage: dosageValue, // Use the actual dosage value
+      unit: unitValue, // Use the actual unit value
       quantity,
     };
 
     setIsModalOpen(false);
-
-    // console.log('adbhaerhbar', data);
     setSelectedMedicines((prevState) => [...prevState, data]);
   };
   // console.log(selectedMedicines);
@@ -406,10 +417,13 @@ const DoctorPatientServicesConfirmPrescription = () => {
             </div>
             <div className="w-1/2 space-y-6">
               <div>
-                <p className="text-blue-600 font-medium mb-2">{selectedMedicineDetails?.company}</p>
+                {/* <p className="text-blue-600 font-medium mb-2">{selectedMedicineDetails?.company}</p> */}
                 <h2 className="text-3xl font-bold mb-1">{selectedMedicineDetails?.name}</h2>
                 <p className="text-blue-500 mb-4">{selectedMedicineDetails?.form}</p>
-                <p className="text-gray-600">{selectedMedicineDetails?.description}</p>
+                <div
+                  className="text-gray-600"
+                  dangerouslySetInnerHTML={{ __html: selectedMedicineDetails?.description }}
+                />
               </div>
 
               {/* Dosage Selection */}
@@ -426,6 +440,7 @@ const DoctorPatientServicesConfirmPrescription = () => {
                       }`}
                       onClick={() => {
                         setSelectedDosage(variation?._id);
+                        setSelectedDosageName(variation?.dosage);
                         // Reset unit selection when dosage changes
                         setSelectedUnit(undefined);
                       }}
@@ -489,14 +504,16 @@ const DoctorPatientServicesConfirmPrescription = () => {
               <button
                 className="w-full bg-[#00865A] hover:bg-[#007a52] text-white py-4 rounded flex items-center justify-center gap-2 disabled:bg-gray-400"
                 disabled={!selectedDosage || !selectedUnit || !quantity}
-                onClick={() =>
-                  handleAddToCart({
-                    medicine: selectedMedicineDetails,
-                    dosage: selectedDosage || '',
-                    unit: selectedUnit || '',
-                    quantity,
-                  })
-                }
+                onClick={() => {
+                  if (selectedDosage && selectedUnit && quantity > 0) {
+                    handleAddToCart({
+                      medicine: selectedMedicineDetails,
+                      dosage: selectedDosage,
+                      unit: selectedUnit,
+                      quantity,
+                    });
+                  }
+                }}
               >
                 <span className="text-xl">+</span> Add to Prescription
               </button>

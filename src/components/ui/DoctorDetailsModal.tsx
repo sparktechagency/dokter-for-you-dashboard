@@ -17,7 +17,7 @@ const DoctorDetailsModal = ({
     contactNumber: viewShippingProfile?.contact,
     gender: viewShippingProfile?.gender,
     address: viewShippingProfile?.location,
-    type: viewShippingProfile?.subCategory?.name,
+    // type: viewShippingProfile?.subCategory?.name,
   };
 
   // console.log('in profile modal', viewShippingProfile);
@@ -50,7 +50,7 @@ const DoctorDetailsModal = ({
                 <h3 className="text-2xl font-semibold">
                   {viewShippingProfile?.firstName} {viewShippingProfile?.lastName}
                 </h3>
-                <p className="text-green-500">Specialized in {viewShippingProfile?.subCategory?.name}</p>
+                {/* <p className="text-green-500">Specialized in {viewShippingProfile?.subCategory?.name}</p> */}
               </div>
             </div>
           </div>

@@ -134,10 +134,14 @@ const DoctorPatientServices = () => {
       render: (subCategory: { name: string }) => subCategory.name,
     },
     {
-      title: 'Consultant',
-      dataIndex: 'doctorId',
-      key: 'doctorId',
-      render: (doctorId: { firstName: string; lastName: string }) => `${doctorId.firstName} ${doctorId.lastName}`,
+      title: 'Patient',
+      dataIndex: 'userId',
+      key: 'patient',
+      render: (userId: any) => (
+        <span>
+          {userId?.firstName} {userId?.lastName}
+        </span>
+      ),
     },
     {
       title: 'Date & Time',
@@ -149,9 +153,9 @@ const DoctorPatientServices = () => {
     },
     {
       title: 'Price',
-      dataIndex: 'price',
+      dataIndex: 'totalPrice',
       key: 'price',
-      render: () => `€ 25.00`,
+      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
     },
     {
       title: 'Status',
@@ -210,10 +214,14 @@ const DoctorPatientServices = () => {
       render: (subCategory: { name: string }) => subCategory.name,
     },
     {
-      title: 'Consultant',
-      dataIndex: 'doctorId',
-      key: 'doctorId',
-      render: (doctorId: { firstName: string; lastName: string }) => `${doctorId.firstName} ${doctorId.lastName}`,
+      title: 'Patient',
+      dataIndex: 'userId',
+      key: 'patient',
+      render: (userId: any) => (
+        <span>
+          {userId?.firstName} {userId?.lastName}
+        </span>
+      ),
     },
     {
       title: 'Date & Time',
@@ -225,9 +233,9 @@ const DoctorPatientServices = () => {
     },
     {
       title: 'Price',
-      dataIndex: 'price',
+      dataIndex: 'totalPrice',
       key: 'price',
-      render: () => `€ 25.00`,
+      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
     },
     {
       title: 'Status',
@@ -286,10 +294,14 @@ const DoctorPatientServices = () => {
       render: (subCategory: { name: string }) => subCategory.name,
     },
     {
-      title: 'Consultant',
-      dataIndex: 'doctorId',
-      key: 'doctorId',
-      render: (doctorId: { firstName: string; lastName: string }) => `${doctorId.firstName} ${doctorId.lastName}`,
+      title: 'Patient',
+      dataIndex: 'userId',
+      key: 'patient',
+      render: (userId: any) => (
+        <span>
+          {userId?.firstName} {userId?.lastName}
+        </span>
+      ),
     },
     {
       title: 'Date & Time',
@@ -301,9 +313,9 @@ const DoctorPatientServices = () => {
     },
     {
       title: 'Price',
-      dataIndex: 'price',
+      dataIndex: 'totalPrice',
       key: 'price',
-      render: () => `€ 25.00`,
+      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
     },
     {
       title: 'Status',
@@ -362,10 +374,14 @@ const DoctorPatientServices = () => {
       render: (subCategory: { name: string }) => subCategory.name,
     },
     {
-      title: 'Consultant',
-      dataIndex: 'doctorId',
-      key: 'doctorId',
-      render: (doctorId: { firstName: string; lastName: string }) => `${doctorId.firstName} ${doctorId.lastName}`,
+      title: 'Patient',
+      dataIndex: 'userId',
+      key: 'patient',
+      render: (userId: any) => (
+        <span>
+          {userId?.firstName} {userId?.lastName}
+        </span>
+      ),
     },
     {
       title: 'Date & Time',
@@ -377,9 +393,9 @@ const DoctorPatientServices = () => {
     },
     {
       title: 'Price',
-      dataIndex: 'price',
+      dataIndex: 'totalPrice',
       key: 'price',
-      render: () => `€ 25.00`,
+      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
     },
     {
       title: 'Status',
