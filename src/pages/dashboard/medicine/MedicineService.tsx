@@ -73,6 +73,11 @@ const MedicineService = () => {
       title: 'Country',
       dataIndex: 'country',
       key: 'country',
+      render: (_text: string, record: any) => (
+        <Tooltip title={record?.country?.join(', ')}>
+          <span className="font-mono cursor-pointer">{record?.country?.join(', ')}</span>
+        </Tooltip>
+      ),
     },
     {
       title: 'Form',

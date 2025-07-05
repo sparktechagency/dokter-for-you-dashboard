@@ -403,122 +403,133 @@ const DoctorPatientServicesConfirmPrescription = () => {
         closeIcon={<span className="text-2xl">×</span>}
       >
         {selectedMedicineDetails && (
-          <div className="flex items-center gap-8">
-            <div className="w-1/2">
-              <img
-                src={
-                  selectedMedicineDetails?.image.startsWith('http')
-                    ? selectedMedicineDetails?.image
-                    : `${import.meta.env.VITE_BASE_URL}${selectedMedicineDetails?.image}`
-                }
-                alt={selectedMedicineDetails.name}
-                className="w-full object-contain"
-              />
-            </div>
-            <div className="w-1/2 space-y-6">
-              <div>
-                {/* <p className="text-blue-600 font-medium mb-2">{selectedMedicineDetails?.company}</p> */}
-                <h2 className="text-3xl font-bold mb-1">{selectedMedicineDetails?.name}</h2>
-                <p className="text-blue-500 mb-4">{selectedMedicineDetails?.form}</p>
-                <div
-                  className="text-gray-600"
-                  dangerouslySetInnerHTML={{ __html: selectedMedicineDetails?.description }}
+          <>
+            <div className="flex items-center gap-8">
+              <div className="w-1/2">
+                <img
+                  src={
+                    selectedMedicineDetails?.image.startsWith('http')
+                      ? selectedMedicineDetails?.image
+                      : `${import.meta.env.VITE_BASE_URL}${selectedMedicineDetails?.image}`
+                  }
+                  alt={selectedMedicineDetails.name}
+                  className="w-full object-contain"
                 />
               </div>
-
-              {/* Dosage Selection */}
-              <div>
-                <p className="font-medium mb-4">Dosage</p>
-                <div className="flex gap-4 mb-4 flex-wrap">
-                  {selectedMedicineDetails?.variations?.map((variation: any) => (
-                    <button
-                      key={variation?.dosage}
-                      className={`px-4 py-2 rounded transition-colors ${
-                        selectedDosage === variation?._id
-                          ? 'bg-[#0a2369] text-white'
-                          : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
-                      }`}
-                      onClick={() => {
-                        setSelectedDosage(variation?._id);
-                        setSelectedDosageName(variation?.dosage);
-                        // Reset unit selection when dosage changes
-                        setSelectedUnit(undefined);
-                      }}
-                    >
-                      {variation?.dosage}
-                    </button>
-                  ))}
+              <div className="w-1/2 space-y-6">
+                <div>
+                  {/* <p className="text-blue-600 font-medium mb-2">{selectedMedicineDetails?.company}</p> */}
+                  <h2 className="text-3xl font-bold mb-1">{selectedMedicineDetails?.name}</h2>
+                  <p className="text-blue-500 mb-4">{selectedMedicineDetails?.form}</p>
                 </div>
-                {selectedDosage ? null : <p className="text-red-600 text-sm">Please select dosage</p>}
+
+                {/* Dosage Selection */}
+                <div>
+                  <p className="font-medium mb-4">Dosage</p>
+                  <div className="flex gap-4 mb-4 flex-wrap">
+                    {selectedMedicineDetails?.variations?.map((variation: any) => (
+                      <button
+                        key={variation?.dosage}
+                        className={`px-4 py-2 rounded transition-colors ${
+                          selectedDosage === variation?._id
+                            ? 'bg-[#0a2369] text-white'
+                            : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
+                        }`}
+                        onClick={() => {
+                          setSelectedDosage(variation?._id);
+                          setSelectedDosageName(variation?.dosage);
+                          // Reset unit selection when dosage changes
+                          setSelectedUnit(undefined);
+                        }}
+                      >
+                        {variation?.dosage}
+                      </button>
+                    ))}
+                  </div>
+                  {selectedDosage ? null : <p className="text-red-600 text-sm">Please select dosage</p>}
+                </div>
+
+                {/* Unit Selection (only shown after dosage is selected) */}
+                {selectedDosage && (
+                  <div>
+                    <p className="font-medium mb-4">Select Units per Box</p>
+                    <div className="flex gap-4 mb-6 flex-wrap">
+                      {selectedMedicineDetails?.variations
+                        ?.find((v: any) => v._id === selectedDosage)
+                        ?.units?.map((unit: any) => (
+                          <button
+                            key={unit?.unitPerBox}
+                            className={`px-4 py-2 rounded transition-colors ${
+                              selectedUnit === unit?._id
+                                ? 'bg-[#0a2369] text-white'
+                                : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
+                            }`}
+                            onClick={() => setSelectedUnit(unit?._id)}
+                          >
+                            {unit?.unitPerBox}
+                          </button>
+                        ))}
+                    </div>
+                    {selectedUnit ? null : <p className="text-red-600 text-sm">Please select unit per box</p>}
+                  </div>
+                )}
+
+                {/* Quantity Selection (only shown after unit is selected) */}
+                {selectedUnit && (
+                  <div>
+                    <p className="font-medium mb-4">Quantity</p>
+                    <div className="flex gap-2 items-center mb-6">
+                      <button
+                        className="bg-slate-100 w-20 font-bold hover:bg-gray-200 text-gray-700 px-4 py-2 rounded"
+                        onClick={() => handleQuantityChange('decrease')}
+                      >
+                        -
+                      </button>
+                      <input type="text" value={quantity} className="w-16 text-center border rounded py-2" readOnly />
+                      <button
+                        className="bg-slate-100 w-20 font-bold hover:bg-gray-200 text-gray-700 px-4 py-2 rounded"
+                        onClick={() => handleQuantityChange('increase')}
+                      >
+                        +
+                      </button>
+                    </div>
+                    {quantity ? null : <p className="text-red-600 text-sm">Please select quantity</p>}
+                  </div>
+                )}
+
+                {/* Add to Cart Button */}
+                <button
+                  className="w-full bg-[#00865A] hover:bg-[#007a52] text-white py-4 rounded flex items-center justify-center gap-2 disabled:bg-gray-400"
+                  disabled={!selectedDosage || !selectedUnit || !quantity}
+                  onClick={() => {
+                    if (selectedDosage && selectedUnit && quantity > 0) {
+                      handleAddToCart({
+                        medicine: selectedMedicineDetails,
+                        dosage: selectedDosage,
+                        unit: selectedUnit,
+                        quantity,
+                      });
+                    }
+                  }}
+                >
+                  <span className="text-xl">+</span> Add to Prescription
+                </button>
               </div>
-
-              {/* Unit Selection (only shown after dosage is selected) */}
-              {selectedDosage && (
-                <div>
-                  <p className="font-medium mb-4">Select Units per Box</p>
-                  <div className="flex gap-4 mb-6 flex-wrap">
-                    {selectedMedicineDetails?.variations
-                      ?.find((v: any) => v._id === selectedDosage)
-                      ?.units?.map((unit: any) => (
-                        <button
-                          key={unit?.unitPerBox}
-                          className={`px-4 py-2 rounded transition-colors ${
-                            selectedUnit === unit?._id
-                              ? 'bg-[#0a2369] text-white'
-                              : 'bg-slate-100 text-gray-700 hover:bg-slate-400'
-                          }`}
-                          onClick={() => setSelectedUnit(unit?._id)}
-                        >
-                          {unit?.unitPerBox}
-                        </button>
-                      ))}
-                  </div>
-                  {selectedUnit ? null : <p className="text-red-600 text-sm">Please select unit per box</p>}
-                </div>
-              )}
-
-              {/* Quantity Selection (only shown after unit is selected) */}
-              {selectedUnit && (
-                <div>
-                  <p className="font-medium mb-4">Quantity</p>
-                  <div className="flex gap-2 items-center mb-6">
-                    <button
-                      className="bg-slate-100 w-20 font-bold hover:bg-gray-200 text-gray-700 px-4 py-2 rounded"
-                      onClick={() => handleQuantityChange('decrease')}
-                    >
-                      -
-                    </button>
-                    <input type="text" value={quantity} className="w-16 text-center border rounded py-2" readOnly />
-                    <button
-                      className="bg-slate-100 w-20 font-bold hover:bg-gray-200 text-gray-700 px-4 py-2 rounded"
-                      onClick={() => handleQuantityChange('increase')}
-                    >
-                      +
-                    </button>
-                  </div>
-                  {quantity ? null : <p className="text-red-600 text-sm">Please select quantity</p>}
-                </div>
-              )}
-
-              {/* Add to Cart Button */}
-              <button
-                className="w-full bg-[#00865A] hover:bg-[#007a52] text-white py-4 rounded flex items-center justify-center gap-2 disabled:bg-gray-400"
-                disabled={!selectedDosage || !selectedUnit || !quantity}
-                onClick={() => {
-                  if (selectedDosage && selectedUnit && quantity > 0) {
-                    handleAddToCart({
-                      medicine: selectedMedicineDetails,
-                      dosage: selectedDosage,
-                      unit: selectedUnit,
-                      quantity,
-                    });
-                  }
-                }}
-              >
-                <span className="text-xl">+</span> Add to Prescription
-              </button>
             </div>
-          </div>
+            <div className="mt-6">
+              <h1 className="text-xl font-bold">Description</h1>
+              <div
+                className="text-gray-600"
+                dangerouslySetInnerHTML={{ __html: selectedMedicineDetails?.description }}
+              />
+
+              <h1 className="text-xl font-bold mt-6">Sub Details</h1>
+              <div
+                className="text-gray-600"
+                dangerouslySetInnerHTML={{ __html: selectedMedicineDetails?.subDescription }}
+              />
+            </div>
+          </>
         )}
       </Modal>
     </div>

@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, Upload, InputNumber, Card, Space } from 'antd';
+import { Form, Input, Select, Button, Upload, InputNumber, Card, Space, Tag } from 'antd';
 import { UploadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useRef, useState } from 'react';
 import { useGetConsultationSubcategoryQuery } from '../../../redux/apiSlices/consultationSlice';
@@ -120,7 +120,7 @@ const AddMedication = () => {
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('company', 'Apotheek Zaandam Oost');
-    formData.append('country', values.country);
+    formData.append('country', JSON.stringify(values.country || [])); // Store as JSON string
     formData.append('image', values.image?.fileList[0]?.originFileObj || '');
     formData.append('form', values.from);
     formData.append('description', values.description);
@@ -174,8 +174,17 @@ const AddMedication = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Country" name="country">
-              <Select placeholder="Select a country" className="w-full">
+            <Form.Item label="Countries" name="country">
+              <Select
+                mode="multiple"
+                placeholder="Select countries"
+                className="w-full"
+                tagRender={({ label, value, closable, onClose }) => (
+                  <Tag closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
+                    {label}
+                  </Tag>
+                )}
+              >
                 {countries.map((country) => (
                   <Select.Option key={country.value} value={country.value}>
                     {country.label}

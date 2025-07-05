@@ -55,7 +55,9 @@ const EditMedication = () => {
   const medicineData = getMedicineById?.data;
   const subCategoriesData = getAllSubCategories?.data;
 
-  const editor = useRef(null);
+  // Separate refs for each editor
+  const descriptionEditor = useRef(null);
+  const subDescriptionEditor = useRef(null);
 
   useEffect(() => {
     if (medicineData) {
@@ -63,62 +65,97 @@ const EditMedication = () => {
       const { image, ...restData } = medicineData;
       setImgURL(image ? `${import.meta.env.VITE_BASE_URL}${image}` : null);
 
-      // Convert data to variations format if needed
-      const variationsData = medicineData.variations ||
-        medicineData.dosage?.map((dosage: string, index: number) => ({
-          dosage,
-          units: [
-            {
-              unitPerBox: medicineData.unitPerBox?.[index] || '',
-              sellingPrice: medicineData.sellingPrice?.[index] || 0,
-            },
-          ],
-        })) || [{ dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }];
+      // Create a deep copy to avoid immutability issues
+      const variationsData = medicineData.variations
+        ? JSON.parse(JSON.stringify(medicineData.variations))
+        : medicineData.dosage?.map((dosage: string, index: number) => ({
+            dosage,
+            units: [
+              {
+                unitPerBox: medicineData.unitPerBox?.[index] || '',
+                sellingPrice: medicineData.sellingPrice?.[index] || 0,
+              },
+            ],
+          })) || [{ dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }];
 
       setVariations(variationsData);
 
       form.setFieldsValue({
         ...restData,
         subCategory: medicineData.subCategory?._id,
+        variations: variationsData, // Add variations to form
       });
     }
   }, [medicineData, form]);
 
+  // Sync variations with form whenever they change
+  useEffect(() => {
+    form.setFieldValue('variations', variations);
+  }, [variations, form]);
+
   const addVariation = () => {
-    setVariations([...variations, { dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }]);
+    const newVariations = [...variations, { dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }];
+    setVariations(newVariations);
   };
 
   const removeVariation = (variationIndex: number) => {
     if (variations.length > 1) {
-      setVariations(variations.filter((_, index) => index !== variationIndex));
-    }
-  };
-
-  const updateVariationDosage = (variationIndex: number, dosage: string) => {
-    const newVariations = [...variations];
-    newVariations[variationIndex].dosage = dosage;
-    setVariations(newVariations);
-  };
-
-  const addUnit = (variationIndex: number) => {
-    const newVariations = [...variations];
-    newVariations[variationIndex].units.push({ unitPerBox: '', sellingPrice: 0 });
-    setVariations(newVariations);
-  };
-
-  const removeUnit = (variationIndex: number, unitIndex: number) => {
-    const newVariations = [...variations];
-    if (newVariations[variationIndex].units.length > 1) {
-      newVariations[variationIndex].units = newVariations[variationIndex].units.filter(
-        (_, index) => index !== unitIndex,
-      );
+      const newVariations = variations.filter((_, index) => index !== variationIndex);
       setVariations(newVariations);
     }
   };
 
+  const updateVariationDosage = (variationIndex: number, dosage: string) => {
+    const newVariations = variations.map((variation, index) => {
+      if (index === variationIndex) {
+        return { ...variation, dosage };
+      }
+      return { ...variation };
+    });
+    setVariations(newVariations);
+  };
+
+  const addUnit = (variationIndex: number) => {
+    const newVariations = variations.map((variation, index) => {
+      if (index === variationIndex) {
+        return {
+          ...variation,
+          units: [...variation.units, { unitPerBox: '', sellingPrice: 0 }],
+        };
+      }
+      return { ...variation };
+    });
+    setVariations(newVariations);
+  };
+
+  const removeUnit = (variationIndex: number, unitIndex: number) => {
+    const newVariations = variations.map((variation, vIndex) => {
+      if (vIndex === variationIndex && variation.units.length > 1) {
+        return {
+          ...variation,
+          units: variation.units.filter((_, uIndex) => uIndex !== unitIndex),
+        };
+      }
+      return { ...variation };
+    });
+    setVariations(newVariations);
+  };
+
   const updateUnit = (variationIndex: number, unitIndex: number, field: keyof Unit, value: string | number) => {
-    const newVariations = [...variations];
-    (newVariations[variationIndex].units[unitIndex] as any)[field] = value;
+    const newVariations = variations.map((variation, vIndex) => {
+      if (vIndex === variationIndex) {
+        return {
+          ...variation,
+          units: variation.units.map((unit, uIndex) => {
+            if (uIndex === unitIndex) {
+              return { ...unit, [field]: value };
+            }
+            return { ...unit };
+          }),
+        };
+      }
+      return { ...variation };
+    });
     setVariations(newVariations);
   };
 
@@ -293,7 +330,7 @@ const EditMedication = () => {
                     padding: '0 35px',
                   },
                 }}
-                ref={editor}
+                ref={descriptionEditor}
                 value={form.getFieldValue('description')}
                 onChange={(value) => form.setFieldValue('description', value)}
               />
@@ -307,7 +344,7 @@ const EditMedication = () => {
                     padding: '0 35px',
                   },
                 }}
-                ref={editor}
+                ref={subDescriptionEditor}
                 value={form.getFieldValue('subDescription')}
                 onChange={(value) => form.setFieldValue('subDescription', value)}
               />
@@ -328,6 +365,11 @@ const EditMedication = () => {
               Add Dosage Variation
             </Button>
           </div>
+
+          {/* Hidden form field to track variations */}
+          <Form.Item name="variations" hidden>
+            <Input />
+          </Form.Item>
 
           <div className="space-y-6">
             {variations.map((variation, variationIndex) => (
