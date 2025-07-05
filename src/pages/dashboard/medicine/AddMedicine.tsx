@@ -179,7 +179,7 @@ const AddMedication = () => {
                 mode="multiple"
                 placeholder="Select countries"
                 className="w-full"
-                tagRender={({ label, value, closable, onClose }) => (
+                tagRender={({ label, closable, onClose }) => (
                   <Tag closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
                     {label}
                   </Tag>

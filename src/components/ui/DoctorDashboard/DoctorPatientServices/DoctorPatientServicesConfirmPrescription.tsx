@@ -17,6 +17,7 @@ interface Medicine {
   medicineType: string;
   image: string;
   description: string;
+  subDescription: string;
   variations: [
     {
       dosage: string;

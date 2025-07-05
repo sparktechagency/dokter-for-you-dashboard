@@ -33,7 +33,7 @@ export interface doctorDetails {
   contactNumber: string;
   gender: string;
   address: string;
-  // type: string;
+  type: string;
 }
 
 export interface pharmacy {

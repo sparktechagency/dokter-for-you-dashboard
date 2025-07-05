@@ -17,7 +17,7 @@ const DoctorDetailsModal = ({
     contactNumber: viewShippingProfile?.contact,
     gender: viewShippingProfile?.gender,
     address: viewShippingProfile?.location,
-    // type: viewShippingProfile?.subCategory?.name,
+    type: viewShippingProfile?.subCategory?.name,
   };
 
   // console.log('in profile modal', viewShippingProfile);
