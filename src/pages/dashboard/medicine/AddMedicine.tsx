@@ -233,6 +233,9 @@ const AddMedication = () => {
                 config={{
                   readonly: false,
                   height: 400,
+                  style: {
+                    padding: '0 35px',
+                  },
                 }}
                 ref={editor}
                 value={form.getFieldValue('description')}
@@ -244,6 +247,9 @@ const AddMedication = () => {
                 config={{
                   readonly: false,
                   height: 400,
+                  style: {
+                    padding: '0 35px',
+                  },
                 }}
                 ref={editor}
                 value={form.getFieldValue('subDescription')}
