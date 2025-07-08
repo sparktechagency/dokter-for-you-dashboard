@@ -151,12 +151,12 @@ const DoctorPatientServices = () => {
         return <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>;
       },
     },
-    {
-      title: 'Price',
-      dataIndex: 'totalPrice',
-      key: 'price',
-      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
-    },
+    // {
+    //   title: 'Price',
+    //   dataIndex: 'totalPrice',
+    //   key: 'price',
+    //   render: (totalPrice: any) => `€ ${totalPrice || 0}`,
+    // },
     {
       title: 'Status',
       dataIndex: 'status',
@@ -167,8 +167,8 @@ const DoctorPatientServices = () => {
             status === 'pending'
               ? 'bg-yellow-500 text-white'
               : status === 'rejected'
-              ? 'bg-red-500 text-white'
-              : 'bg-green-500 text-white'
+                ? 'bg-red-500 text-white'
+                : 'bg-green-500 text-white'
           }
         >
           {status}
@@ -231,12 +231,12 @@ const DoctorPatientServices = () => {
         return <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>;
       },
     },
-    {
-      title: 'Price',
-      dataIndex: 'totalPrice',
-      key: 'price',
-      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
-    },
+    // {
+    //   title: 'Price',
+    //   dataIndex: 'totalPrice',
+    //   key: 'price',
+    //   render: (totalPrice: any) => `€ ${totalPrice || 0}`,
+    // },
     {
       title: 'Status',
       dataIndex: 'status',
@@ -247,8 +247,8 @@ const DoctorPatientServices = () => {
             status === 'pending'
               ? 'bg-yellow-500 text-white'
               : status === 'rejected'
-              ? 'bg-red-500 text-white'
-              : 'bg-green-500 text-white'
+                ? 'bg-red-500 text-white'
+                : 'bg-green-500 text-white'
           }
         >
           {status}
@@ -311,12 +311,12 @@ const DoctorPatientServices = () => {
         return <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>;
       },
     },
-    {
-      title: 'Price',
-      dataIndex: 'totalPrice',
-      key: 'price',
-      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
-    },
+    // {
+    //   title: 'Price',
+    //   dataIndex: 'totalPrice',
+    //   key: 'price',
+    //   render: (totalPrice: any) => `€ ${totalPrice || 0}`,
+    // },
     {
       title: 'Status',
       dataIndex: 'status',
@@ -327,8 +327,8 @@ const DoctorPatientServices = () => {
             status === 'pending'
               ? 'bg-yellow-500 text-white'
               : status === 'rejected'
-              ? 'bg-red-500 text-white'
-              : 'bg-green-500 text-white'
+                ? 'bg-red-500 text-white'
+                : 'bg-green-500 text-white'
           }
         >
           {status}
@@ -391,12 +391,12 @@ const DoctorPatientServices = () => {
         return <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>;
       },
     },
-    {
-      title: 'Price',
-      dataIndex: 'totalPrice',
-      key: 'price',
-      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
-    },
+    // {
+    //   title: 'Price',
+    //   dataIndex: 'totalPrice',
+    //   key: 'price',
+    //   render: (totalPrice: any) => `€ ${totalPrice || 0}`,
+    // },
     {
       title: 'Status',
       dataIndex: 'status',
@@ -407,8 +407,8 @@ const DoctorPatientServices = () => {
             status === 'pending'
               ? 'bg-yellow-500 text-white'
               : status === 'rejected'
-              ? 'bg-red-500 text-white'
-              : 'bg-green-500 text-white'
+                ? 'bg-red-500 text-white'
+                : 'bg-green-500 text-white'
           }
         >
           {status}
