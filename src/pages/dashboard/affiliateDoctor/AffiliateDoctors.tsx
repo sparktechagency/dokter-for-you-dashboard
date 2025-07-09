@@ -173,7 +173,7 @@ const AffiliateDoctors: React.FC = () => {
       title: 'Serial',
       dataIndex: 'serial',
       key: 'serial',
-      render: (_: any, record: any, index: number) => index + 1,
+      render: (_: any, _record: any, index: number) => index + 1,
     },
     {
       title: 'Doctor',
