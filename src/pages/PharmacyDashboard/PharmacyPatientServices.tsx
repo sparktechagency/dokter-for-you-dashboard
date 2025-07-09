@@ -69,12 +69,12 @@ const PharmacyPatientServices = () => {
       key: 'createdAt',
       render: (createdAt: any) => <span>{moment(createdAt).format('MMMM Do YYYY, h:mm a')}</span>,
     },
-    {
-      title: 'Price',
-      dataIndex: 'totalPrice',
-      key: 'price',
-      render: (totalPrice: any) => `€ ${totalPrice || 0}`,
-    },
+    // {
+    //   title: 'Price',
+    //   dataIndex: 'totalPrice',
+    //   key: 'price',
+    //   render: (totalPrice: any) => `€ ${totalPrice || 0}`,
+    // },
     {
       title: 'Status',
       dataIndex: 'status',
@@ -82,15 +82,14 @@ const PharmacyPatientServices = () => {
       render: (status: string) => (
         <div>
           <button
-            className={`${
-              status === 'processing'
+            className={`${status === 'processing'
                 ? 'bg-yellow-500'
                 : status === 'accepted'
-                ? 'bg-blue-600'
-                : status === 'prescribed'
-                ? 'bg-green-500'
-                : 'bg-red-500'
-            } text-white text-[14px] py-1.5 px-2 rounded-md`}
+                  ? 'bg-blue-600'
+                  : status === 'prescribed'
+                    ? 'bg-green-500'
+                    : 'bg-red-500'
+              } text-white text-[14px] py-1.5 px-2 rounded-md`}
           >
             {status}
           </button>

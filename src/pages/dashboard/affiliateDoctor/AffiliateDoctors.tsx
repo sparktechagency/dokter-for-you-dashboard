@@ -56,13 +56,13 @@ const AffiliateDoctors: React.FC = () => {
     setFileList(
       doctor.image
         ? [
-            {
-              uid: '-1',
-              name: 'doctor-image.png',
-              status: 'done',
-              url: doctor.image.startsWith('http') ? doctor.image : `${import.meta.env.VITE_BASE_URL}${doctor.image}`,
-            },
-          ]
+          {
+            uid: '-1',
+            name: 'doctor-image.png',
+            status: 'done',
+            url: doctor.image.startsWith('http') ? doctor.image : `${import.meta.env.VITE_BASE_URL}${doctor.image}`,
+          },
+        ]
         : [],
     );
 
@@ -112,8 +112,8 @@ const AffiliateDoctors: React.FC = () => {
       console.error('Error:', error);
       toast.error(
         error?.data?.message ||
-          error.message ||
-          (currentDoctor ? 'An error occurred while updating doctor' : 'An error occurred while adding doctor'),
+        error.message ||
+        (currentDoctor ? 'An error occurred while updating doctor' : 'An error occurred while adding doctor'),
       );
     }
   };
@@ -170,9 +170,9 @@ const AffiliateDoctors: React.FC = () => {
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'key',
-      key: 'key',
+      title: 'Serial',
+      dataIndex: 'serial',
+      key: 'serial',
       render: (_: any, index: number) => index + 1,
     },
     {
