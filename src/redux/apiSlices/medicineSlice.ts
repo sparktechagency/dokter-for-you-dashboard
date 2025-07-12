@@ -4,7 +4,7 @@ const medicineApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getMedicine: builder.query({
       query: () => ({
-        url: '/medicine',
+        url: '/medicine?limit=1000',
         method: 'GET',
       }),
     }),
