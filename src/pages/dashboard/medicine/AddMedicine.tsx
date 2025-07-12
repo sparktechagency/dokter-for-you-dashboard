@@ -1,6 +1,6 @@
 import { Form, Input, Select, Button, Upload, InputNumber, Card, Space, Tag } from 'antd';
 import { UploadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useGetConsultationSubcategoryQuery } from '../../../redux/apiSlices/consultationSlice';
 import { useCreateMedicineMutation } from '../../../redux/apiSlices/medicineSlice';
 import toast from 'react-hot-toast';
@@ -45,6 +45,13 @@ const AddMedication = () => {
   const [createMedicine] = useCreateMedicineMutation();
 
   const editor = useRef(null);
+
+  useEffect(() => {
+    // Pre-select all countries by default
+    form.setFieldsValue({
+      country: countries.map(country => country.value)
+    });
+  }, [form]);
 
   if (isFetching) {
     return <div>Loading...</div>;
@@ -120,7 +127,7 @@ const AddMedication = () => {
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('company', 'Apotheek Zaandam Oost');
-    formData.append('country', JSON.stringify(values.country || [])); // Store as JSON string
+    values.country.forEach((country: string) => formData.append('country', country));
     formData.append('image', values.image?.fileList[0]?.originFileObj || '');
     formData.append('form', values.from);
     formData.append('description', values.description);
@@ -156,9 +163,9 @@ const AddMedication = () => {
               <Input placeholder="Ceevit" className="w-full" />
             </Form.Item>
 
-            <Form.Item label="Company" name="company">
+            {/* <Form.Item label="Company" name="company">
               <Input placeholder="Apotheek Zaandam Oost" className="w-full" />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               label="Sub Category"

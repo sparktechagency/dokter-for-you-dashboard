@@ -15,6 +15,24 @@ const SingleMedicineDetails = () => {
     return <h1>Loading...</h1>;
   }
 
+  const countryNameToCode: Record<string, string> = {
+    Belgium: 'BE',
+    Denmark: 'DK',
+    Germany: 'DE',
+    France: 'FR',
+    Luxembourg: 'LU',
+    Netherlands: 'NL',
+    Austria: 'AT',
+    Poland: 'PL',
+    Portugal: 'PT',
+    Romania: 'RO',
+    Switzerland: 'CH',
+    Finland: 'FI',
+    Sweden: 'SE',
+    Lithuania: 'LT',
+    Spain: 'ES',
+  };
+
   const medicineData = getMedicineById?.data;
   // console.log(medicineData);
 
@@ -52,11 +70,11 @@ const SingleMedicineDetails = () => {
 
                 <td>: {medicineData?.name}</td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td className="font-medium text-gray-700 align-top">Company</td>
 
                 <td>: {medicineData?.company}</td>
-              </tr>
+              </tr> */}
               <tr>
                 <td className="font-medium text-gray-700 align-top">Form</td>
 
@@ -95,7 +113,42 @@ const SingleMedicineDetails = () => {
               </tr>
               <tr>
                 <td className="font-medium text-gray-700 align-top">Country</td>
-                <td>: {medicineData?.country}</td>
+                <td className="grid grid-cols-2 gap-2 items-center my-6">
+                  <ul className="list-disc col-span-1">
+                    {medicineData?.country
+                      ?.slice(0, Math.ceil(medicineData?.country?.length / 2))
+                      .map((country: string, index: number) => {
+                        const countryCode = countryNameToCode[country];
+                        return (
+                          <li key={index} className="flex items-center gap-2">
+                            <img
+                              src={`https://flagcdn.com/w40/${countryCode?.toLowerCase()}.png`}
+                              alt={country}
+                              className="w-5 h-4 rounded-sm object-cover"
+                            />
+                            {country}
+                          </li>
+                        );
+                      })}
+                  </ul>
+                  <ul className="list-disc col-span-1">
+                    {medicineData?.country
+                      ?.slice(Math.ceil(medicineData?.country?.length / 2))
+                      .map((country: string, index: number) => {
+                        const countryCode = countryNameToCode[country];
+                        return (
+                          <li key={index} className="flex items-center gap-2">
+                            <img
+                              src={`https://flagcdn.com/w40/${countryCode?.toLowerCase()}.png`}
+                              alt={country}
+                              className="w-5 h-4 rounded-sm object-cover"
+                            />
+                            {country}
+                          </li>
+                        );
+                      })}
+                  </ul>
+                </td>
               </tr>
 
               <tr>

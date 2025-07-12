@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, Card, Space, InputNumber } from 'antd';
+import { Form, Input, Select, Button, Card, Space, InputNumber, Tag } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import whiteBg from '../../../assets/whiteBg.png';
 import { useEffect, useRef, useState } from 'react';
@@ -69,14 +69,14 @@ const EditMedication = () => {
       const variationsData = medicineData.variations
         ? JSON.parse(JSON.stringify(medicineData.variations))
         : medicineData.dosage?.map((dosage: string, index: number) => ({
-            dosage,
-            units: [
-              {
-                unitPerBox: medicineData.unitPerBox?.[index] || '',
-                sellingPrice: medicineData.sellingPrice?.[index] || 0,
-              },
-            ],
-          })) || [{ dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }];
+          dosage,
+          units: [
+            {
+              unitPerBox: medicineData.unitPerBox?.[index] || '',
+              sellingPrice: medicineData.sellingPrice?.[index] || 0,
+            },
+          ],
+        })) || [{ dosage: '', units: [{ unitPerBox: '', sellingPrice: 0 }] }];
 
       setVariations(variationsData);
 
@@ -200,7 +200,7 @@ const EditMedication = () => {
     formData.append('name', values.name);
     formData.append('company', values.company || 'Apotheek Zaandam Oost');
     formData.append('subCategory', values.subCategory);
-    formData.append('country', values.country);
+    values.country.forEach((country: string) => formData.append('country', country));
     formData.append('form', values.form);
     formData.append('description', values.description || '');
     formData.append('subDescription', values.subDescription || '');
@@ -243,13 +243,13 @@ const EditMedication = () => {
               <Input placeholder="Medicine Name" />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               label="Company"
               name="company"
               rules={[{ required: true, message: 'Please enter company name' }]}
             >
               <Input placeholder="Company Name" />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               label="Sub Category"
@@ -265,8 +265,17 @@ const EditMedication = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Country" name="country">
-              <Select placeholder="Select a country" className="w-full">
+            <Form.Item label="Countries" name="country">
+              <Select
+                mode="multiple"
+                placeholder="Select countries"
+                className="w-full"
+                tagRender={({ label, closable, onClose }) => (
+                  <Tag closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
+                    {label}
+                  </Tag>
+                )}
+              >
                 {countries.map((country) => (
                   <Select.Option key={country.value} value={country.value}>
                     {country.label}

@@ -30,7 +30,7 @@ const MedicineService = () => {
   const filteredData = getMedicineData?.filter((item: any) => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesDosage = filterDosage === 'all' || item.form === filterDosage;
-    const matchesCountry = filterCountry === 'all' || item.country.toLowerCase() === filterCountry.toLowerCase();
+    const matchesCountry = filterCountry === 'all' || item.country?.includes(filterCountry);
     return matchesSearch && matchesDosage && matchesCountry;
   });
 
@@ -54,16 +54,16 @@ const MedicineService = () => {
       key: 'sno',
       render: (_: any, __: any, index: number) => index + 1,
     },
-    {
-      title: 'Medicine Id',
-      dataIndex: '_id',
-      key: '_id',
-      render: (id: string) => (
-        <span className="font-mono">
-          <Tooltip title={id}># {id.slice(0, 8)}</Tooltip>
-        </span>
-      ),
-    },
+    // {
+    //   title: 'Medicine Id',
+    //   dataIndex: '_id',
+    //   key: '_id',
+    //   render: (id: string) => (
+    //     <span className="font-mono">
+    //       <Tooltip title={id}># {id.slice(0, 8)}</Tooltip>
+    //     </span>
+    //   ),
+    // },
     {
       title: 'Medicine Name',
       dataIndex: 'name',
@@ -73,11 +73,13 @@ const MedicineService = () => {
       title: 'Country',
       dataIndex: 'country',
       key: 'country',
+      width: 800,
       render: (_text: string, record: any) => (
-        <Tooltip title={record?.country?.join(', ')}>
+        <Tooltip title={`${record?.country?.length} countries`}>
           <span className="font-mono cursor-pointer">{record?.country?.join(', ')}</span>
         </Tooltip>
       ),
+
     },
     {
       title: 'Form',
@@ -188,10 +190,21 @@ const MedicineService = () => {
             value={filterCountry}
             onChange={(value) => setFilterCountry(value)}
             options={[
-              { value: 'all', label: 'All Countries' },
-              { value: 'netherlands', label: 'Netherlands' },
-              // { value: 'egypt', label: 'Egypt' },
-              // { value: 'france', label: 'France' },
+              { value: 'Belgium', label: 'Belgium' },
+              { value: 'Denmark', label: 'Denmark' },
+              { value: 'France', label: 'France' },
+              { value: 'Germany', label: 'Germany' },
+              { value: 'Luxembourg', label: 'Luxembourg' },
+              { value: 'Netherlands', label: 'Netherlands' },
+              { value: 'Poland', label: 'Poland' },
+              { value: 'Austria', label: 'Austria' },
+              { value: 'Portugal', label: 'Portugal' },
+              { value: 'Romania', label: 'Romania' },
+              { value: 'Switzerland', label: 'Switzerland' },
+              { value: 'Finland', label: 'Finland' },
+              { value: 'Sweden', label: 'Sweden' },
+              { value: 'Lithuania', label: 'Lithuania' },
+              { value: 'Spain', label: 'Spain' },
             ]}
           />
           {userProfile?.role === 'ADMIN' && (
